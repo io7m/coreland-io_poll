@@ -4,6 +4,7 @@
 #include "aio-mech.h"
 
 #define IO_POLL_OVERALLOC 64
+#define IO_POLL_ALLOC 16
 
 #define IO_POLL_READ  0x1
 #define IO_POLL_WRITE 0x2

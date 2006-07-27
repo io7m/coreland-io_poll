@@ -19,7 +19,7 @@ void dump_pipes()
   printf("\n");
 }
 
-void init_test1()
+void init_test()
 {
   unsigned long ind;
  
@@ -36,15 +36,15 @@ void init_test1()
 
   numfds = NUM_PIPES;
   if (io_poll_init(&iop, numfds) == -1) {
-    perror("(FAIL: init_test1) io_poll_init");
+    perror("(FAIL: init_test) io_poll_init");
     _exit(1);
   }
   if (iop.len != numfds) {
-    printf("(FAIL: init_test1) iop.len: %lu != %lu\n", iop.len, numfds);
+    printf("(FAIL: init_test) iop.len: %lu != %lu\n", iop.len, numfds);
     _exit(1);
   }
   if (iop.a != numfds + IO_POLL_OVERALLOC) {
-    printf("(FAIL: init_test1) iop.a: %lu != %lu\n", iop.a,
+    printf("(FAIL: init_test) iop.a: %lu != %lu\n", iop.a,
             numfds + IO_POLL_OVERALLOC);
     _exit(1);
   }
@@ -182,6 +182,8 @@ void rm_test2()
   long ret;
   char ch;
 
+  printf("deleting a file descriptor\n");
+
   /* stop polling a file descriptor, it should still be open */
 
   ret = io_poll_rm(&iop, 6);
@@ -210,24 +212,131 @@ void wait_test3()
   if (ret != 0) {
     printf("(FAIL: wait_test3) io_poll_wait returned %lu\n", ret); _exit(1);
   }
+
+  printf("removed file descriptor correctly ignored\n");
 }
 
-void free_test1()
+void free_test()
 {
+  printf("deallocating io_poll structure\n");
+
   if (io_poll_free(&iop) == -1) {
-    perror("(FAIL: free_test1) io_poll_free"); _exit(1);
+    perror("(FAIL: free_test) io_poll_free"); _exit(1);
   }
+
+  printf("deallocated ok\n");
+}
+
+static int addpipe1[2];
+
+void add_test1()
+{
+  long ret;
+  unsigned long old_len;
+  unsigned long old_a;
+
+  printf("checking if new file descriptors are added correctly\n");
+
+  if (pipe(addpipe1) == -1) { perror("pipe"); _exit(2); }
+
+  old_a = iop.a;
+  old_len = iop.len;
+  ret = io_poll_add(&iop, addpipe1[0], IO_POLL_READ);
+  if (ret == -1) { perror("(FAIL: add_test1) io_poll_add"); _exit(1); }
+
+  if (iop.len != old_len) {
+    printf("(FAIL: add_test1) iop.len != old_len: %lu != %lu\n",
+           iop.len, old_len);
+    _exit(1);
+  }
+  if (iop.a != old_a) {
+    printf("(FAIL: add_test1) iop.a != old_a: %lu != %lu\n",
+           iop.a, old_a);
+    _exit(1);
+  }
+  printf("added ok\n");
+}
+
+void wait_test4()
+{
+  char ch;
+  long ret;
+  
+  if (write(addpipe1[1], "", 1) == -1) { perror("write"); _exit(2); }
+
+  printf("checking if added file descriptors are polled\n");
+
+  ret = io_poll_wait(&iop, 0);
+  if (ret == -1) { perror("(FAIL: wait_test4) io_poll_wait"); _exit(1); }
+  if (ret != 1) {
+    printf("(FAIL: wait_test4) io_poll_wait returned %lu\n", ret); _exit(1);
+  }
+
+  if (read(addpipe1[0], &ch, 1) == -1) { perror("read"); _exit(2); }
+  if (close(addpipe1[0]) == -1) { perror("close"); _exit(2); }
+  printf("polled ok\n");
+}
+
+static int addpipe2[2];
+
+void add_test2()
+{
+  unsigned long ind;
+  unsigned long old_a;
+  unsigned long expect;
+
+  /* check that array reallocation works correctly */
+  if (pipe(addpipe2) == -1) { perror("pipe"); _exit(2); }
+
+  printf("attempting to cause reallocation\n");
+
+  if (io_poll_init(&iop, 1) == -1) {
+    perror("(FAIL: add_test2) io_poll_init"); _exit(1);
+  }
+  if (iop.len != 1) {
+    printf("(FAIL: add_test2) iop.len: %lu != %lu\n", iop.len, 1);
+    _exit(1);
+  }
+  if (iop.a != 1 + IO_POLL_OVERALLOC) {
+    printf("(FAIL: add_test2) iop.a: %lu != %lu\n",
+           iop.a, 1 + IO_POLL_OVERALLOC);
+    _exit(1);
+  }
+
+  old_a = iop.a;
+  for (ind = 0; ind < 1 + IO_POLL_OVERALLOC; ++ind) {
+    if (io_poll_add(&iop, addpipe2[0], IO_POLL_READ) == -1) {
+      perror("(FAIL: add_test2) io_poll_add"); _exit(1);
+    }
+  }
+  if (iop.a == old_a) {
+    printf("(FAIL: add_test2) iop.a: %lu == %lu\n", iop.a, old_a);
+    _exit(1);
+  }
+  expect = 1 + IO_POLL_ALLOC + IO_POLL_OVERALLOC + IO_POLL_OVERALLOC;
+  if (iop.a != expect) {
+    printf("(FAIL: add_test2) iop.a: %lu != %lu\n", iop.a, expect);
+    _exit(1);
+  }
+
+  printf("reallocated ok\n");
 }
 
 int main()
 {
-  init_test1();
+  init_test();
   register_test1();
   wait_test1();
   wait_test2();
   rm_test1();
   rm_test2();
   wait_test3();
+  add_test1();
+  wait_test4();
+  free_test();
 
+  add_test2();
+
+  free_test();
   return 0;
 }

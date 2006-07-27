@@ -1,3 +1,4 @@
+#include <corelib/alloc.h>
 #include <corelib/bin.h>
 #include <corelib/error.h>
 
@@ -11,7 +12,62 @@
 
 static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned short flags)
 {
-  return 0;
+  struct kevent *kein;
+  struct kevent *kout;
+  struct kevent *kptr;
+  struct io_pollfd *fds;
+  struct io_pollfd *rfds;
+  struct io_pollfd *fptr;
+  unsigned long len;
+  unsigned long old_a;
+  unsigned long new_a;
+  unsigned long ind;
+  unsigned long es;
+  int kfd;
+
+  kfd = iop->pfd;
+  kein = (struct kevent *) iop->pd_in;  
+  kout = (struct kevent *) iop->pd_out;
+  fds = iop->fds;
+  rfds = iop->rfds;
+  len = iop->len;
+  old_a = iop->a;
+
+  /* empty space before len? */
+  for (ind = 0; ind < len; ++ind) {
+    if ((fds[ind].fd == -1) && (!fds[ind].events)) {
+      fptr = &fds[ind];
+      kptr = &kein[ind];
+      goto SET;
+    }
+  }
+
+  /* append to array */
+  ++len;
+  if (len >= old_a) {
+    new_a = old_a + IO_POLL_ALLOC + IO_POLL_OVERALLOC;
+    es = sizeof(struct io_pollfd);
+    if (!alloc_re((void **) &fds, old_a * es, new_a * es)) return -1;
+    if (!alloc_re((void **) &rfds, old_a * es, new_a * es)) return -1;
+    es = sizeof(struct kevent);
+    if (!alloc_re((void **) &kein, old_a * es, new_a * es)) return -1;
+    if (!alloc_re((void **) &kout, old_a * es, new_a * es)) return -1;
+    iop->a = new_a;
+    iop->pd_in = kein;
+    iop->pd_out = kout;
+    iop->fds = fds;
+    iop->rfds = rfds;
+  }
+  kptr = &kein[len];
+  fptr = &fds[len];
+  iop->len = len;
+
+  SET:
+  fptr->fd = fd;
+  fptr->events = flags;
+
+  EV_SET(kptr, fd, io_poll_flags_io2kq(flags), EV_ADD, 0, 1, 0);
+  return kevent(kfd, kptr, 1, 0, 0, 0);
 }
 #endif /* HAVE_KQUEUE */
 
