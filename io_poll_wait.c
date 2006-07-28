@@ -102,6 +102,7 @@ static long iop_wait_select(struct io_poll *iop, long ms)
   struct io_pollfd *fds;
   struct io_pollfd *rfds;
   struct fd_sets *fdset;
+  struct fd_sets *rfdset;
   struct timeval tv;
   struct timeval *tvp;
   unsigned long len;
@@ -114,6 +115,7 @@ static long iop_wait_select(struct io_poll *iop, long ms)
   fds = iop->fds;
   rfds = iop->rfds;
   fdset = (struct fd_sets *) iop->pd_in;
+  rfdset = (struct fd_sets *) iop->pd_out;
   len = iop->len;
 
   tvp = &tv;
@@ -122,7 +124,9 @@ static long iop_wait_select(struct io_poll *iop, long ms)
   tv.tv_sec = 0;
   tv.tv_usec = ms;
 
-  ret = select(len, &fdset->readfds, &fdset->writefds, 0, tvp);
+  bin_copy((char *) fdset, (char *) rfdset, sizeof(struct fd_sets));
+
+  ret = select(FD_SETSIZE, &rfdset->readfds, &rfdset->writefds, 0, tvp);
   if (ret == -1) return -1;
 
   pos = 0;
@@ -130,14 +134,14 @@ static long iop_wait_select(struct io_poll *iop, long ms)
     fd = fds[ind].fd;
     incr = 0;
     if (fds[ind].events & IO_POLL_READ) {
-      if ((FD_SET(fd, &fdset->readfds))) {
+      if ((FD_ISSET(fd, &rfdset->readfds))) {
         rfds[pos].fd = fd;
         rfds[pos].events = IO_POLL_READ;
         incr = 1;
       }
     }
     if (fds[ind].events & IO_POLL_WRITE) {
-      if ((FD_SET(fd, &fdset->writefds))) {
+      if ((FD_ISSET(fd, &rfdset->writefds))) {
         rfds[pos].fd = fd;
         rfds[pos].events = IO_POLL_WRITE;
         incr = 1;
