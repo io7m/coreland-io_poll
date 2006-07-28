@@ -322,6 +322,21 @@ void add_test2()
   printf("reallocated ok\n");
 }
 
+void add_test3()
+{
+  int fd;
+
+  printf("trying to add bad file descriptor\n");
+  fd = -1;
+
+  if (io_poll_add(&iop, fd, IO_POLL_READ) != -1) {
+    printf("(FAIL: add_test3) added bad file descriptor\n");
+    _exit(1);
+  }
+
+  printf("failed to add bad file descriptor\n");
+}
+
 int main()
 {
   init_test();
@@ -336,6 +351,7 @@ int main()
   free_test();
 
   add_test2();
+  add_test3();
 
   free_test();
   return 0;

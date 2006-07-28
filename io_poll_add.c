@@ -1,9 +1,27 @@
+#include <fcntl.h>
+
 #include <corelib/alloc.h>
 #include <corelib/bin.h>
 #include <corelib/error.h>
 
 #include "io_poll.h"
 #include "select.h"
+
+static int find_empty(struct io_pollfd *fds, unsigned long len,
+                      unsigned long *pos)
+{
+  unsigned long ind;
+  /* empty space before len? */
+  for (ind = 0; ind < len; ++ind) {
+    if ((fds[ind].fd == -1) && (!fds[ind].events)) {
+      *pos = ind;
+      return 1;
+    }
+  }
+  return 0;
+}
+
+#define CHECK_OVERFLOW(n) (((n) + 1) < (n))
 
 #ifdef HAVE_KQUEUE
 #include <sys/types.h>
@@ -33,16 +51,15 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned short flags)
   len = iop->len;
   old_a = iop->a;
 
-  /* empty space before len? */
-  for (ind = 0; ind < len; ++ind) {
-    if ((fds[ind].fd == -1) && (!fds[ind].events)) {
-      fptr = &fds[ind];
-      kptr = &kein[ind];
-      goto SET;
-    }
+  if (find_empty(fds, len, &ind)) {
+    fptr = &fds[ind];
+    kptr = &kein[ind];
+    goto SET;
   }
 
-  /* append to array */
+  if (CHECK_OVERFLOW(len)) { errno = error_nomem; return -1; }
+
+  /* append */
   ++len;
   if (len >= old_a) {
     new_a = old_a + IO_POLL_ALLOC + IO_POLL_OVERALLOC;
@@ -79,8 +96,58 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned short flags)
 #endif /* HAVE_EPOLL */
 
 #ifdef HAVE_POLL
+#include <poll.h>
+
 static int iop_add_poll(struct io_poll *iop, int fd, unsigned short flags)
 {
+  struct pollfd *pfds;
+  struct pollfd *pptr;
+  struct io_pollfd *fds;
+  struct io_pollfd *rfds;
+  struct io_pollfd *fptr;
+  unsigned long len;
+  unsigned long old_a;
+  unsigned long new_a;
+  unsigned long ind;
+  unsigned long es;
+
+  pfds = (struct pollfd *) iop->pd_in;
+  fds = iop->fds;
+  rfds = iop->rfds;
+  len = iop->len;
+  old_a = iop->a;
+
+  if (find_empty(fds, len, &ind)) {
+    fptr = &fds[ind];
+    pptr = &pfds[ind];
+    goto SET;
+  }
+
+  if (CHECK_OVERFLOW(len)) { errno = error_nomem; return -1; }
+
+  /* append */
+  ++len;
+  if (len >= old_a) {
+    new_a = old_a + IO_POLL_ALLOC + IO_POLL_OVERALLOC;
+    es = sizeof(struct io_pollfd);
+    if (!alloc_re((void **) &fds, old_a * es, new_a * es)) return -1;
+    if (!alloc_re((void **) &rfds, old_a * es, new_a * es)) return -1;
+    es = sizeof(struct pollfd);
+    if (!alloc_re((void **) &pfds, old_a * es, new_a * es)) return -1;
+    iop->a = new_a;
+    iop->pd_in = pfds;
+    iop->fds = fds;
+    iop->rfds = rfds;
+  }
+  pptr = &pfds[len];
+  fptr = &fds[len];
+  iop->len = len;
+
+  SET:
+  pptr->fd = fd;
+  pptr->events = io_poll_flags_io2po(flags);
+  fptr->fd = fd;
+  fptr->events = flags;
   return 0;
 }
 #endif /* HAVE_POLL */
@@ -96,6 +163,9 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned short flags)
 
 int io_poll_add(struct io_poll *iop, int fd, unsigned short flags)
 {
+  /* check for bad file descriptors */
+  if (fcntl(fd, F_GETFL, 0) == -1) return -1;
+
 #ifdef HAVE_KQUEUE
   return iop_add_kqueue(iop, fd, flags);
 #endif
