@@ -1,0 +1,5 @@
+The select() interface needs to build fd_sets in reg()
+and then put a copy of that into select(), as select()
+overwrites the fd_sets.
+
+This means making a copy of pd_in into pd_out in wait().
