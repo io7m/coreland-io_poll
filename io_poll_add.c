@@ -157,6 +157,51 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned short flags)
 
 static int iop_add_select(struct io_poll *iop, int fd, unsigned short flags)
 {
+  struct fd_sets *fdset;
+  struct io_pollfd *fds;
+  struct io_pollfd *rfds;
+  struct io_pollfd *fptr;
+  unsigned long len;
+  unsigned long old_a;
+  unsigned long new_a;
+  unsigned long ind;
+  unsigned long es;
+
+  fdset = (struct fd_sets *) iop->pd_in;
+  fds = iop->fds;
+  rfds = iop->rfds;
+  len = iop->len;
+  old_a = iop->a;
+
+  if (find_empty(fds, len, &ind)) {
+    fptr = &fds[ind];
+    goto SET;
+  }
+
+  /* select() can't handle more than FD_SETSIZE */
+  if (len == FD_SETSIZE) { errno = error_overflow; return -1; }
+
+  /* redundant */
+  if (CHECK_OVERFLOW(len)) { errno = error_overflow; return -1; }
+
+  ++len;
+  if (len >= old_a) {
+    new_a = old_a + IO_POLL_ALLOC + IO_POLL_OVERALLOC;
+    es = sizeof(struct io_pollfd);
+    if (!alloc_re((void **) &fds, old_a * es, new_a * es)) return -1;
+    if (!alloc_re((void **) &rfds, old_a * es, new_a * es)) return -1;
+    iop->a = new_a;
+    iop->fds = fds;
+    iop->rfds = rfds;
+  }
+  fptr = &fds[len];
+  iop->len = len;
+
+  SET:
+  fptr->fd = fd;
+  fptr->events = flags;
+  if (flags & IO_POLL_READ) FD_SET(fd, &fdset->readfds);
+  if (flags & IO_POLL_WRITE) FD_SET(fd, &fdset->writefds);
   return 0;
 }
 #endif /* HAVE_SELECT */

@@ -1,3 +1,5 @@
+#include <fcntl.h>
+
 #include <corelib/bin.h>
 #include <corelib/error.h>
 
@@ -28,7 +30,6 @@ static int iop_rm_kqueue(struct io_poll *iop, unsigned long n)
 
   ret = kevent(kfd, &kein[n], 1, 0, 0, 0);
   bin_zero((char *) &kein[n], sizeof(struct kevent));
-
   fds[n].fd = -1;
   return ret;
 }
@@ -43,7 +44,6 @@ static int iop_rm_epoll(struct io_poll *iop, unsigned long n)
 
 #ifdef HAVE_POLL
 #include <poll.h>
-#include <fcntl.h>
 
 static int iop_rm_poll(struct io_poll *iop, unsigned long n)
 {
@@ -59,7 +59,6 @@ static int iop_rm_poll(struct io_poll *iop, unsigned long n)
 
   bin_zero((char *) &fds[n], sizeof(struct io_pollfd));
   bin_zero((char *) &pfds[n], sizeof(struct pollfd));
-
   fds[n].fd = -1;
   return ret;
 }
@@ -70,7 +69,22 @@ static int iop_rm_poll(struct io_poll *iop, unsigned long n)
 
 static int iop_rm_select(struct io_poll *iop, unsigned long n)
 {
-  return 0;
+  struct io_pollfd *fds;
+  struct fd_sets *fdset;
+  int ret;
+
+  fds = iop->fds;
+  fdset = (struct fd_sets *) iop->pd_in;
+
+  /* check for bad fd and set errno, for uniformity */
+  ret = fcntl(fds[n].fd, F_GETFL, 0);
+
+  if (fds[n].events & IO_POLL_READ) FD_CLR(fds[n].fd, &fdset->readfds);
+  if (fds[n].events & IO_POLL_WRITE) FD_CLR(fds[n].fd, &fdset->writefds);
+
+  bin_zero((char *) &fds[n], sizeof(struct io_pollfd));
+  fds[n].fd = -1;
+  return ret;
 }
 #endif /* HAVE_SELECT */
 

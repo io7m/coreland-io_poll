@@ -47,6 +47,11 @@ static int iop_free_poll(struct io_poll *iop)
 
 static int iop_free_select(struct io_poll *iop)
 {
+  dealloc(iop->pd_in);
+  dealloc(iop->fds);
+  dealloc(iop->rfds);
+
+  bin_zero((char *) iop, sizeof(struct io_poll));
   return 0;
 }
 #endif /* HAVE_SELECT */
