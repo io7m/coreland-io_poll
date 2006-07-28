@@ -141,6 +141,40 @@ static int iop_init_poll(struct io_poll *iop, unsigned long num)
 
 static int iop_init_select(struct io_poll *iop, unsigned long num)
 {
+  struct fd_sets *fdset;
+  struct io_pollfd *fds;
+  struct io_pollfd *rfds;
+  unsigned long allocnum;
+  unsigned long allocd;
+
+  if (num >= FD_SETSIZE) { errno = error_overflow; return -1; }
+
+  allocd = alloc_io_pollfds(&fds, num);
+  if (!allocd) return -1;
+  allocnum = allocd;
+  allocd = alloc_io_pollfds(&rfds, num);
+  if (!allocd) {
+    dealloc(fds);
+    return -1;
+  }
+  fdset = (struct fd_sets *) alloc(sizeof(struct fd_sets));
+  if (!fdset) {
+    dealloc(rfds);
+    dealloc(fds);
+    return -1;
+  }
+
+  FD_ZERO(&fdset->readfds);
+  FD_ZERO(&fdset->writefds);
+  FD_ZERO(&fdset->exceptfds);
+
+  iop->fds = fds;
+  iop->rfds = rfds;
+  iop->pfd = -1;
+  iop->pd_in = fdset;
+  iop->pd_out = 0;
+  iop->a = allocnum;
+  iop->len = num;
   return 0;
 }
 #endif /* HAVE_SELECT */

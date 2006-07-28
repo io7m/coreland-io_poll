@@ -28,16 +28,12 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
   kfd = iop->pfd;
   len = iop->len;
   tsp = &ts;
-  if (ms > 0) {
-    ms /= 1000000UL; /* ms to nanoseconds */
-    ts.tv_sec = 0;
-    ts.tv_nsec = ms;
-  } else if (ms == 0) {
-    ts.tv_sec = 0;
-    ts.tv_nsec = 0;
-  } else if (ms == -1) {
-    tsp = 0;
-  }
+
+  if (ms > 0) ms /= 1000000UL; /* ms to nanoseconds */
+  if (ms == -1) tsp = 0;
+
+  ts.tv_sec = 0;
+  ts.tv_nsec = ms;
 
   ret = kevent(kfd, 0, 0, kout, len, tsp);
   if (ret <= 0) return ret;
@@ -49,7 +45,6 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
     rfds[ind].events |= io_poll_flags_kq2io(ke_filter);
     rfds[ind].events |= io_poll_flags_kq2io(ke_flags);
   }
-
   return ret;
 }
 #endif /* HAVE_KQUEUE */
@@ -95,7 +90,6 @@ static long iop_wait_poll(struct io_poll *iop, long ms)
       ++pos;
     }
   }
-
   return ret;
 }
 #endif /* HAVE_POLL */
@@ -105,7 +99,53 @@ static long iop_wait_poll(struct io_poll *iop, long ms)
 
 static long iop_wait_select(struct io_poll *iop, long ms)
 {
-  return 0;
+  struct io_pollfd *fds;
+  struct io_pollfd *rfds;
+  struct fd_sets *fdset;
+  struct timeval tv;
+  struct timeval *tvp;
+  unsigned long len;
+  unsigned long ind;
+  long pos;
+  long ret;
+  int fd;
+  int incr;
+
+  fds = iop->fds;
+  rfds = iop->rfds;
+  fdset = (struct fd_sets *) iop->pd_in;
+  len = iop->len;
+
+  tvp = &tv;
+  if (ms > 0) ms *= 1000; /* milliseconds to microseconds */
+  if (ms == -1) tvp = 0;
+  tv.tv_sec = 0;
+  tv.tv_usec = ms;
+
+  ret = select(len, &fdset->readfds, &fdset->writefds, 0, tvp);
+  if (ret == -1) return -1;
+
+  pos = 0;
+  for (ind = 0; ind < len; ++ind) {
+    fd = fds[ind].fd;
+    incr = 0;
+    if (fds[ind].events & IO_POLL_READ) {
+      if ((FD_SET(fd, &fdset->readfds))) {
+        rfds[pos].fd = fd;
+        rfds[pos].events = IO_POLL_READ;
+        incr = 1;
+      }
+    }
+    if (fds[ind].events & IO_POLL_WRITE) {
+      if ((FD_SET(fd, &fdset->writefds))) {
+        rfds[pos].fd = fd;
+        rfds[pos].events = IO_POLL_WRITE;
+        incr = 1;
+      }
+    }
+    pos += incr;
+  }
+  return pos;
 }
 #endif /* HAVE_SELECT */
 

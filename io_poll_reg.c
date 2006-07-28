@@ -1,9 +1,9 @@
+#include <fcntl.h>
+
 #include <corelib/error.h>
 
 #include "io_poll.h"
 #include "select.h"
-
-#include <stdio.h>
 
 #ifdef HAVE_KQUEUE
 #include <sys/types.h>
@@ -51,13 +51,16 @@ static int iop_register_poll(struct io_poll *iop)
   struct pollfd *pfds;
   unsigned long len; 
   unsigned long ind;
+  int fd;
 
   fds = iop->fds;
   pfds = (struct pollfd *) iop->pd_in;
   len = iop->len;
 
   for (ind = 0; ind < len; ++ind) {
-    pfds[ind].fd = fds[ind].fd;
+    fd = fds[ind].fd;
+    if (fcntl(fd, F_GETFL, 0) == -1) return -1;
+    pfds[ind].fd = fd;
     pfds[ind].events = io_poll_flags_io2po(fds[ind].events);
   }
 
@@ -70,6 +73,25 @@ static int iop_register_poll(struct io_poll *iop)
 
 static int iop_register_select(struct io_poll *iop)
 {
+  struct io_pollfd *fds;
+  struct fd_sets *fdset;
+  unsigned long len;
+  unsigned long ind;
+  unsigned short flags;
+  int fd;
+
+  fds = iop->fds;
+  fdset = (struct fd_sets *) iop->pd_in;
+  len = iop->len;
+
+  for (ind = 0; ind < len; ++ind) {
+    fd = fds[ind].fd;
+    flags = fds[ind].events;
+    if (fcntl(fd, F_GETFL, 0) == -1) return -1;
+    if (flags & IO_POLL_READ) FD_SET(fd, &fdset->readfds);
+    if (flags & IO_POLL_WRITE) FD_SET(fd, &fdset->writefds);
+  }
+
   return 0;
 }
 #endif /* HAVE_SELECT */

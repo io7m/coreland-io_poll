@@ -33,6 +33,8 @@ int io_poll_rm(struct io_poll *, unsigned long);
 int io_poll_free(struct io_poll *);
 long io_poll_wait(struct io_poll *, long);
 
+#define io_poll_size(io) ((io)->len)
+#define io_poll_fds(io) ((io)->fds)
 
 /* force usage of specific systems for unit testing */
 #ifdef USE_KQUEUE
@@ -59,8 +61,18 @@ long io_poll_wait(struct io_poll *, long);
 #undef HAVE_SELECT
 #endif
 
-/* flag translation */
+/* select() specific data */
+#ifdef HAVE_SELECT
+#include "select.h"
 
+struct fd_sets {
+  fd_set readfds;
+  fd_set writefds;
+  fd_set exceptfds; /* unused, currently */
+};
+#endif
+
+/* flag translation */
 #ifdef HAVE_KQUEUE
 unsigned short io_poll_flags_io2kq(unsigned short);
 unsigned short io_poll_flags_kq2io(unsigned short);

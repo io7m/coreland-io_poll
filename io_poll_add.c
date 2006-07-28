@@ -57,7 +57,7 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned short flags)
     goto SET;
   }
 
-  if (CHECK_OVERFLOW(len)) { errno = error_nomem; return -1; }
+  if (CHECK_OVERFLOW(len)) { errno = error_overflow; return -1; }
 
   /* append */
   ++len;
@@ -123,7 +123,7 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned short flags)
     goto SET;
   }
 
-  if (CHECK_OVERFLOW(len)) { errno = error_nomem; return -1; }
+  if (CHECK_OVERFLOW(len)) { errno = error_overflow; return -1; }
 
   /* append */
   ++len;

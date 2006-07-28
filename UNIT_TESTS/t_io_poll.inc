@@ -92,7 +92,7 @@ void wait_test1()
   ret = io_poll_wait(&iop, 0);
   if (ret == -1) { perror("io_poll_wait"); _exit(1); }
   if (ret != 2) {
-    printf("(FAIL: wait_test1) io_poll_wait: ret == %lu\n", ret);
+    printf("(FAIL: wait_test1) io_poll_wait: ret == %lu, expected %u\n", ret, 2);
     _exit(1);
   }
 
@@ -130,7 +130,8 @@ void wait_test2()
   ret = io_poll_wait(&iop, 0);
   if (ret == -1) { perror("io_poll_wait"); _exit(1); }
   if (ret != 0) {
-    printf("(FAIL: wait_test2) io_poll_wait (1): ret == %lu\n", ret);
+    printf("(FAIL: wait_test2) io_poll_wait (1): ret == %lu, expected %u\n",
+           ret, 0);
     _exit(1);
   }
 
@@ -146,7 +147,8 @@ void wait_test2()
   ret = io_poll_wait(&iop, 0);
   if (ret == -1) { perror("io_poll_wait"); _exit(1); }
   if (ret != 1) {
-    printf("(FAIL: wait_test2) io_poll_wait (2): ret == %lu\n", ret);
+    printf("(FAIL: wait_test2) io_poll_wait (2): ret == %lu, expected %u\n",
+           ret, 1);
     _exit(1);
   }
   rfds = iop.rfds;
@@ -337,6 +339,25 @@ void add_test3()
   printf("failed to add bad file descriptor\n");
 }
 
+void register_test2()
+{
+  printf("attempting to register set with bad file descriptor\n");
+
+  if (io_poll_init(&iop, 1) == -1) {
+    perror("(FAIL: register_test2) io_poll_init"); _exit(1);
+  }
+
+  iop.fds[0].fd = -1;
+  iop.fds[0].events = IO_POLL_READ;
+ 
+  if (io_poll_register(&iop) != -1) {
+    printf("(FAIL: register_test2) registered bad file descriptor\n");
+    _exit(1);
+  }
+
+  printf("failed to register set with bad file descriptor\n");
+}
+
 int main()
 {
   init_test();
@@ -352,6 +373,10 @@ int main()
 
   add_test2();
   add_test3();
+
+  free_test();
+
+  register_test2();
 
   free_test();
   return 0;
