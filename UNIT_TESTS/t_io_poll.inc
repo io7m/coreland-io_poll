@@ -296,12 +296,12 @@ void add_test2()
     perror("(FAIL: add_test2) io_poll_init"); _exit(1);
   }
   if (iop.len != 1) {
-    printf("(FAIL: add_test2) iop.len: %lu != %lu\n", iop.len, 1);
+    printf("(FAIL: add_test2) iop.len: %lu != %d\n", iop.len, 1);
     _exit(1);
   }
   if (iop.a != 1 + IO_POLL_OVERALLOC) {
     printf("(FAIL: add_test2) iop.a: %lu != %lu\n",
-           iop.a, 1 + IO_POLL_OVERALLOC);
+           iop.a, (unsigned long) 1 + IO_POLL_OVERALLOC);
     _exit(1);
   }
 

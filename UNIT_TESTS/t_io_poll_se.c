@@ -9,7 +9,9 @@ int main()
   return 0;
 }
 #else
-
-#include "t_io_poll.inc"
-
+int main()
+{
+  printf("select() backend is currently disabled due to reliabilty concerns\n");
+  return 0;
+}
 #endif /* HAVE_SELECT */
