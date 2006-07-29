@@ -36,6 +36,8 @@ static int iop_rm_kqueue(struct io_poll *iop, unsigned long n)
 #endif /* HAVE_KQUEUE */
 
 #ifdef HAVE_EPOLL
+#include <sys/epoll.h>
+
 static int iop_rm_epoll(struct io_poll *iop, unsigned long n)
 {
   int pfd;

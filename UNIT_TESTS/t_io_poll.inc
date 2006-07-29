@@ -320,7 +320,7 @@ void add_test2()
     printf("(FAIL: add_test2) iop.a: %lu == %lu\n", iop.a, old_a);
     _exit(1);
   }
-  expect = 1 + IO_POLL_ALLOC + IO_POLL_OVERALLOC + IO_POLL_OVERALLOC;
+  expect = 1 + 1 + IO_POLL_OVERALLOC + IO_POLL_OVERALLOC;
   if (iop.a != expect) {
     printf("(FAIL: add_test2) iop.a: %lu != %lu\n", iop.a, expect);
     _exit(1);
