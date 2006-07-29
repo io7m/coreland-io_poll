@@ -1,4 +1,11 @@
-Test:
+BUGS
+
+  epoll() can't handle adding the same file descriptor more than once.
+  should the epoll() backend pretend that the file descriptor was added?
+  all the other interfaces seem to allow this, however useless it might
+  be.
+
+TEST
 
   what happens if io_poll_rm(iop, iop->len)? --iop->len?
 

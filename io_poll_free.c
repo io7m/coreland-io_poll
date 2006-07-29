@@ -26,6 +26,13 @@ static int iop_free_kqueue(struct io_poll *iop)
 #ifdef HAVE_EPOLL
 static int iop_free_epoll(struct io_poll *iop)
 {
+  if (close(iop->pfd) == -1) return -1;
+  dealloc(iop->pd_in);
+  dealloc(iop->pd_out);
+  dealloc(iop->fds);
+  dealloc(iop->rfds);
+
+  bin_zero((char *) iop, sizeof(struct io_poll));
   return 0;
 }
 #endif /* HAVE_EPOLL */
