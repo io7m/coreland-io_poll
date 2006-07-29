@@ -1,0 +1,109 @@
+This is a comparison of the currently supported IO mechanisms with notes
+on why certain decisions were made for the io_poll interface.
+
+  system    value             note
+
+Accepts duplicate file descriptors?
+  
+  kqueue    yes
+  epoll     no                returns EEXIST
+  poll      yes
+  select    yes
+
+  All of the IO mechanisms except epoll() treat duplicate file
+  descriptors as one single descriptor.
+
+  In order to try to keep uniformity across the backends, the
+  io_poll library maintains a small hash of file descriptors
+  and will reject any attempt to register() or add() duplicates
+  and return EEXIST.
+
+Accepts bad file descriptors?
+
+  kqueue    no
+  epoll     no
+  poll      no
+  select    no
+
+  io_poll doesn't accept bad file descriptors.
+
+Timeout value?
+
+  kqueue    struct timespec   seconds or nanoseconds
+  epoll     int               milliseconds
+  poll      int               milliseconds
+  select    struct timeval    seconds or microseconds
+
+  io_poll uses milliseconds for the timeout value.
+
+Keeps state in kernel?
+
+  kqueue    yes
+  epoll     yes
+  poll      no
+  select    no
+
+  io_poll keeps state in a userland structure, converting to mechanism
+  specific data when necessary.
+
+File descriptor limits?
+
+  kqueue    none
+  epoll     none
+  poll      none
+  select    FD_SETSIZE       can be overridden at compile time.
+
+  io_poll does not place any limits on the number of file descriptors,
+  but includes the function io_poll_iomech() in order for software to
+  test if it's using the select() backend. When using the select()
+  backend, io_poll functions are limited to FD_SETSIZE file descriptors,
+  which is defined as 1024 on most systems.
+
+Returns information about events?
+
+  kqueue   yes
+  epoll    yes
+  poll     yes
+  select   some
+
+  select() allows you to find out if a file descriptor is readable or
+  writable, nothing more. In many cases it's unreliable, reporting
+  writability when a write() call would actually block. There is no
+  portable action that the io_poll library could take to avoid this
+  unreliability.
+
+Returns information in the structure passed to the function?
+
+  kqueue   yes/no
+  epoll    yes/no
+  poll     yes
+  select   yes
+
+  kqueue and epoll will return the events in any array of structures
+  passed to the function. The io_poll library keeps two arrays so
+  that the array passed to the functions doesn't have to be copied
+  every time io_poll_wait() is called.
+
+  poll() returns data in a seperate field in each index in an array,
+  so the io_poll library just resets this field every time
+  io_poll_wait() is called and doesn't need to keep a duplicate copy.
+
+  select() uses an fd_set structure, which behaves differently
+  before and after a call to the function. The io_poll library keeps
+  a copy of the fd_set structures to pass to select().
+
+Portable?
+
+  kqueue  across the BSDs and Darwin
+  epoll   Linux only
+  poll    buggy or nonexistant on at least Darwin 8 (OS X 10.4)
+  select  seems to be ubiquitous
+
+  Darwin doesn't have poll() prior to version 8 (OS X 10.4) and it
+  contains a number of bugs that are apparently fixed in 10.4.3.
+  The main bug is indicating that a socket is writable, when in fact
+  a write() would block.
+
+  kqueue() or poll() returns incorrect values when used on character
+  devices on Darwin 8 and lower. There appear to be no known
+  workarounds.

@@ -44,6 +44,9 @@ error.o:\
 error_str.o:\
 	compile error_str.c error.h 
 	./compile error_str error_str.c 
+fd_hash.o:\
+	compile fd_hash.c alloc.h bin.h fd_hash.h 
+	./compile fd_hash fd_hash.c 
 io_poll_add.o:\
 	compile io_poll_add.c alloc.h bin.h error.h io_poll.h select.h \
 	select.h 
@@ -75,11 +78,11 @@ io_poll_wait.o:\
 
 phase_compile:\
 	alloc.o bin_copy.o bin_zero.o depchklist.o error.o error_str.o \
-	io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
+	fd_hash.o io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
 	io_poll_iom.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
 phase_compile_clean:
 	rm -f alloc.o bin_copy.o bin_zero.o depchklist.o error.o \
-	error_str.o io_poll_add.o io_poll_flgt.o io_poll_free.o \
+	error_str.o fd_hash.o io_poll_add.o io_poll_flgt.o io_poll_free.o \
 	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
 	io_poll_wait.o 
 
@@ -94,6 +97,9 @@ bin.a:\
 error.a:\
 	makelib error.sld error.o error_str.o 
 	./makelib error error.o error_str.o 
+fd_hash.a:\
+	makelib fd_hash.sld fd_hash.o 
+	./makelib fd_hash fd_hash.o 
 io_poll.a:\
 	makelib io_poll.sld io_poll_add.o io_poll_flgt.o io_poll_free.o \
 	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
@@ -103,9 +109,9 @@ io_poll.a:\
 	io_poll_wait.o 
 
 phase_library:\
-	alloc.a bin.a error.a io_poll.a 
+	alloc.a bin.a error.a fd_hash.a io_poll.a 
 phase_library_clean:
-	rm -f alloc.a bin.a error.a io_poll.a 
+	rm -f alloc.a bin.a error.a fd_hash.a io_poll.a 
 
 #--LINK-----------------------------------------------------------------------
 

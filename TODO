@@ -5,7 +5,13 @@ BUGS
   all the other interfaces seem to allow this, however useless it might
   be.
 
+  it seems as though every file descriptor will have to be compared
+  against every other file descriptor in register() unless the fd's
+  are placed into a hash table. this is getting complicated.
+
 TEST
+
+  split tests up
 
   what happens if io_poll_rm(iop, iop->len)? --iop->len?
 

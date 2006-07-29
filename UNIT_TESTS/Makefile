@@ -14,28 +14,37 @@ clean: phase_local_clean phase_compile_clean phase_library_clean \
 
 #--COMPILE--------------------------------------------------------------------
 
-t_io_poll.o:\
-	compile t_io_poll.c ../io_poll.h t_io_poll.inc 
-	./compile t_io_poll t_io_poll.c 
-t_io_poll_ep.o:\
-	compile t_io_poll_ep.c ../io_poll.h t_io_poll.inc 
-	./compile t_io_poll_ep t_io_poll_ep.c 
-t_io_poll_kq.o:\
-	compile t_io_poll_kq.c ../io_poll.h t_io_poll.inc 
-	./compile t_io_poll_kq t_io_poll_kq.c 
-t_io_poll_po.o:\
-	compile t_io_poll_po.c ../io_poll.h t_io_poll.inc 
-	./compile t_io_poll_po t_io_poll_po.c 
-t_io_poll_se.o:\
-	compile t_io_poll_se.c ../io_poll.h t_io_poll.inc 
-	./compile t_io_poll_se t_io_poll_se.c 
+t_iop1_ep.o:\
+	compile t_iop1_ep.c ../io_poll.h t_iop1.inc 
+	./compile t_iop1_ep t_iop1_ep.c 
+t_iop1_kq.o:\
+	compile t_iop1_kq.c ../io_poll.h t_iop1.inc 
+	./compile t_iop1_kq t_iop1_kq.c 
+t_iop1_po.o:\
+	compile t_iop1_po.c ../io_poll.h t_iop1.inc 
+	./compile t_iop1_po t_iop1_po.c 
+t_iop1_se.o:\
+	compile t_iop1_se.c ../io_poll.h t_iop1.inc 
+	./compile t_iop1_se t_iop1_se.c 
+t_iop2_ep.o:\
+	compile t_iop2_ep.c ../io_poll.h t_iop2.inc 
+	./compile t_iop2_ep t_iop2_ep.c 
+t_iop2_kq.o:\
+	compile t_iop2_kq.c ../io_poll.h t_iop2.inc 
+	./compile t_iop2_kq t_iop2_kq.c 
+t_iop2_po.o:\
+	compile t_iop2_po.c ../io_poll.h t_iop2.inc 
+	./compile t_iop2_po t_iop2_po.c 
+t_iop2_se.o:\
+	compile t_iop2_se.c ../io_poll.h t_iop2.inc 
+	./compile t_iop2_se t_iop2_se.c 
 
 phase_compile:\
-	t_io_poll.o t_io_poll_ep.o t_io_poll_kq.o t_io_poll_po.o \
-	t_io_poll_se.o 
+	t_iop1_ep.o t_iop1_kq.o t_iop1_po.o t_iop1_se.o t_iop2_ep.o \
+	t_iop2_kq.o t_iop2_po.o t_iop2_se.o 
 phase_compile_clean:
-	rm -f t_io_poll.o t_io_poll_ep.o t_io_poll_kq.o t_io_poll_po.o \
-	t_io_poll_se.o 
+	rm -f t_iop1_ep.o t_iop1_kq.o t_iop1_po.o t_iop1_se.o t_iop2_ep.o \
+	t_iop2_kq.o t_iop2_po.o t_iop2_se.o 
 
 #--LIBRARY--------------------------------------------------------------------
 
@@ -45,36 +54,53 @@ phase_library_clean:
 
 #--LINK-----------------------------------------------------------------------
 
-t_io_poll:\
-	link t_io_poll.ld t_io_poll.o ../io_poll.a ../bin.a ../error.a \
-	../alloc.a 
-	./link t_io_poll t_io_poll.o ../io_poll.a ../bin.a ../error.a \
-	../alloc.a 
-t_io_poll_ep:\
-	link t_io_poll_ep.ld t_io_poll_ep.o io_poll_ep/io_poll.a ../bin.a \
+t_iop1_ep:\
+	link t_iop1_ep.ld t_iop1_ep.o io_poll_ep/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
-	./link t_io_poll_ep t_io_poll_ep.o io_poll_ep/io_poll.a ../bin.a \
+	./link t_iop1_ep t_iop1_ep.o io_poll_ep/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
-t_io_poll_kq:\
-	link t_io_poll_kq.ld t_io_poll_kq.o io_poll_kq/io_poll.a ../bin.a \
+t_iop1_kq:\
+	link t_iop1_kq.ld t_iop1_kq.o io_poll_kq/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
-	./link t_io_poll_kq t_io_poll_kq.o io_poll_kq/io_poll.a ../bin.a \
+	./link t_iop1_kq t_iop1_kq.o io_poll_kq/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
-t_io_poll_po:\
-	link t_io_poll_po.ld t_io_poll_po.o io_poll_po/io_poll.a ../bin.a \
+t_iop1_po:\
+	link t_iop1_po.ld t_iop1_po.o io_poll_po/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
-	./link t_io_poll_po t_io_poll_po.o io_poll_po/io_poll.a ../bin.a \
+	./link t_iop1_po t_iop1_po.o io_poll_po/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
-t_io_poll_se:\
-	link t_io_poll_se.ld t_io_poll_se.o io_poll_se/io_poll.a ../bin.a \
+t_iop1_se:\
+	link t_iop1_se.ld t_iop1_se.o io_poll_se/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
-	./link t_io_poll_se t_io_poll_se.o io_poll_se/io_poll.a ../bin.a \
+	./link t_iop1_se t_iop1_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+t_iop2_ep:\
+	link t_iop2_ep.ld t_iop2_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_ep t_iop2_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+t_iop2_kq:\
+	link t_iop2_kq.ld t_iop2_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_kq t_iop2_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+t_iop2_po:\
+	link t_iop2_po.ld t_iop2_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_po t_iop2_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+t_iop2_se:\
+	link t_iop2_se.ld t_iop2_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_se t_iop2_se.o io_poll_se/io_poll.a ../bin.a \
 	../error.a ../alloc.a 
 
 phase_link:\
-	t_io_poll t_io_poll_ep t_io_poll_kq t_io_poll_po t_io_poll_se 
+	t_iop1_ep t_iop1_kq t_iop1_po t_iop1_se t_iop2_ep t_iop2_kq \
+	t_iop2_po t_iop2_se 
 phase_link_clean:
-	rm -f t_io_poll t_io_poll_ep t_io_poll_kq t_io_poll_po t_io_poll_se 
+	rm -f t_iop1_ep t_iop1_kq t_iop1_po t_iop1_se t_iop2_ep t_iop2_kq \
+	t_iop2_po t_iop2_se 
 
 #--TEST-----------------------------------------------------------------------
 
