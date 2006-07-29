@@ -42,7 +42,7 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
     ke_filter = kout[ind].filter;
     ke_flags = kout[ind].flags;
     rfds[ind].fd = kout[ind].ident;
-    rfds[ind].events |= io_poll_flags_kq2io(ke_filter);
+    rfds[ind].events = io_poll_flags_kq2io(ke_filter);
     rfds[ind].events |= io_poll_flags_kq2io(ke_flags);
   }
   return ret;
@@ -54,7 +54,33 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
 
 static long iop_wait_epoll(struct io_poll *iop, long ms)
 {
-  return 0;
+  int pfd;
+  int fd;
+  struct io_pollfd *fds;
+  struct io_pollfd *rfds;
+  struct epoll_event *revs;
+  unsigned long len;
+  unsigned long ind;
+  unsigned int flags;
+  long ret;
+
+  pfd = iop->pfd;
+  fds = iop->fds;
+  len = iop->len;
+  rfds = iop->rfds;
+  revs = (struct epoll_event *) iop->pd_out;
+
+  ret = epoll_wait(pfd, revs, len, ms);
+  if (ret <= 0) return ret;
+
+  for (ind = 0; ind < (unsigned long) ret; ++ind) {
+    flags = io_poll_flags_ep2io(revs[ind].events);
+    fd = revs[ind].data.fd;
+    rfds[ind].fd = fd;
+    rfds[ind].events = flags;
+  }
+
+  return ret;
 }
 #endif /* HAVE_EPOLL */
 
@@ -135,17 +161,18 @@ static long iop_wait_select(struct io_poll *iop, long ms)
   for (ind = 0; ind < len; ++ind) {
     fd = fds[ind].fd;
     incr = 0;
+    rfds[pos].events = 0;
     if (fds[ind].events & IO_POLL_READ) {
       if ((FD_ISSET(fd, &rfdset->readfds))) {
         rfds[pos].fd = fd;
-        rfds[pos].events = IO_POLL_READ;
+        rfds[pos].events |= IO_POLL_READ;
         incr = 1;
       }
     }
     if (fds[ind].events & IO_POLL_WRITE) {
       if ((FD_ISSET(fd, &rfdset->writefds))) {
         rfds[pos].fd = fd;
-        rfds[pos].events = IO_POLL_WRITE;
+        rfds[pos].events |= IO_POLL_WRITE;
         incr = 1;
       }
     }

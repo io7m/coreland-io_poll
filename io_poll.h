@@ -36,6 +36,15 @@ long io_poll_wait(struct io_poll *, long);
 #define io_poll_size(io) ((io)->len)
 #define io_poll_fds(io) ((io)->fds)
 
+/* defines for testing specific backends */
+
+#define IO_POLL_KQUEUE 0x1
+#define IO_POLL_EPOLL  0x2
+#define IO_POLL_POLL   0x3
+#define IO_POLL_SELECT 0x4
+
+int io_poll_iomech(void);
+
 /* force usage of specific systems for unit testing */
 #ifdef USE_KQUEUE
 #undef HAVE_EPOLL

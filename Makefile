@@ -59,6 +59,9 @@ io_poll_init.o:\
 	compile io_poll_init.c alloc.h bin.h close.h error.h io_poll.h \
 	select.h 
 	./compile io_poll_init io_poll_init.c 
+io_poll_iom.o:\
+	compile io_poll_iom.c io_poll.h 
+	./compile io_poll_iom io_poll_iom.c 
 io_poll_reg.o:\
 	compile io_poll_reg.c error.h io_poll.h select.h select.h 
 	./compile io_poll_reg io_poll_reg.c 
@@ -73,11 +76,12 @@ io_poll_wait.o:\
 phase_compile:\
 	alloc.o bin_copy.o bin_zero.o depchklist.o error.o error_str.o \
 	io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
-	io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_iom.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
 phase_compile_clean:
 	rm -f alloc.o bin_copy.o bin_zero.o depchklist.o error.o \
 	error_str.o io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
+	io_poll_wait.o 
 
 #--LIBRARY--------------------------------------------------------------------
 
@@ -92,9 +96,11 @@ error.a:\
 	./makelib error error.o error_str.o 
 io_poll.a:\
 	makelib io_poll.sld io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
+	io_poll_wait.o 
 	./makelib io_poll io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
+	io_poll_wait.o 
 
 phase_library:\
 	alloc.a bin.a error.a io_poll.a 

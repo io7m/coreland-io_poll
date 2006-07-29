@@ -44,6 +44,7 @@ static int iop_register_epoll(struct io_poll *iop)
   struct epoll_event *ev;
   struct epoll_event *evp;
   struct io_pollfd *fds;
+  struct io_pollfd *ifd;
   unsigned long len;
   unsigned long ind;
   unsigned int iop_f;
@@ -53,7 +54,7 @@ static int iop_register_epoll(struct io_poll *iop)
   len = iop->len;
   pfd = iop->pfd;
 
-  for (ind = 0; ind < num; ++ind) {
+  for (ind = 0; ind < len; ++ind) {
     evp = &ev[ind];
     ifd = &fds[ind];
     iop_f = ifd->events;
