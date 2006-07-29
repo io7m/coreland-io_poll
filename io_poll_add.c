@@ -7,13 +7,26 @@
 #include "io_poll.h"
 #include "select.h"
 
-static int find_empty(struct io_pollfd *fds, unsigned long len,
-                      unsigned long *pos)
+static int find_empty(struct io_pollfd *fds,
+                      unsigned long len, unsigned long *pos)
 {
   unsigned long ind;
   /* empty space before len? */
   for (ind = 0; ind < len; ++ind) {
     if ((fds[ind].fd == -1) && (!fds[ind].events)) {
+      *pos = ind;
+      return 1;
+    }
+  }
+  return 0;
+}
+
+static int find_duplicate(struct io_pollfd *fds, int fd,
+                          unsigned long len, unsigned long *pos)
+{
+  unsigned long ind;
+  for (ind = 0; ind < len; ++ind) {
+    if (fds[ind].fd == fd) {
       *pos = ind;
       return 1;
     }
@@ -264,8 +277,11 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
 
 int io_poll_add(struct io_poll *iop, int fd, unsigned int flags)
 {
-  /* check for bad file descriptors */
+  unsigned long dummy;
+
+  /* check for bad or duplicate file descriptors */
   if (fcntl(fd, F_GETFL, 0) == -1) return -1;
+  if (find_duplicate(iop->fds, fd, iop->len, &dummy)) return 0;
 
 #ifdef HAVE_KQUEUE
   return iop_add_kqueue(iop, fd, flags);

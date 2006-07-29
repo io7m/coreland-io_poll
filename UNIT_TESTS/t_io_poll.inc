@@ -19,18 +19,32 @@ void dump_pipes()
   printf("\n");
 }
 
-void init_test()
+void open_pipes()
 {
   unsigned long ind;
- 
   printf("creating %u pipes\n", NUM_PIPES);
-
   for (ind = 0; ind < NUM_PIPES; ++ind)
     if (pipe(pipes[ind]) == -1) {
       perror("pipe");
       _exit(2);
     }
-  
+}
+
+void close_pipes()
+{
+  unsigned long ind;
+  printf("closing %u pipes\n", NUM_PIPES);
+  for (ind = 0; ind < NUM_PIPES; ++ind) {
+    close(pipes[ind][0]);
+    close(pipes[ind][1]);
+  }
+}
+
+void init_test()
+{
+  unsigned long ind;
+ 
+  open_pipes(); 
   dump_pipes();
   printf("initialising %u spaces\n", NUM_PIPES);
 
@@ -231,6 +245,7 @@ void free_test()
     perror("(FAIL: free_test) io_poll_free"); _exit(1);
   }
 
+  close_pipes();
   printf("deallocated ok\n");
 }
 
@@ -363,6 +378,28 @@ void register_test2()
   printf("failed to register set with bad file descriptor\n");
 }
 
+void register_test3()
+{
+  printf("attempting to register set with duplicate file descriptor\n");
+
+  if (io_poll_init(&iop, 2) == -1) {
+    perror("(FAIL: register_test2) io_poll_init"); _exit(1);
+  }
+
+  iop.fds[0].fd = 0;
+  iop.fds[0].events = IO_POLL_READ;
+ 
+  iop.fds[1].fd = 0;
+  iop.fds[1].events = IO_POLL_READ;
+
+  if (io_poll_register(&iop) != -1) {
+    printf("(FAIL: register_test2) registered duplicate file descriptor\n");
+    _exit(1);
+  }
+
+  printf("failed to register set with duplicate file descriptor\n");
+}
+
 int main()
 {
   init_test();
@@ -378,11 +415,13 @@ int main()
 
   add_test2();
   add_test3();
-
   free_test();
 
   register_test2();
-
   free_test();
+
+  register_test3();
+  free_test();
+
   return 0;
 }
