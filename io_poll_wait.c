@@ -19,8 +19,8 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
   struct io_pollfd *rfds;
   unsigned long len;
   unsigned long ind;
-  unsigned short ke_filter;
-  unsigned short ke_flags;
+  unsigned int ke_filter;
+  unsigned int ke_flags;
   long ret;
 
   kout = (struct kevent *) iop->pd_out;
@@ -50,6 +50,8 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
 #endif /* HAVE_KQUEUE */
 
 #ifdef HAVE_EPOLL
+#include <sys/epoll.h>
+
 static long iop_wait_epoll(struct io_poll *iop, long ms)
 {
   return 0;

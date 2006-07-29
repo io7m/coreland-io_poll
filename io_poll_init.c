@@ -89,8 +89,70 @@ static int iop_init_kqueue(struct io_poll *iop, unsigned long num)
 #endif /* HAVE_KQUEUE */
 
 #ifdef HAVE_EPOLL
+#include <sys/epoll.h>
+
 static int iop_init_epoll(struct io_poll *iop, unsigned long num)
 {
+  struct io_pollfd *fds;
+  struct io_pollfd *rfds;
+  struct epoll_event *evs;
+  struct epoll_event *revs;
+  unsigned long allocnum;
+  unsigned long allocd;
+  int pfd;
+  int err;
+
+  pfd = epoll_create(num);
+  if (pfd == -1) return -1;
+
+  allocd = alloc_io_pollfds(&fds, num);
+  if (!allocd) {
+    err = errno;
+    close(pfd);
+    errno = err;
+    return -1;
+  }
+  allocnum = allocd;
+  allocd = alloc_io_pollfds(&rfds, num);
+  if (!allocd) {
+    err = errno;
+    dealloc(fds);
+    close(pfd);
+    errno = err;
+    return -1;
+  }
+  evs = (struct epoll_event *) alloc(allocnum * sizeof(struct epoll_event));
+  if (!evs) {
+    err = errno;
+    dealloc(fds);
+    dealloc(rfds);
+    close(pfd);
+    errno = err;
+    return -1;
+  }
+  revs = (struct epoll_event *) alloc(allocnum * sizeof(struct epoll_event));
+  if (!revs) {
+    err = errno;
+    dealloc(fds);
+    dealloc(rfds);
+    dealloc(evs);
+    close(pfd);
+    errno = err;
+    return -1;
+  }
+
+  bin_zero((char *) evs, allocnum * sizeof(struct epoll_event));
+  bin_zero((char *) revs, allocnum * sizeof(struct epoll_event));
+  bin_zero((char *) fds, allocnum * sizeof(struct io_pollfd));
+  bin_zero((char *) rfds, allocnum * sizeof(struct io_pollfd));
+
+  iop->fds = fds;
+  iop->rfds = rfds;
+  iop->pfd = pfd;
+  iop->pd_in = evs;
+  iop->pd_out = revs; 
+  iop->a = allocnum;
+  iop->len = num;
   return 0;
 }
 #endif /* HAVE_EPOLL */

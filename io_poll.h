@@ -13,7 +13,7 @@
 
 struct io_pollfd {
   int fd;
-  unsigned short events;
+  unsigned int events;
 };
 
 struct io_poll {
@@ -28,7 +28,7 @@ struct io_poll {
 
 int io_poll_init(struct io_poll *, unsigned long);
 int io_poll_register(struct io_poll *);
-int io_poll_add(struct io_poll *, int, unsigned short);
+int io_poll_add(struct io_poll *, int, unsigned int);
 int io_poll_rm(struct io_poll *, unsigned long);
 int io_poll_free(struct io_poll *);
 long io_poll_wait(struct io_poll *, long);
@@ -74,18 +74,18 @@ struct fd_sets {
 
 /* flag translation */
 #ifdef HAVE_KQUEUE
-unsigned short io_poll_flags_io2kq(unsigned short);
-unsigned short io_poll_flags_kq2io(unsigned short);
+unsigned int io_poll_flags_io2kq(unsigned int);
+unsigned int io_poll_flags_kq2io(unsigned int);
 #endif
 
 #ifdef HAVE_EPOLL
-unsigned short io_poll_flags_io2ep(unsigned short);
-unsigned short io_poll_flags_ep2io(unsigned short);
+unsigned int io_poll_flags_io2ep(unsigned int);
+unsigned int io_poll_flags_ep2io(unsigned int);
 #endif
 
 #ifdef HAVE_POLL
-unsigned short io_poll_flags_io2po(unsigned short);
-unsigned short io_poll_flags_po2io(unsigned short);
+unsigned int io_poll_flags_io2po(unsigned int);
+unsigned int io_poll_flags_po2io(unsigned int);
 #endif
 
 #endif

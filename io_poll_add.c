@@ -28,7 +28,7 @@ static int find_empty(struct io_pollfd *fds, unsigned long len,
 #include <sys/event.h>
 #include <sys/time.h>
 
-static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned short flags)
+static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
 {
   struct kevent *kein;
   struct kevent *kout;
@@ -89,7 +89,7 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned short flags)
 #endif /* HAVE_KQUEUE */
 
 #ifdef HAVE_EPOLL
-static int iop_add_epoll(struct io_poll *iop, int fd, unsigned short flags)
+static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
 {
   return 0;
 }
@@ -98,7 +98,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned short flags)
 #ifdef HAVE_POLL
 #include <poll.h>
 
-static int iop_add_poll(struct io_poll *iop, int fd, unsigned short flags)
+static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
 {
   struct pollfd *pfds;
   struct pollfd *pptr;
@@ -155,7 +155,7 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned short flags)
 #ifdef HAVE_SELECT
 #include "select.h"
 
-static int iop_add_select(struct io_poll *iop, int fd, unsigned short flags)
+static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
 {
   struct fd_sets *fdset;
   struct io_pollfd *fds;
@@ -206,7 +206,7 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned short flags)
 }
 #endif /* HAVE_SELECT */
 
-int io_poll_add(struct io_poll *iop, int fd, unsigned short flags)
+int io_poll_add(struct io_poll *iop, int fd, unsigned int flags)
 {
   /* check for bad file descriptors */
   if (fcntl(fd, F_GETFL, 0) == -1) return -1;

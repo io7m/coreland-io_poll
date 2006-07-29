@@ -18,7 +18,7 @@ static int iop_register_kqueue(struct io_poll *iop)
   struct kevent *kein;
   struct io_pollfd *fds;
   struct io_pollfd *ifd;
-  unsigned short iop_f;
+  unsigned int iop_f;
 
   kein = (struct kevent *) iop->pd_in;
   kfd = iop->pfd;
@@ -36,8 +36,32 @@ static int iop_register_kqueue(struct io_poll *iop)
 #endif /* HAVE_KQUEUE */
 
 #ifdef HAVE_EPOLL
+#include <sys/epoll.h>
+
 static int iop_register_epoll(struct io_poll *iop)
 {
+  int pfd;
+  struct epoll_event *ev;
+  struct epoll_event *evp;
+  struct io_pollfd *fds;
+  unsigned long len;
+  unsigned long ind;
+  unsigned int iop_f;
+
+  fds = iop->fds;
+  ev = iop->pd_in;
+  len = iop->len;
+  pfd = iop->pfd;
+
+  for (ind = 0; ind < num; ++ind) {
+    evp = &ev[ind];
+    ifd = &fds[ind];
+    iop_f = ifd->events;
+    evp->events = io_poll_flags_io2ep(iop_f);
+    evp->data.fd = ifd->fd;
+    if (epoll_ctl(pfd, EPOLL_CTL_ADD, ifd->fd, evp) == -1) return -1;
+  }
+
   return 0;
 }
 #endif /* HAVE_EPOLL */
@@ -77,7 +101,7 @@ static int iop_register_select(struct io_poll *iop)
   struct fd_sets *fdset;
   unsigned long len;
   unsigned long ind;
-  unsigned short flags;
+  unsigned int flags;
   int fd;
 
   fds = iop->fds;

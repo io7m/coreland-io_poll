@@ -6,9 +6,9 @@
 #include <sys/event.h>
 #include <sys/time.h>
 
-unsigned short io_poll_flags_io2kq(unsigned short iof)
+unsigned int io_poll_flags_io2kq(unsigned int iof)
 {
-  unsigned short kf;
+  unsigned int kf;
   kf = 0;
   if (iof & IO_POLL_READ) kf |= EVFILT_READ;
   if (iof & IO_POLL_WRITE) kf |= EVFILT_WRITE;
@@ -16,9 +16,9 @@ unsigned short io_poll_flags_io2kq(unsigned short iof)
   if (iof & IO_POLL_EOF) kf |= EV_EOF;
   return kf;
 }
-unsigned short io_poll_flags_kq2io(unsigned short kf)
+unsigned int io_poll_flags_kq2io(unsigned int kf)
 {
-  unsigned short iof;
+  unsigned int iof;
   iof = 0;
   if (kf & EVFILT_READ) iof |= IO_POLL_READ;
   if (kf & EVFILT_WRITE) iof |= IO_POLL_WRITE;
@@ -29,9 +29,27 @@ unsigned short io_poll_flags_kq2io(unsigned short kf)
 #endif /* HAVE_KQUEUE */
 
 #ifdef HAVE_EPOLL
-static int iop_register_epoll(struct io_poll *iop)
+#include <sys/epoll.h>
+
+unsigned int io_poll_flags_io2ep(unsigned int iof)
 {
-  return 0;
+  unsigned int ef;
+  ef = 0;
+  if (iof & IO_POLL_READ) ef |= EPOLLIN;
+  if (iof & IO_POLL_WRITE) ef |= EPOLLOUT;
+  if (iof & IO_POLL_ERROR) ef |= EPOLLERR;
+  if (iof & IO_POLL_EOF) ef |= EPOLLHUP;
+  return ef;
+}
+unsigned int io_poll_flags_ep2io(unsigned int ef)
+{
+  unsigned int iof;
+  iof = 0;
+  if (ef & EPOLLIN) iof |= IO_POLL_READ;
+  if (ef & EPOLLOUT) iof |= IO_POLL_WRITE;
+  if (ef & EPOLLERR) iof |= IO_POLL_ERROR;
+  if (ef & EPOLLHUP) iof |= IO_POLL_EOF;
+  return iof;
 }
 #endif /* HAVE_EPOLL */
 
@@ -41,9 +59,9 @@ static int iop_register_epoll(struct io_poll *iop)
 /* various kernel bugs mean that it's better to always check
    for POLLHUP and POLLERR */
 
-unsigned short io_poll_flags_io2po(unsigned short iof)
+unsigned int io_poll_flags_io2po(unsigned int iof)
 {
-  unsigned short pf;
+  unsigned int pf;
   pf = 0;
   if (iof & IO_POLL_READ) pf |= POLLIN | POLLERR | POLLHUP;
   if (iof & IO_POLL_WRITE) pf |= POLLOUT | POLLERR | POLLHUP;
@@ -51,9 +69,9 @@ unsigned short io_poll_flags_io2po(unsigned short iof)
   if (iof & IO_POLL_EOF) pf |= POLLHUP;
   return pf;
 }
-unsigned short io_poll_flags_po2io(unsigned short pf)
+unsigned int io_poll_flags_po2io(unsigned int pf)
 {
-  unsigned short iof;
+  unsigned int iof;
   iof = 0;
   if (pf & POLLIN) iof |= IO_POLL_READ;
   if (pf & POLLOUT) iof |= IO_POLL_WRITE;
