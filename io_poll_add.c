@@ -1,8 +1,8 @@
 #include <fcntl.h>
 
-#include <corelib/alloc.h>
-#include <corelib/bin.h>
-#include <corelib/error.h>
+#include "alloc.h"
+#include "bin.h"
+#include "error.h"
 
 #include "io_poll.h"
 #include "select.h"

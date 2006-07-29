@@ -46,20 +46,30 @@ phase_library_clean:
 #--LINK-----------------------------------------------------------------------
 
 t_io_poll:\
-	link t_io_poll.ld t_io_poll.o ../io_poll.a 
-	./link t_io_poll t_io_poll.o ../io_poll.a 
+	link t_io_poll.ld t_io_poll.o ../io_poll.a ../bin.a ../error.a \
+	../alloc.a 
+	./link t_io_poll t_io_poll.o ../io_poll.a ../bin.a ../error.a \
+	../alloc.a 
 t_io_poll_ep:\
-	link t_io_poll_ep.ld t_io_poll_ep.o io_poll_ep/io_poll.a 
-	./link t_io_poll_ep t_io_poll_ep.o io_poll_ep/io_poll.a 
+	link t_io_poll_ep.ld t_io_poll_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_io_poll_ep t_io_poll_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_io_poll_kq:\
-	link t_io_poll_kq.ld t_io_poll_kq.o io_poll_kq/io_poll.a 
-	./link t_io_poll_kq t_io_poll_kq.o io_poll_kq/io_poll.a 
+	link t_io_poll_kq.ld t_io_poll_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_io_poll_kq t_io_poll_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_io_poll_po:\
-	link t_io_poll_po.ld t_io_poll_po.o io_poll_po/io_poll.a 
-	./link t_io_poll_po t_io_poll_po.o io_poll_po/io_poll.a 
+	link t_io_poll_po.ld t_io_poll_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_io_poll_po t_io_poll_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_io_poll_se:\
-	link t_io_poll_se.ld t_io_poll_se.o io_poll_se/io_poll.a 
-	./link t_io_poll_se t_io_poll_se.o io_poll_se/io_poll.a 
+	link t_io_poll_se.ld t_io_poll_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_io_poll_se t_io_poll_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 
 phase_link:\
 	t_io_poll t_io_poll_ep t_io_poll_kq t_io_poll_po t_io_poll_se 

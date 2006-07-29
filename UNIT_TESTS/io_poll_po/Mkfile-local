@@ -10,12 +10,8 @@ tools: make-compile make-link make-makelib make-makeso make-libname \
 toollink_clean:
 	@rm -f make-compile make-link make-makelib make-makeso make-libname \
 	conf-cc conf-ld conf-shebang rebuild-flag compile link makelib makeso \
-	libname flags-corelib
+	libname 
 
-flags-corelib: ../../flags-corelib
-	@echo symlink flags-corelib
-	@rm -f flags-corelib
-	@ln -s ../../flags-corelib flags-corelib
 conf-cc: ../../conf-cc
 	@echo symlink conf-cc
 	@rm -f conf-cc
@@ -55,8 +51,7 @@ make-libname: ../../make-libname conf-shebang
 	@rm -f make-libname
 	@ln -s ../../make-libname make-libname
 
-compile: conf-shebang conf-cc make-compile conf-ccfflist flags-sysspec \
-	flags-corelib
+compile: conf-shebang conf-cc make-compile conf-ccfflist flags-sysspec
 	(cat conf-shebang; ./make-compile) > compile; chmod u+x compile;
 link: conf-shebang conf-ld make-link 
 	(cat conf-shebang; ./make-link) > link; chmod u+x link;
@@ -127,7 +122,24 @@ select.h: ../../select.h rebuild-flag
 	@echo symlink select.h
 	@rm -f select.h
 	@ln -s ../../select.h select.h
+bin.h: ../../bin.h rebuild-flag
+	@echo symlink bin.h
+	@rm -f bin.h
+	@ln -s ../../bin.h bin.h
+alloc.h: ../../alloc.h rebuild-flag
+	@echo symlink alloc.h
+	@rm -f alloc.h
+	@ln -s ../../alloc.h alloc.h
+error.h: ../../error.h rebuild-flag
+	@echo symlink error.h
+	@rm -f error.h
+	@ln -s ../../error.h error.h
+close.h: ../../close.h rebuild-flag
+	@echo symlink close.h
+	@rm -f close.h
+	@ln -s ../../close.h close.h
+
 sources_clean: 
-	rm -f  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h io_poll.h select.h
+	rm -f  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h io_poll.h select.h bin.h alloc.h error.h close.h
 	touch  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_reg.c io_poll_rm.c io_poll_wait.c
-sources:  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h io_poll.h select.h
+sources:  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h io_poll.h select.h bin.h alloc.h error.h close.h

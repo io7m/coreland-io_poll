@@ -1,6 +1,6 @@
 #include <fcntl.h>
 
-#include <corelib/error.h>
+#include "error.h"
 
 #include "io_poll.h"
 #include "select.h"

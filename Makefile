@@ -26,40 +26,70 @@ phase_tools_clean:  mkftools_clean
 
 #--COMPILE--------------------------------------------------------------------
 
+alloc.o:\
+	compile alloc.c alloc.h 
+	./compile alloc alloc.c 
+bin_copy.o:\
+	compile bin_copy.c bin.h 
+	./compile bin_copy bin_copy.c 
+bin_zero.o:\
+	compile bin_zero.c bin.h 
+	./compile bin_zero bin_zero.c 
 depchklist.o:\
 	compile depchklist.c aio-mech.h 
 	./compile depchklist depchklist.c 
+error.o:\
+	compile error.c error.h 
+	./compile error error.c 
+error_str.o:\
+	compile error_str.c error.h 
+	./compile error_str error_str.c 
 io_poll_add.o:\
-	compile io_poll_add.c io_poll.h select.h select.h 
+	compile io_poll_add.c alloc.h bin.h error.h io_poll.h select.h \
+	select.h 
 	./compile io_poll_add io_poll_add.c 
 io_poll_flgt.o:\
 	compile io_poll_flgt.c io_poll.h select.h 
 	./compile io_poll_flgt io_poll_flgt.c 
 io_poll_free.o:\
-	compile io_poll_free.c io_poll.h select.h 
+	compile io_poll_free.c alloc.h bin.h close.h error.h io_poll.h \
+	select.h 
 	./compile io_poll_free io_poll_free.c 
 io_poll_init.o:\
-	compile io_poll_init.c io_poll.h select.h 
+	compile io_poll_init.c alloc.h bin.h close.h error.h io_poll.h \
+	select.h 
 	./compile io_poll_init io_poll_init.c 
 io_poll_reg.o:\
-	compile io_poll_reg.c io_poll.h select.h select.h 
+	compile io_poll_reg.c error.h io_poll.h select.h select.h 
 	./compile io_poll_reg io_poll_reg.c 
 io_poll_rm.o:\
-	compile io_poll_rm.c io_poll.h select.h select.h 
+	compile io_poll_rm.c bin.h error.h io_poll.h select.h select.h 
 	./compile io_poll_rm io_poll_rm.c 
 io_poll_wait.o:\
-	compile io_poll_wait.c io_poll.h select.h 
+	compile io_poll_wait.c alloc.h bin.h close.h error.h io_poll.h \
+	select.h 
 	./compile io_poll_wait io_poll_wait.c 
 
 phase_compile:\
-	depchklist.o io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	alloc.o bin_copy.o bin_zero.o depchklist.o error.o error_str.o \
+	io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
+	io_poll_reg.o io_poll_rm.o io_poll_wait.o 
 phase_compile_clean:
-	rm -f depchklist.o io_poll_add.o io_poll_flgt.o io_poll_free.o \
+	rm -f alloc.o bin_copy.o bin_zero.o depchklist.o error.o \
+	error_str.o io_poll_add.o io_poll_flgt.o io_poll_free.o \
 	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
 
 #--LIBRARY--------------------------------------------------------------------
 
+alloc.a:\
+	makelib alloc.sld alloc.o 
+	./makelib alloc alloc.o 
+bin.a:\
+	makelib bin.sld bin_copy.o bin_zero.o 
+	./makelib bin bin_copy.o bin_zero.o 
+error.a:\
+	makelib error.sld error.o error_str.o 
+	./makelib error error.o error_str.o 
 io_poll.a:\
 	makelib io_poll.sld io_poll_add.o io_poll_flgt.o io_poll_free.o \
 	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
@@ -67,9 +97,9 @@ io_poll.a:\
 	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
 
 phase_library:\
-	io_poll.a 
+	alloc.a bin.a error.a io_poll.a 
 phase_library_clean:
-	rm -f io_poll.a 
+	rm -f alloc.a bin.a error.a io_poll.a 
 
 #--LINK-----------------------------------------------------------------------
 
@@ -121,11 +151,9 @@ sysdep_clean:
 #--TOOLS----------------------------------------------------------------------
 
 mkftools: compile makelib libname makeso link 
-compile: sysdeps.out conf-shebang conf-cc make-compile conf-ccfflist \
-	flags-corelib 
+compile: sysdeps.out conf-shebang conf-cc make-compile 
 	(cat conf-shebang; ./make-compile) > compile; chmod u+x compile;
-link: sysdeps.out conf-shebang conf-ld make-link conf-ldfflist \
-	libs-corelib libs-corelib-C 
+link: sysdeps.out conf-shebang conf-ld make-link 
 	(cat conf-shebang; ./make-link) > link; chmod u+x link;
 makelib: sysdeps.out conf-shebang make-makelib 
 	(cat conf-shebang; ./make-makelib) > makelib; chmod u+x makelib;
