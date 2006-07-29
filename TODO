@@ -1,5 +1,7 @@
-The select() interface needs to build fd_sets in reg()
-and then put a copy of that into select(), as select()
-overwrites the fd_sets.
+Test:
 
-This means making a copy of pd_in into pd_out in wait().
+  what happens if io_poll_rm(iop, iop->len)? --iop->len?
+
+  scatter test of reading, writing and closing of/to multiple fds to
+  ensure all data is up to date at all times.
+

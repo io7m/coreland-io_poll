@@ -38,7 +38,21 @@ static int iop_rm_kqueue(struct io_poll *iop, unsigned long n)
 #ifdef HAVE_EPOLL
 static int iop_rm_epoll(struct io_poll *iop, unsigned long n)
 {
-  return 0;
+  int pfd;
+  struct epoll_event *evs;
+  struct io_pollfd *fds;
+  int ret;
+
+  evs = (struct epoll_event *) iop->pd_in;
+  pfd = iop->pfd;
+  fds = iop->fds;
+
+  bin_zero((char *) &fds[n], sizeof(struct io_pollfd));
+
+  ret = epoll_ctl(pfd, EPOLL_CTL_DEL, evs[n].data.fd, &evs[n]);
+  bin_zero((char *) &evs[n], sizeof(struct epoll_event));
+  fds[n].fd = -1;
+  return ret;
 }
 #endif /* HAVE_EPOLL */
 
