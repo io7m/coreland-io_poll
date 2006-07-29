@@ -153,9 +153,13 @@ void wait_test2()
   }
   rfds = iop.rfds;
 
-  if (!(rfds[0].events & IO_POLL_EOF)) {
-    printf("(WARN: wait_test2) io_poll_wait did not set EOF\n");
-    _exit(1);
+  if (io_poll_iomech() != IO_POLL_SELECT) {
+    if (!(rfds[0].events & IO_POLL_EOF)) {
+      printf("(FAIL: wait_test2) io_poll_wait did not set EOF\n");
+      _exit(1);
+    }
+  } else {
+    printf("the select() backend cannot indicate EOF\n");
   }
 
   printf("EOF test done\n");

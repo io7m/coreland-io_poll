@@ -24,6 +24,9 @@ io_poll_free.o:\
 io_poll_init.o:\
 	compile io_poll_init.c 
 	./compile io_poll_init io_poll_init.c 
+io_poll_iom.o:\
+	compile io_poll_iom.c 
+	./compile io_poll_iom io_poll_iom.c 
 io_poll_reg.o:\
 	compile io_poll_reg.c 
 	./compile io_poll_reg io_poll_reg.c 
@@ -36,18 +39,20 @@ io_poll_wait.o:\
 
 phase_compile:\
 	io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
-	io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_iom.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
 phase_compile_clean:
 	rm -f io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
-	io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_iom.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
 
 #--LIBRARY--------------------------------------------------------------------
 
 io_poll.a:\
 	makelib io_poll.sld io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
+	io_poll_wait.o 
 	./makelib io_poll io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
+	io_poll_wait.o 
 
 phase_library:\
 	io_poll.a 
