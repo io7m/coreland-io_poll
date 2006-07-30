@@ -1,7 +1,7 @@
 #ifndef FD_HASH_H
 #define FD_HASH_H
 
-#define FD_HASH_BUCKETS 128
+#define FD_HASH_BUCKETS 4
 
 struct fd_hash_node {
   int fd;

@@ -34,11 +34,59 @@ int fd_hash_init(struct fd_hash *h)
 
 int fd_hash_add(struct fd_hash *h, int fd)
 {
-  return 0;
+  struct fd_hash_node *n;
+  struct fd_hash_node *n_next;
+  struct fd_hash_node *n_prev;
+  unsigned int hash;
+
+  /* sanity */
+  if (fd == -1) return 0;
+
+  hash = fd_hash_hash(fd) % FD_HASH_BUCKETS;
+  n = &h->slots[hash];
+  n_next = 0;
+  n_prev = 0;
+
+  while (n) {
+    if (n->fd == fd) return 0;
+    if (n->fd == -1) goto SET;
+    n_prev = n;
+    n_next = n->next;
+    n = n->next;
+  }
+
+  if (!n) {
+    n = alloc(sizeof(struct fd_hash_node));
+    if (!n) return -1;
+    n_next = 0;
+  }
+
+  SET:
+  n->fd = fd;
+  n->next = n_next;
+  if (n_prev) n_prev->next = n;
+  return 1;
 }
 
 int fd_hash_rm(struct fd_hash *h, int fd)
 {
+  struct fd_hash_node *n;
+  struct fd_hash_node *n_next;
+  struct fd_hash_node *n_prev;
+  unsigned int hash;
+
+  /* sanity */
+  if (fd == -1) return 0;
+
+  hash = fd_hash_hash(fd) % FD_HASH_BUCKETS;
+  n = &h->slots[hash];
+  n_next = 0;
+  n_prev = 0;
+
+  while (n) {
+    if (n->fd == fd) { n->fd = -1; return 1; }
+    n = n->next;
+  }
   return 0;
 }
 
