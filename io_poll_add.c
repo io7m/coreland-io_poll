@@ -178,7 +178,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
     goto SET;
   }
 
-  if (CHECK_OVERFLOW(len)) { errno = error_overflow; return -1; }
+  if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
   ++len;
   if (len >= old_a) {
@@ -249,6 +249,9 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
   eptr->events = io_poll_flags_io2ep(flags);
 
   return epoll_ctl(pfd, EPOLL_CTL_ADD, eptr->data.fd, eptr);
+  ERR:
+  fd_hash_rm(fd);
+  return -1;
 }
 #endif /* HAVE_EPOLL */
 
@@ -286,7 +289,7 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
     goto SET;
   }
 
-  if (CHECK_OVERFLOW(len)) { errno = error_overflow; return -1; }
+  if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
   /* append */
   ++len;

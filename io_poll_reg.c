@@ -48,6 +48,7 @@ static int iop_register_kqueue(struct io_poll *iop)
 
 static int iop_register_epoll(struct io_poll *iop)
 {
+  struct iop_fdhash *fdhash;
   struct epoll_event *evs;
   struct epoll_event *evp;
   struct io_pollfd *fds;
@@ -57,6 +58,7 @@ static int iop_register_epoll(struct io_poll *iop)
   unsigned int iop_f;
   int pfd;
 
+  fdhash = (struct iop_fdhash *) &iop->fdhash;
   fds = iop->fds;
   evs = iop->pd_in;
   len = iop->len;
@@ -68,6 +70,11 @@ static int iop_register_epoll(struct io_poll *iop)
     iop_f = ifd->events;
     evp->events = io_poll_flags_io2ep(iop_f);
     evp->data.fd = ifd->fd;
+    switch (iop_fdhash_add(fdhash, fd)) {
+      case -1: return -1;
+       case 0: errno = error_exist; return -1;
+      default: break;
+    }
     if (epoll_ctl(pfd, EPOLL_CTL_ADD, ifd->fd, evp) == -1) return -1;
   }
   return 0;
