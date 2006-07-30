@@ -16,7 +16,7 @@ Accepts duplicate file descriptors?
   In order to try to keep uniformity across the backends, the
   io_poll library maintains a small hash of file descriptors
   and will reject any attempt to register() or add() duplicates
-  and return EEXIST.
+  and will return EEXIST.
 
 Accepts bad file descriptors?
 
