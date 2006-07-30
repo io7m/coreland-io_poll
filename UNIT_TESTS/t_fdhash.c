@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "../fd_hash.h"
+#include "../io_poll_fdh.h"
 
-struct fd_hash fdh;
+struct iop_fdhash fdh;
 
 void add(int fd, int exp)
 {
-  switch (fd_hash_add(&fdh, fd)) {
-    case -1: perror("fd_hash_add: alloc: "); _exit(2);
+  switch (iop_fdhash_add(&fdh, fd)) {
+    case -1: perror("iop_fdhash_add: alloc: "); _exit(2);
     case 0:
       if (exp != 0) {
         printf("unexpected duplicate found for %d\n", fd); _exit(1);
@@ -32,7 +32,7 @@ void add(int fd, int exp)
 
 void rm(int fd, int exp)
 {
-  switch (fd_hash_rm(&fdh, fd)) {
+  switch (iop_fdhash_rm(&fdh, fd)) {
     case 0:
       if (exp != 0) {
         printf("could not remove %d, but should have\n", fd); _exit(1);
@@ -58,7 +58,7 @@ int main()
 {
   int i;
 
-  if (fd_hash_init(&fdh) == -1) { perror("fd_hash_init"); _exit(2); }
+  if (iop_fdhash_init(&fdh) == -1) { perror("iop_fdhash_init"); _exit(2); }
 
   add(0, 1);
   add(1, 1);  
@@ -74,6 +74,6 @@ int main()
   for (i = 2; i < 32; ++i) rm(i, 1);
   for (i = 0; i < 32; ++i) rm(i, 0);
 
-  if (fd_hash_free(&fdh) == -1) { perror("fd_hash_free"); _exit(2); }
+  if (iop_fdhash_free(&fdh) == -1) { perror("iop_fdhash_free"); _exit(2); }
   return 0;
 }

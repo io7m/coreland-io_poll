@@ -1,8 +1,8 @@
 #include "alloc.h"
 #include "bin.h"
-#include "fd_hash.h"
+#include "io_poll_fdh.h"
 
-static unsigned int fd_hash_hash(int fd)
+static unsigned int iop_fdhash_hash(int fd)
 {
   unsigned int h;
   unsigned int ind;
@@ -17,7 +17,7 @@ static unsigned int fd_hash_hash(int fd)
   }
   return h;
 }
-static void clear(struct fd_hash_node *slots, unsigned int num)
+static void clear(struct iop_fdhash_node *slots, unsigned int num)
 {
   unsigned int ind;
   for (ind = 0; ind < num; ++ind) {
@@ -26,23 +26,23 @@ static void clear(struct fd_hash_node *slots, unsigned int num)
   }
 }
 
-int fd_hash_init(struct fd_hash *h)
+int iop_fdhash_init(struct iop_fdhash *h)
 {
   clear(h->slots, FD_HASH_BUCKETS);
   return 1;
 }
 
-int fd_hash_add(struct fd_hash *h, int fd)
+int iop_fdhash_add(struct iop_fdhash *h, int fd)
 {
-  struct fd_hash_node *n;
-  struct fd_hash_node *n_next;
-  struct fd_hash_node *n_prev;
+  struct iop_fdhash_node *n;
+  struct iop_fdhash_node *n_next;
+  struct iop_fdhash_node *n_prev;
   unsigned int hash;
 
   /* sanity */
   if (fd == -1) return 0;
 
-  hash = fd_hash_hash(fd) % FD_HASH_BUCKETS;
+  hash = iop_fdhash_hash(fd) % FD_HASH_BUCKETS;
   n = &h->slots[hash];
   n_next = 0;
   n_prev = 0;
@@ -56,7 +56,7 @@ int fd_hash_add(struct fd_hash *h, int fd)
   }
 
   if (!n) {
-    n = alloc(sizeof(struct fd_hash_node));
+    n = alloc(sizeof(struct iop_fdhash_node));
     if (!n) return -1;
     n_next = 0;
   }
@@ -68,17 +68,17 @@ int fd_hash_add(struct fd_hash *h, int fd)
   return 1;
 }
 
-int fd_hash_rm(struct fd_hash *h, int fd)
+int iop_fdhash_rm(struct iop_fdhash *h, int fd)
 {
-  struct fd_hash_node *n;
-  struct fd_hash_node *n_next;
-  struct fd_hash_node *n_prev;
+  struct iop_fdhash_node *n;
+  struct iop_fdhash_node *n_next;
+  struct iop_fdhash_node *n_prev;
   unsigned int hash;
 
   /* sanity */
   if (fd == -1) return 0;
 
-  hash = fd_hash_hash(fd) % FD_HASH_BUCKETS;
+  hash = iop_fdhash_hash(fd) % FD_HASH_BUCKETS;
   n = &h->slots[hash];
   n_next = 0;
   n_prev = 0;
@@ -90,11 +90,11 @@ int fd_hash_rm(struct fd_hash *h, int fd)
   return 0;
 }
 
-int fd_hash_free(struct fd_hash *h)
+int iop_fdhash_free(struct iop_fdhash *h)
 {
   unsigned int ind;
-  struct fd_hash_node *n;
-  struct fd_hash_node *n_next;
+  struct iop_fdhash_node *n;
+  struct iop_fdhash_node *n_next;
 
   for (ind = 0; ind < FD_HASH_BUCKETS; ++ind) {
     n = h->slots[ind].next;

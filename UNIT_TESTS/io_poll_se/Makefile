@@ -15,6 +15,9 @@ clean: phase_local_clean phase_compile_clean phase_library_clean \
 io_poll_add.o:\
 	compile io_poll_add.c 
 	./compile io_poll_add io_poll_add.c 
+io_poll_fdh.o:\
+	compile io_poll_fdh.c 
+	./compile io_poll_fdh io_poll_fdh.c 
 io_poll_flgt.o:\
 	compile io_poll_flgt.c 
 	./compile io_poll_flgt io_poll_flgt.c 
@@ -38,21 +41,23 @@ io_poll_wait.o:\
 	./compile io_poll_wait io_poll_wait.c 
 
 phase_compile:\
-	io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
-	io_poll_iom.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	io_poll_add.o io_poll_fdh.o io_poll_flgt.o io_poll_free.o \
+	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
+	io_poll_wait.o 
 phase_compile_clean:
-	rm -f io_poll_add.o io_poll_flgt.o io_poll_free.o io_poll_init.o \
-	io_poll_iom.o io_poll_reg.o io_poll_rm.o io_poll_wait.o 
+	rm -f io_poll_add.o io_poll_fdh.o io_poll_flgt.o io_poll_free.o \
+	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
+	io_poll_wait.o 
 
 #--LIBRARY--------------------------------------------------------------------
 
 io_poll.a:\
-	makelib io_poll.sld io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
-	io_poll_wait.o 
-	./makelib io_poll io_poll_add.o io_poll_flgt.o io_poll_free.o \
-	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
-	io_poll_wait.o 
+	makelib io_poll.sld io_poll_add.o io_poll_fdh.o io_poll_flgt.o \
+	io_poll_free.o io_poll_init.o io_poll_iom.o io_poll_reg.o \
+	io_poll_rm.o io_poll_wait.o 
+	./makelib io_poll io_poll_add.o io_poll_fdh.o io_poll_flgt.o \
+	io_poll_free.o io_poll_init.o io_poll_iom.o io_poll_reg.o \
+	io_poll_rm.o io_poll_wait.o 
 
 phase_library:\
 	io_poll.a 
@@ -136,11 +141,15 @@ rebuild-flag:
 
 #--src--#
 
-
 io_poll_add.c: ../../io_poll_add.c rebuild-flag
 	@echo symlink io_poll_add.c
 	@rm -f io_poll_add.c
 	@ln -s ../../io_poll_add.c io_poll_add.c
+
+io_poll_fdh.c: ../../io_poll_fdh.c rebuild-flag
+	@echo symlink io_poll_fdh.c
+	@rm -f io_poll_fdh.c
+	@ln -s ../../io_poll_fdh.c io_poll_fdh.c
 
 io_poll_flgt.c: ../../io_poll_flgt.c rebuild-flag
 	@echo symlink io_poll_flgt.c
@@ -205,22 +214,22 @@ error.h: ../../error.h rebuild-flag
 	@echo symlink error.h
 	@rm -f error.h
 	@ln -s ../../error.h error.h
-fd_hash.h: ../../fd_hash.h rebuild-flag
-	@echo symlink fd_hash.h
-	@rm -f fd_hash.h
-	@ln -s ../../fd_hash.h fd_hash.h
 io_poll.h: ../../io_poll.h rebuild-flag
 	@echo symlink io_poll.h
 	@rm -f io_poll.h
 	@ln -s ../../io_poll.h io_poll.h
+io_poll_fdh.h: ../../io_poll_fdh.h rebuild-flag
+	@echo symlink io_poll_fdh.h
+	@rm -f io_poll_fdh.h
+	@ln -s ../../io_poll_fdh.h io_poll_fdh.h
 select.h: ../../select.h rebuild-flag
 	@echo symlink select.h
 	@rm -f select.h
 	@ln -s ../../select.h select.h
 sources_clean: 
-	rm -f  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h alloc.h bin.h close.h error.h fd_hash.h io_poll.h select.h
-	touch  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c
-sources:  io_poll_add.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h alloc.h bin.h close.h error.h fd_hash.h io_poll.h select.h
+	rm -f  io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h alloc.h bin.h close.h error.h io_poll.h io_poll_fdh.h select.h
+	touch  io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c
+sources:  io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _select.h aio-mech.h alloc.h bin.h close.h error.h io_poll.h io_poll_fdh.h select.h
 
 #--TOOLS----------------------------------------------------------------------
 

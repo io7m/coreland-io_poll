@@ -2,6 +2,7 @@
 #define IO_POLL_H
 
 #include "aio-mech.h"
+#include "io_poll_fdh.h"
 
 #define IO_POLL_OVERALLOC 32
 
@@ -16,13 +17,14 @@ struct io_pollfd {
 };
 
 struct io_poll {
+  void *pd_in;      /* private mechanism specific data */
+  void *pd_out;
   struct io_pollfd *fds;
   struct io_pollfd *rfds;
+  struct iop_fdhash fdhash;
   unsigned long len;
   unsigned long a;
   int pfd;
-  void *pd_in;      /* private mechanism specific data */
-  void *pd_out;
 };
 
 int io_poll_init(struct io_poll *, unsigned long);

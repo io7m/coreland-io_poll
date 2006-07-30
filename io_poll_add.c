@@ -30,6 +30,7 @@ static int find_empty(struct io_pollfd *fds,
 
 static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
 {
+  struct iop_fdhash *fdhash;
   struct kevent *kein;
   struct kevent *kout;
   struct kevent *kptr;
@@ -38,18 +39,23 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
   struct io_pollfd *fptr;
   unsigned long len;
   unsigned long old_a;
-  unsigned long new_a;
   unsigned long ind;
-  unsigned long es;
   int kfd;
 
-  kfd = iop->pfd;
+  fdhash = &iop->fdhash;
+  old_a = iop->a;
   kein = (struct kevent *) iop->pd_in;  
   kout = (struct kevent *) iop->pd_out;
-  fds = iop->fds;
   rfds = iop->rfds;
+  fds = iop->fds;
+  kfd = iop->pfd;
   len = iop->len;
-  old_a = iop->a;
+
+  switch (iop_fdhash_add(fdhash, fd)) {
+    case -1: return -1;
+     case 0: errno = error_exist; return -1;
+    default: break;
+  }
 
   if (find_empty(fds, len, &ind)) {
     fptr = &fds[ind];
@@ -57,23 +63,66 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
     goto SET;
   }
 
-  if (CHECK_OVERFLOW(len)) { errno = error_overflow; return -1; }
+  if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
   /* append */
   ++len;
   if (len >= old_a) {
+    struct io_pollfd *tmpfds;
+    struct io_pollfd *tmprfds;
+    struct kevent *tmpkein;
+    struct kevent *tmpkout;
+    unsigned long new_a;
+    unsigned int esize;
+
     new_a = old_a + 1 + IO_POLL_OVERALLOC;
-    es = sizeof(struct io_pollfd);
-    if (!alloc_re((void **) &fds, old_a * es, new_a * es)) return -1;
-    if (!alloc_re((void **) &rfds, old_a * es, new_a * es)) return -1;
-    es = sizeof(struct kevent);
-    if (!alloc_re((void **) &kein, old_a * es, new_a * es)) return -1;
-    if (!alloc_re((void **) &kout, old_a * es, new_a * es)) return -1;
+    esize = sizeof(struct io_pollfd);
+
+    tmpfds = alloc(new_a * esize);
+    if (!tmpfds) goto ERR;
+    tmprfds = alloc(new_a * esize);
+    if (!tmprfds) {
+      dealloc(tmpfds);
+      goto ERR;
+    } 
+
+    esize = sizeof(struct kevent);
+    tmpkein = alloc(new_a * esize);
+    if (!tmpkein) {
+      dealloc(tmpfds);
+      dealloc(tmprfds);
+      goto ERR;
+    }
+    tmpkout = alloc(new_a * esize);
+    if (tmpkout) {
+      dealloc(tmpfds);
+      dealloc(tmprfds);
+      dealloc(tmpkein);
+      goto ERR;
+    }
+
+    esize = sizeof(struct io_pollfd);
+    bin_copy((char *) fds, (char *) tmpfds, old_a * esize);
+    bin_copy((char *) rfds, (char *) tmprfds, old_a * esize);
+    esize = sizeof(struct kevent);
+    bin_copy((char *) tmpkein, (char *) tmpkein, old_a * esize);
+    bin_copy((char *) tmpkout, (char *) tmpkout, old_a * esize);
+
     iop->a = new_a;
-    iop->pd_in = kein;
-    iop->pd_out = kout;
-    iop->fds = fds;
-    iop->rfds = rfds;
+    iop->pd_in = tmpkein;
+    iop->pd_out = tmpkout;
+    iop->fds = tmpfds;
+    iop->rfds = tmprfds;
+
+    dealloc(kein);
+    dealloc(kout);
+    dealloc(rfds);
+    dealloc(fds);
+
+    kein = (struct kevent *) iop->pd_in;  
+    kout = (struct kevent *) iop->pd_out;
+    rfds = iop->rfds;
+    fds = iop->fds;
   }
   kptr = &kein[len];
   fptr = &fds[len];
@@ -85,6 +134,10 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
 
   EV_SET(kptr, fd, io_poll_flags_io2kq(flags), EV_ADD, 0, 1, 0);
   return kevent(kfd, kptr, 1, 0, 0, 0);
+
+  ERR:
+  iop_fdhash_rm(fdhash, fd);
+  return -1;
 }
 #endif /* HAVE_KQUEUE */
 
@@ -93,6 +146,7 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
 
 static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
 {
+  struct iop_fdhash *fdhash;
   struct epoll_event *evs;
   struct epoll_event *revs;
   struct epoll_event *eptr;
@@ -101,18 +155,22 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
   struct io_pollfd *fptr;
   unsigned long len;
   unsigned long old_a;
-  unsigned long new_a;
   unsigned long ind;
-  unsigned long es;
   int pfd;
 
+  old_a = iop->a;
+  revs = (struct epoll_event *) iop->pd_out;
+  rfds = iop->rfds;
   pfd = iop->pfd;
   evs = (struct epoll_event *) iop->pd_in;  
-  revs = (struct epoll_event *) iop->pd_out;
   fds = iop->fds;
-  rfds = iop->rfds;
   len = iop->len;
-  old_a = iop->a;
+
+  switch (iop_fdhash_add(fdhash, fd)) {
+    case -1: return -1;
+     case 0: errno = error_exist; return -1;
+    default: break;
+  }
 
   if (find_empty(fds, len, &ind)) {
     fptr = &fds[ind];
@@ -124,18 +182,61 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
 
   ++len;
   if (len >= old_a) {
+    struct io_pollfd *tmpfds;
+    struct io_pollfd *tmprfds;
+    struct epoll_event *tmpevs;
+    struct epoll_event *tmprevs;
+    unsigned long new_a;
+    unsigned int esize;
+
     new_a = old_a + 1 + IO_POLL_OVERALLOC;
-    es = sizeof(struct io_pollfd);
-    if (!alloc_re((void **) &fds, old_a * es, new_a * es)) return -1;
-    if (!alloc_re((void **) &rfds, old_a * es, new_a * es)) return -1;
-    es = sizeof(struct epoll_event);
-    if (!alloc_re((void **) &evs, old_a * es, new_a * es)) return -1;
-    if (!alloc_re((void **) &revs, old_a * es, new_a * es)) return -1;
+    esize = sizeof(struct io_pollfd);
+
+    tmpfds = alloc(new_a * esize);
+    if (!tmpfds) goto ERR;
+    tmprfds = alloc(new_a * esize);
+    if (!tmprfds) {
+      dealloc(tmpfds);
+      goto ERR;
+    } 
+
+    esize = sizeof(struct epoll_event);
+    tmpevs = alloc(new_a * esize);
+    if (!tmpevs) {
+      dealloc(tmpfds);
+      dealloc(tmprfds);
+      goto ERR;
+    }
+    tmprevs = alloc(new_a * esize);
+    if (tmprevs) {
+      dealloc(tmpfds);
+      dealloc(tmprfds);
+      dealloc(tmpevs);
+      goto ERR;
+    }
+
+    esize = sizeof(struct io_pollfd);
+    bin_copy((char *) fds, (char *) tmpfds, old_a * esize);
+    bin_copy((char *) rfds, (char *) tmprfds, old_a * esize);
+    esize = sizeof(struct epoll_event);
+    bin_copy((char *) tmpevs, (char *) tmpevs, old_a * esize);
+    bin_copy((char *) tmprevs, (char *) tmprevs, old_a * esize);
+
     iop->a = new_a;
-    iop->pd_in = evs;
-    iop->pd_out = revs;
-    iop->fds = fds;
-    iop->rfds = rfds;
+    iop->pd_in = tmpevs;
+    iop->pd_out = tmprevs;
+    iop->fds = tmpfds;
+    iop->rfds = tmprfds;
+
+    dealloc(evs);
+    dealloc(revs);
+    dealloc(rfds);
+    dealloc(fds);
+
+    evs = (struct epoll_event *) iop->pd_in;  
+    revs = (struct epoll_event *) iop->pd_out;
+    rfds = iop->rfds;
+    fds = iop->fds;
   }
   eptr = &evs[len];
   fptr = &fds[len];
@@ -156,6 +257,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
 
 static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
 {
+  struct iop_fdhash *fdhash;
   struct pollfd *pfds;
   struct pollfd *pptr;
   struct io_pollfd *fds;
@@ -163,15 +265,20 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
   struct io_pollfd *fptr;
   unsigned long len;
   unsigned long old_a;
-  unsigned long new_a;
   unsigned long ind;
-  unsigned long es;
 
+  fdhash = &iop->fdhash;
   pfds = (struct pollfd *) iop->pd_in;
   fds = iop->fds;
   rfds = iop->rfds;
   len = iop->len;
   old_a = iop->a;
+
+  switch (iop_fdhash_add(fdhash, fd)) {
+    case -1: return -1;
+     case 0: errno = error_exist; return -1;
+    default: break;
+  }
 
   if (find_empty(fds, len, &ind)) {
     fptr = &fds[ind];
@@ -184,16 +291,49 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
   /* append */
   ++len;
   if (len >= old_a) {
+    struct io_pollfd *tmpfds;
+    struct io_pollfd *tmprfds;
+    struct pollfd *tmppfds;
+    unsigned long new_a;
+    unsigned int esize;
+
     new_a = old_a + 1 + IO_POLL_OVERALLOC;
-    es = sizeof(struct io_pollfd);
-    if (!alloc_re((void **) &fds, old_a * es, new_a * es)) return -1;
-    if (!alloc_re((void **) &rfds, old_a * es, new_a * es)) return -1;
-    es = sizeof(struct pollfd);
-    if (!alloc_re((void **) &pfds, old_a * es, new_a * es)) return -1;
+    esize = sizeof(struct io_pollfd);
+
+    tmpfds = alloc(new_a * esize);
+    if (!tmpfds) goto ERR;
+    tmprfds = alloc(new_a * esize);
+    if (!tmprfds) {
+      dealloc(tmpfds);
+      goto ERR;
+    } 
+
+    esize = sizeof(struct pollfd);
+    tmppfds = alloc(new_a * esize);
+    if (!tmppfds) {
+      dealloc(tmpfds);
+      dealloc(tmprfds);
+      goto ERR;
+    }
+
+    esize = sizeof(struct io_pollfd);
+    bin_copy((char *) fds, (char *) tmpfds, esize);
+    bin_copy((char *) rfds, (char *) tmprfds, esize);
+    esize = sizeof(struct pollfd);
+    bin_copy((char *) tmppfds, (char *) tmppfds, esize);
+
     iop->a = new_a;
-    iop->pd_in = pfds;
-    iop->fds = fds;
-    iop->rfds = rfds;
+    iop->pd_in = tmppfds;
+    iop->fds = tmpfds;
+    iop->rfds = tmprfds;
+
+    dealloc(pfds);
+    dealloc(rfds);
+    dealloc(fds);
+
+    pfds = (struct pollfd *) iop->pd_in;  
+    rfds = iop->rfds;
+    fds = iop->fds;
   }
   pptr = &pfds[len];
   fptr = &fds[len];
@@ -205,6 +345,10 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
   fptr->fd = fd;
   fptr->events = flags;
   return 0;
+
+  ERR:
+  iop_fdhash_rm(fdhash, fd);
+  return -1;
 }
 #endif /* HAVE_POLL */
 
@@ -213,6 +357,7 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
 
 static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
 {
+  struct iop_fdhash *fdhash;
   struct fd_sets *fdset;
   struct io_pollfd *fds;
   struct io_pollfd *rfds;
@@ -221,13 +366,19 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
   unsigned long old_a;
   unsigned long new_a;
   unsigned long ind;
-  unsigned long es;
 
+  fdhash = &iop->fdhash;
   fdset = (struct fd_sets *) iop->pd_in;
   fds = iop->fds;
   rfds = iop->rfds;
   len = iop->len;
   old_a = iop->a;
+
+  switch (iop_fdhash_add(fdhash, fd)) {
+    case -1: return -1;
+     case 0: errno = error_exist; return -1;
+    default: break;
+  }
 
   if (find_empty(fds, len, &ind)) {
     fptr = &fds[ind];
@@ -235,20 +386,29 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
   }
 
   /* select() can't handle more than FD_SETSIZE */
-  if (len == FD_SETSIZE) { errno = error_overflow; return -1; }
+  if (len == FD_SETSIZE) { errno = error_overflow; goto ERR; }
 
   /* redundant */
-  if (CHECK_OVERFLOW(len)) { errno = error_overflow; return -1; }
+  if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
   ++len;
   if (len >= old_a) {
+    struct io_pollfd *tmpfds;
+    struct io_pollfd *tmprfds;
+    unsigned int esize;
+
     new_a = old_a + 1 + IO_POLL_OVERALLOC;
-    es = sizeof(struct io_pollfd);
-    if (!alloc_re((void **) &fds, old_a * es, new_a * es)) return -1;
-    if (!alloc_re((void **) &rfds, old_a * es, new_a * es)) return -1;
+    esize = sizeof(struct io_pollfd);
+
     iop->a = new_a;
-    iop->fds = fds;
-    iop->rfds = rfds;
+    iop->fds = tmpfds;
+    iop->rfds = tmprfds;
+
+    dealloc(fds);
+    dealloc(rfds);
+
+    fds = iop->fds;
+    rfds = iop->rfds;
   }
   fptr = &fds[len];
   iop->len = len;
@@ -259,12 +419,16 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
   if (flags & IO_POLL_READ) FD_SET(fd, &fdset->readfds);
   if (flags & IO_POLL_WRITE) FD_SET(fd, &fdset->writefds);
   return 0;
+
+  ERR:
+  iop_fdhash_rm(fdhash, fd);
+  return -1;
 }
 #endif /* HAVE_SELECT */
 
 int io_poll_add(struct io_poll *iop, int fd, unsigned int flags)
 {
-  /* check for bad or duplicate file descriptors */
+  /* check for bad file descriptors */
   if (fcntl(fd, F_GETFL, 0) == -1) return -1;
 
 #ifdef HAVE_KQUEUE

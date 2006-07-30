@@ -254,6 +254,8 @@ static int iop_init_select(struct io_poll *iop, unsigned long num)
 
 int io_poll_init(struct io_poll *iop, unsigned long num)
 {
+  if (iop_fdhash_init(&iop->fdhash) == -1) return -1;
+
 #ifdef HAVE_KQUEUE
   return iop_init_kqueue(iop, num);
 #endif
