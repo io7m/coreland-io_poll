@@ -34,7 +34,8 @@ Timeout value?
   poll      int               milliseconds
   select    struct timeval    seconds or microseconds
 
-  io_poll uses milliseconds for the timeout value.
+  io_poll uses milliseconds for the timeout value, as a signed long.
+  -1 designates 'wait forever'.
 
 Keeps state in kernel?
 
