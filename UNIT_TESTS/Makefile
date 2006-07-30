@@ -61,45 +61,45 @@ t_fdhash:\
 	link t_fdhash.ld t_fdhash.o ../io_poll.a ../alloc.a 
 	./link t_fdhash t_fdhash.o ../io_poll.a ../alloc.a 
 t_iop1_ep:\
-	link t_iop1_ep.ld t_iop1_ep.o io_poll_ep/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop1_ep t_iop1_ep.o io_poll_ep/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop1_ep.ld t_iop1_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop1_ep t_iop1_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_iop1_kq:\
-	link t_iop1_kq.ld t_iop1_kq.o io_poll_kq/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop1_kq t_iop1_kq.o io_poll_kq/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop1_kq.ld t_iop1_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop1_kq t_iop1_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_iop1_po:\
-	link t_iop1_po.ld t_iop1_po.o io_poll_po/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop1_po t_iop1_po.o io_poll_po/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop1_po.ld t_iop1_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop1_po t_iop1_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_iop1_se:\
-	link t_iop1_se.ld t_iop1_se.o io_poll_se/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop1_se t_iop1_se.o io_poll_se/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop1_se.ld t_iop1_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop1_se t_iop1_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_iop2_ep:\
-	link t_iop2_ep.ld t_iop2_ep.o io_poll_ep/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop2_ep t_iop2_ep.o io_poll_ep/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop2_ep.ld t_iop2_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_ep t_iop2_ep.o io_poll_ep/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_iop2_kq:\
-	link t_iop2_kq.ld t_iop2_kq.o io_poll_kq/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop2_kq t_iop2_kq.o io_poll_kq/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop2_kq.ld t_iop2_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_kq t_iop2_kq.o io_poll_kq/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_iop2_po:\
-	link t_iop2_po.ld t_iop2_po.o io_poll_po/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop2_po t_iop2_po.o io_poll_po/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop2_po.ld t_iop2_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_po t_iop2_po.o io_poll_po/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 t_iop2_se:\
-	link t_iop2_se.ld t_iop2_se.o io_poll_se/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
-	./link t_iop2_se t_iop2_se.o io_poll_se/io_poll.a ../fd_hash.a \
-	../bin.a ../error.a ../alloc.a 
+	link t_iop2_se.ld t_iop2_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
+	./link t_iop2_se t_iop2_se.o io_poll_se/io_poll.a ../bin.a \
+	../error.a ../alloc.a 
 
 phase_link:\
 	t_fdhash t_iop1_ep t_iop1_kq t_iop1_po t_iop1_se t_iop2_ep \
