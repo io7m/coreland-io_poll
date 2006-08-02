@@ -403,6 +403,17 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
     new_a = old_a + 1 + IO_POLL_OVERALLOC;
     esize = sizeof(struct io_pollfd);
 
+    tmpfds = alloc(new_a * esize);
+    if (!tmpfds) goto ERR;
+    tmprfds = alloc(new_a * esize);
+    if (!tmprfds) {
+      dealloc(tmpfds);
+      goto ERR;
+    } 
+
+    bin_copy((char *) fds, (char *) tmpfds, esize);
+    bin_copy((char *) rfds, (char *) tmprfds, esize);
+ 
     iop->a = new_a;
     iop->fds = tmpfds;
     iop->rfds = tmprfds;

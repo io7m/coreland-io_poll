@@ -9,7 +9,6 @@ int main()
     perror("io_poll_init");
     _exit(2);
   }
-
   if (iop.len != len) {
     printf("iop.len %lu != %lu\n", iop.len, len);
     _exit(1);
@@ -17,6 +16,10 @@ int main()
   if (iop.a != len + IO_POLL_OVERALLOC) {
     printf("iop.a %lu != %lu\n", iop.a, len + IO_POLL_OVERALLOC);
     _exit(1);
+  }
+  if (io_poll_free(&iop) == -1) {
+    perror("io_poll_init");
+    _exit(2);
   }
 
   return 0;
