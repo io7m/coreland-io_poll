@@ -442,8 +442,10 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
 
 int io_poll_add(struct io_poll *iop, int fd, unsigned int flags)
 {
-  /* check for bad file descriptors */
+  /* check for bad or illegal file descriptors */
   if (fcntl(fd, F_GETFL, 0) == -1) return -1;
+  if (iop->pfd != -1)
+    if (iop->pfd == fd) return -1;
 
 #ifdef HAVE_KQUEUE
   return iop_add_kqueue(iop, fd, flags);

@@ -1,14 +1,5 @@
 BUGS
 
-  epoll() can't handle adding the same file descriptor more than once.
-  should the epoll() backend pretend that the file descriptor was added?
-  all the other interfaces seem to allow this, however useless it might
-  be.
-
-  it seems as though every file descriptor will have to be compared
-  against every other file descriptor in register() unless the fd's
-  are placed into a hash table. this is getting complicated.
-
 TEST
 
   split tests up

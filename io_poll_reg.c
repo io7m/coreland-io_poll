@@ -70,7 +70,7 @@ static int iop_register_epoll(struct io_poll *iop)
     iop_f = ifd->events;
     evp->events = io_poll_flags_io2ep(iop_f);
     evp->data.fd = ifd->fd;
-    switch (iop_fdhash_add(fdhash, fd)) {
+    switch (iop_fdhash_add(fdhash, ifd->fd)) {
       case -1: return -1;
        case 0: errno = error_exist; return -1;
       default: break;
