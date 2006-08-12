@@ -26,10 +26,10 @@ static int iop_rm_kqueue(struct io_poll *iop, unsigned long n)
      still zeroed */
 
   EV_SET(&kein[n], fds[n].fd, kein[n].filter, EV_DELETE, 0, 0, 0);
-  bin_zero((char *) &fds[n], sizeof(struct io_pollfd));
+  bin_zero(&fds[n], sizeof(struct io_pollfd));
 
   ret = kevent(kfd, &kein[n], 1, 0, 0, 0);
-  bin_zero((char *) &kein[n], sizeof(struct kevent));
+  bin_zero(&kein[n], sizeof(struct kevent));
   fds[n].fd = -1;
   return ret;
 }
@@ -49,10 +49,10 @@ static int iop_rm_epoll(struct io_poll *iop, unsigned long n)
   pfd = iop->pfd;
   fds = iop->fds;
 
-  bin_zero((char *) &fds[n], sizeof(struct io_pollfd));
+  bin_zero(&fds[n], sizeof(struct io_pollfd));
 
   ret = epoll_ctl(pfd, EPOLL_CTL_DEL, evs[n].data.fd, &evs[n]);
-  bin_zero((char *) &evs[n], sizeof(struct epoll_event));
+  bin_zero(&evs[n], sizeof(struct epoll_event));
   fds[n].fd = -1;
   return ret;
 }
@@ -73,8 +73,8 @@ static int iop_rm_poll(struct io_poll *iop, unsigned long n)
   /* check for bad fd and set errno, for uniformity */
   ret = fcntl(fds[n].fd, F_GETFL, 0);
 
-  bin_zero((char *) &fds[n], sizeof(struct io_pollfd));
-  bin_zero((char *) &pfds[n], sizeof(struct pollfd));
+  bin_zero(&fds[n], sizeof(struct io_pollfd));
+  bin_zero(&pfds[n], sizeof(struct pollfd));
   fds[n].fd = -1;
   return ret;
 }
@@ -98,7 +98,7 @@ static int iop_rm_select(struct io_poll *iop, unsigned long n)
   if (fds[n].events & IO_POLL_READ) FD_CLR(fds[n].fd, &fdset->readfds);
   if (fds[n].events & IO_POLL_WRITE) FD_CLR(fds[n].fd, &fdset->writefds);
 
-  bin_zero((char *) &fds[n], sizeof(struct io_pollfd));
+  bin_zero(&fds[n], sizeof(struct io_pollfd));
   fds[n].fd = -1;
   return ret;
 }

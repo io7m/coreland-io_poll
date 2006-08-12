@@ -72,10 +72,10 @@ static int iop_init_kqueue(struct io_poll *iop, unsigned long num)
     return -1;
   }
 
-  bin_zero((char *) kein, allocnum * sizeof(struct kevent));
-  bin_zero((char *) keout, allocnum * sizeof(struct kevent));
-  bin_zero((char *) fds, allocnum * sizeof(struct io_pollfd));
-  bin_zero((char *) rfds, allocnum * sizeof(struct io_pollfd));
+  bin_zero(kein, allocnum * sizeof(struct kevent));
+  bin_zero(keout, allocnum * sizeof(struct kevent));
+  bin_zero(fds, allocnum * sizeof(struct io_pollfd));
+  bin_zero(rfds, allocnum * sizeof(struct io_pollfd));
 
   iop->fds = fds;
   iop->rfds = rfds;
@@ -141,10 +141,10 @@ static int iop_init_epoll(struct io_poll *iop, unsigned long num)
     return -1;
   }
 
-  bin_zero((char *) evs, allocnum * sizeof(struct epoll_event));
-  bin_zero((char *) revs, allocnum * sizeof(struct epoll_event));
-  bin_zero((char *) fds, allocnum * sizeof(struct io_pollfd));
-  bin_zero((char *) rfds, allocnum * sizeof(struct io_pollfd));
+  bin_zero(evs, allocnum * sizeof(struct epoll_event));
+  bin_zero(revs, allocnum * sizeof(struct epoll_event));
+  bin_zero(fds, allocnum * sizeof(struct io_pollfd));
+  bin_zero(rfds, allocnum * sizeof(struct io_pollfd));
 
   iop->fds = fds;
   iop->rfds = rfds;
@@ -183,9 +183,9 @@ static int iop_init_poll(struct io_poll *iop, unsigned long num)
     return -1;
   }
 
-  bin_zero((char *) fds, allocnum * sizeof(struct io_pollfd));
-  bin_zero((char *) rfds, allocnum * sizeof(struct io_pollfd));
-  bin_zero((char *) pfds, allocnum * sizeof(struct pollfd));
+  bin_zero(fds, allocnum * sizeof(struct io_pollfd));
+  bin_zero(rfds, allocnum * sizeof(struct io_pollfd));
+  bin_zero(pfds, allocnum * sizeof(struct pollfd));
 
   iop->fds = fds;
   iop->rfds = rfds;

@@ -1,22 +1,22 @@
 #ifndef BIN_H
 #define BIN_H
 
-long bin_chr(const char *, unsigned long, int);
-long bin_rchr(const char *, unsigned long, int);
+long bin_chr(const void *, unsigned long, int);
+long bin_rchr(const void *, unsigned long, int);
 
-int bin_char(const char *, unsigned long, int, unsigned long *);
-int bin_rchar(const char *, unsigned long, int, unsigned long *);
+int bin_char(const void *, unsigned long, int, unsigned long *);
+int bin_rchar(const void *, unsigned long, int, unsigned long *);
 
-void bin_tolower(char *, unsigned long);
-void bin_toupper(char *, unsigned long);
+void bin_tolower(void *, unsigned long);
+void bin_toupper(void *, unsigned long);
 
-void bin_copy(const char *, char *, unsigned long);
-void bin_copyr(char *, const char *, unsigned long);
-void bin_zero(char *, unsigned long);
-void bin_set(char *, unsigned long, int);
+void bin_copy(const void *, void *, unsigned long);
+void bin_copyr(void *, const void *, unsigned long);
+void bin_zero(void *, unsigned long);
+void bin_set(void *, unsigned long, int);
 
-int bin_diff(const char *, const char *, unsigned long);
-unsigned long bin_count(const char *, unsigned long, int);
+int bin_diff(const void *, const void *, unsigned long);
+unsigned long bin_count(const void *, unsigned long, int);
 
 #define bin_same(a,b,n) (bin_diff((a),(b),(n)) == 0)
 

@@ -152,7 +152,7 @@ static long iop_wait_select(struct io_poll *iop, long ms)
   tv.tv_sec = 0;
   tv.tv_usec = ms;
 
-  bin_copy((char *) fdset, (char *) rfdset, sizeof(struct fd_sets));
+  bin_copy(fdset, rfdset, sizeof(struct fd_sets));
 
   ret = select(FD_SETSIZE, &rfdset->readfds, &rfdset->writefds, 0, tvp);
   if (ret == -1) return -1;

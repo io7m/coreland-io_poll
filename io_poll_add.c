@@ -102,11 +102,11 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
     }
 
     esize = sizeof(struct io_pollfd);
-    bin_copy((char *) fds, (char *) tmpfds, old_a * esize);
-    bin_copy((char *) rfds, (char *) tmprfds, old_a * esize);
+    bin_copy(fds, tmpfds, old_a * esize);
+    bin_copy(rfds, tmprfds, old_a * esize);
     esize = sizeof(struct kevent);
-    bin_copy((char *) tmpkein, (char *) tmpkein, old_a * esize);
-    bin_copy((char *) tmpkout, (char *) tmpkout, old_a * esize);
+    bin_copy(tmpkein, tmpkein, old_a * esize);
+    bin_copy(tmpkout, tmpkout, old_a * esize);
 
     iop->a = new_a;
     iop->pd_in = tmpkein;
@@ -216,11 +216,11 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
     }
 
     esize = sizeof(struct io_pollfd);
-    bin_copy((char *) fds, (char *) tmpfds, old_a * esize);
-    bin_copy((char *) rfds, (char *) tmprfds, old_a * esize);
+    bin_copy(fds, tmpfds, old_a * esize);
+    bin_copy(rfds, tmprfds, old_a * esize);
     esize = sizeof(struct epoll_event);
-    bin_copy((char *) tmpevs, (char *) tmpevs, old_a * esize);
-    bin_copy((char *) tmprevs, (char *) tmprevs, old_a * esize);
+    bin_copy(tmpevs, tmpevs, old_a * esize);
+    bin_copy(tmprevs, tmprevs, old_a * esize);
 
     iop->a = new_a;
     iop->pd_in = tmpevs;
@@ -320,10 +320,10 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
     }
 
     esize = sizeof(struct io_pollfd);
-    bin_copy((char *) fds, (char *) tmpfds, esize);
-    bin_copy((char *) rfds, (char *) tmprfds, esize);
+    bin_copy(fds, tmpfds, esize);
+    bin_copy(rfds, tmprfds, esize);
     esize = sizeof(struct pollfd);
-    bin_copy((char *) tmppfds, (char *) tmppfds, esize);
+    bin_copy(tmppfds, tmppfds, esize);
 
     iop->a = new_a;
     iop->pd_in = tmppfds;
@@ -411,8 +411,8 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
       goto ERR;
     } 
 
-    bin_copy((char *) fds, (char *) tmpfds, esize);
-    bin_copy((char *) rfds, (char *) tmprfds, esize);
+    bin_copy(fds, tmpfds, esize);
+    bin_copy(rfds, tmprfds, esize);
  
     iop->a = new_a;
     iop->fds = tmpfds;
