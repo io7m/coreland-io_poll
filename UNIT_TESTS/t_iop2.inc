@@ -59,12 +59,12 @@ int main()
 
   /* internal poll fd test */
   init();
-  if (iop->pfd != -1) {
+  if (iop.pfd != -1) {
     for (ind = 0; ind < NUM_PIPES; ++ind) {
       iop.fds[ind].fd = 0;
       iop.fds[ind].events = 0;
     }
-    iop.fds[0].fd = iop->pfd;
+    iop.fds[0].fd = iop.pfd;
     iop.fds[0].events = IO_POLL_READ;
     if (io_poll_register(&iop) != -1) {
       printf("FAIL: io_poll_register did not reject internal poll descriptor\n");
