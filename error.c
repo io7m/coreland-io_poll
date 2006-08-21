@@ -113,6 +113,20 @@ EISDIR;
 -16;
 #endif
 
+int error_loop =
+#ifdef ELOOP
+ELOOP;
+#else
+-62;
+#endif
+
+int error_nametoolong =
+#ifdef ENAMETOOLONG
+ENAMETOOLONG;
+#else
+-63;
+#endif
+
 int error_overflow =
 #ifdef EOVERFLOW
 EOVERFLOW;
