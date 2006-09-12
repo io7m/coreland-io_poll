@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "ctxt.h"
+#include "get_opt.h"
 
 const char progname[] = "io_poll-config";
 
@@ -38,14 +39,9 @@ int main(int argc, char *argv[])
   flag_libdir = 0;
   flag_static = 0;
 
-  --argc;
-  ++argv;
-
   if (argc < 1) { usage(); return 111; }
 
-  for (ind = 0; ind < argc; ++ind) {
-    if (argv[ind][0] != '-') { usage(); return 111; }
-    ch = argv[ind][1];
+  while ((ch = get_opt(argc, argv, "ILVcshn")) != opteof)
     switch (ch) {
       case 'I': flag_incdir = 1; break;
       case 'L': flag_libdir = 1; break;
@@ -56,7 +52,6 @@ int main(int argc, char *argv[])
       case 'V': flag_ver = 1; break;
        default: usage(); return 111; break;
     }
-  }
 
   if (flag_ver) {
     printf("%s", ctxt_version);
@@ -75,5 +70,6 @@ int main(int argc, char *argv[])
     printf("%s", " ");
   }
   if (flag_nl) { printf("\n"); }
+  fflush(0);
   return 0;
 }

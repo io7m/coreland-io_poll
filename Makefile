@@ -46,42 +46,42 @@ ctxt/bindir.c: conf-bindir mk-ctxt
 	./mk-ctxt ctxt_bindir ../ctxt < conf-bindir > ctxt/bindir.c
 
 ctxt/bindir.o:\
-	cc ctxt/bindir.c ctxt.h 
+	cc ctxt/bindir.c 
 	./cc ctxt/bindir.c
 ctxt/group.c: conf-group mk-ctxt
 	rm -f ctxt/group.c
 	./mk-ctxt ctxt_group ../ctxt < conf-group > ctxt/group.c
 
 ctxt/group.o:\
-	cc ctxt/group.c ctxt.h 
+	cc ctxt/group.c 
 	./cc ctxt/group.c
 ctxt/incdir.c: conf-incdir mk-ctxt
 	rm -f ctxt/incdir.c
 	./mk-ctxt ctxt_incdir ../ctxt < conf-incdir > ctxt/incdir.c
 
 ctxt/incdir.o:\
-	cc ctxt/incdir.c ctxt.h 
+	cc ctxt/incdir.c 
 	./cc ctxt/incdir.c
 ctxt/owner.c: conf-owner mk-ctxt
 	rm -f ctxt/owner.c
 	./mk-ctxt ctxt_owner ../ctxt < conf-owner > ctxt/owner.c
 
 ctxt/owner.o:\
-	cc ctxt/owner.c ctxt.h 
+	cc ctxt/owner.c 
 	./cc ctxt/owner.c
 ctxt/slibdir.c: conf-slibdir mk-ctxt
 	rm -f ctxt/slibdir.c
 	./mk-ctxt ctxt_slibdir ../ctxt < conf-slibdir > ctxt/slibdir.c
 
 ctxt/slibdir.o:\
-	cc ctxt/slibdir.c ctxt.h 
+	cc ctxt/slibdir.c 
 	./cc ctxt/slibdir.c
 ctxt/version.c: VERSION mk-ctxt
 	rm -f ctxt/version.c
 	./mk-ctxt ctxt_version ../ctxt < VERSION > ctxt/version.c
 
 ctxt/version.o:\
-	cc ctxt/version.c ctxt.h 
+	cc ctxt/version.c 
 	./cc ctxt/version.c
 deinstaller:\
 	ld deinstaller.ld deinstaller.o insthier.o install_core.o \
@@ -106,6 +106,12 @@ error.o:\
 error_str.o:\
 	cc error_str.c error.h 
 	./cc error_str.c
+get_opt.a:\
+	mk-slib get_opt.sld get_opt.o 
+	./mk-slib get_opt get_opt.o 
+get_opt.o:\
+	cc get_opt.c get_opt.h 
+	./cc get_opt.c
 inst-check:\
 	ld inst-check.ld inst-check.o install_error.o 
 	./ld inst-check inst-check.o install_error.o 
@@ -156,10 +162,10 @@ insthier.o:\
 	cc insthier.c ctxt.h install.h 
 	./cc insthier.c
 io_poll-conf:\
-	ld io_poll-conf.ld io_poll-conf.o io_poll.a ctxt.a 
-	./ld io_poll-conf io_poll-conf.o io_poll.a ctxt.a 
+	ld io_poll-conf.ld io_poll-conf.o io_poll.a ctxt.a get_opt.a 
+	./ld io_poll-conf io_poll-conf.o io_poll.a ctxt.a get_opt.a 
 io_poll-conf.o:\
-	cc io_poll-conf.c ctxt.h 
+	cc io_poll-conf.c ctxt.h get_opt.h 
 	./cc io_poll-conf.c
 io_poll.a:\
 	mk-slib io_poll.sld io_poll_add.o io_poll_fdh.o io_poll_flgt.o \
@@ -216,17 +222,17 @@ support.o:\
 	cc support.c aio-mech.h 
 	./cc support.c
 clean: sysdeps_clean tests_clean local_clean 
-	rm -f alloc.a alloc.o bin.a bin_copy.o bin_zero.o conf-cctype \
-	conf-systype ctxt.a ctxt/bindir.c ctxt/bindir.o ctxt/group.c \
-	ctxt/group.o ctxt/incdir.c ctxt/incdir.o ctxt/owner.c ctxt/owner.o \
-	ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o \
-	deinstaller deinstaller.o depchklist depchklist.o error.a error.o \
-	error_str.o inst-check inst-check.o inst-copy inst-copy.o inst-dir \
-	inst-dir.o inst-link inst-link.o install_core.o install_error.o \
-	installer installer.o instchk instchk.o insthier.o io_poll-conf \
-	io_poll-conf.o io_poll.a io_poll_add.o io_poll_fdh.o io_poll_flgt.o \
-	io_poll_free.o io_poll_init.o io_poll_iom.o io_poll_reg.o \
-	io_poll_rm.o io_poll_wait.o mk-ctxt mk-ctxt.o support support.o 
+	rm -f alloc.a alloc.o bin.a bin_copy.o bin_zero.o ctxt.a \
+	ctxt/bindir.c ctxt/bindir.o ctxt/group.c ctxt/group.o ctxt/incdir.c \
+	ctxt/incdir.o ctxt/owner.c ctxt/owner.o ctxt/slibdir.c \
+	ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller \
+	deinstaller.o depchklist depchklist.o error.a error.o error_str.o \
+	get_opt.a get_opt.o inst-check inst-check.o inst-copy inst-copy.o \
+	inst-dir inst-dir.o inst-link inst-link.o install_core.o \
+	install_error.o installer installer.o instchk instchk.o insthier.o \
+	io_poll-conf io_poll-conf.o io_poll.a io_poll_add.o io_poll_fdh.o \
+	io_poll_flgt.o io_poll_free.o io_poll_init.o io_poll_iom.o \
+	io_poll_reg.o io_poll_rm.o io_poll_wait.o support support.o 
 
 deinstall: deinstaller
 	./deinstaller
