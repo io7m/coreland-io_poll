@@ -222,17 +222,18 @@ support.o:\
 	cc support.c aio-mech.h 
 	./cc support.c
 clean: sysdeps_clean tests_clean local_clean 
-	rm -f alloc.a alloc.o bin.a bin_copy.o bin_zero.o ctxt.a \
-	ctxt/bindir.c ctxt/bindir.o ctxt/group.c ctxt/group.o ctxt/incdir.c \
-	ctxt/incdir.o ctxt/owner.c ctxt/owner.o ctxt/slibdir.c \
-	ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller \
-	deinstaller.o depchklist depchklist.o error.a error.o error_str.o \
-	get_opt.a get_opt.o inst-check inst-check.o inst-copy inst-copy.o \
-	inst-dir inst-dir.o inst-link inst-link.o install_core.o \
+	rm -f alloc.a alloc.o bin.a bin_copy.o bin_zero.o conf-cctype \
+	conf-systype ctxt.a ctxt/bindir.c ctxt/bindir.o ctxt/group.c \
+	ctxt/group.o ctxt/incdir.c ctxt/incdir.o ctxt/owner.c ctxt/owner.o \
+	ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o \
+	deinstaller deinstaller.o depchklist depchklist.o error.a error.o \
+	error_str.o get_opt.a get_opt.o inst-check inst-check.o inst-copy \
+	inst-copy.o inst-dir inst-dir.o inst-link inst-link.o install_core.o \
 	install_error.o installer installer.o instchk instchk.o insthier.o \
 	io_poll-conf io_poll-conf.o io_poll.a io_poll_add.o io_poll_fdh.o \
 	io_poll_flgt.o io_poll_free.o io_poll_init.o io_poll_iom.o \
-	io_poll_reg.o io_poll_rm.o io_poll_wait.o support support.o 
+	io_poll_reg.o io_poll_rm.o io_poll_wait.o mk-ctxt mk-ctxt.o support \
+	support.o 
 
 deinstall: deinstaller
 	./deinstaller

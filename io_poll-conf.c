@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
     else
       printf("%s", ctxt_slibdir);
     printf("%s", " ");
+    if (flag_comp) printf("%s", "-lio_poll ");
   }
   if (flag_nl) { printf("\n"); }
   fflush(0);
