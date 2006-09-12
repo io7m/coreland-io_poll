@@ -1,0 +1,5 @@
+install: installer inst-check inst-copy inst-dir inst-link
+	./installer
+install-dryrun: installer inst-check inst-copy inst-dir inst-link
+	./installer dryrun
+

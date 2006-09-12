@@ -1,0 +1,4 @@
+deinstall: deinstaller
+	./deinstaller
+deinstall-dryrun: deinstaller
+	./deinstaller dryrun

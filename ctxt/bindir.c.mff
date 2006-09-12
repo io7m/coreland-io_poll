@@ -1,0 +1,3 @@
+ctxt/bindir.c: conf-bindir mk-ctxt
+	rm -f ctxt/bindir.c
+	./mk-ctxt ctxt_bindir ../ctxt < conf-bindir > ctxt/bindir.c

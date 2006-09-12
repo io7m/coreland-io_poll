@@ -1,0 +1,3 @@
+ctxt/owner.c: conf-owner mk-ctxt
+	rm -f ctxt/owner.c
+	./mk-ctxt ctxt_owner ../ctxt < conf-owner > ctxt/owner.c

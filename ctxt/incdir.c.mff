@@ -1,0 +1,3 @@
+ctxt/incdir.c: conf-incdir mk-ctxt
+	rm -f ctxt/incdir.c
+	./mk-ctxt ctxt_incdir ../ctxt < conf-incdir > ctxt/incdir.c

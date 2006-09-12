@@ -1,0 +1,10 @@
+local: checkdeps
+local_clean: checkdeps_clean
+
+checkdeps: checkdeps.done
+checkdeps_clean:
+	rm -f checkdeps.done
+
+checkdeps.done: depchklist
+	./depchklist
+	touch checkdeps.done

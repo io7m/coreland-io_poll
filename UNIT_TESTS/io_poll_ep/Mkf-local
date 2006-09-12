@@ -1,16 +1,13 @@
-phase_tools_local: tools sources
-phase_compile_local:
-phase_library_local:
-phase_link_local:
-phase_local_clean: toollink_clean sources_clean
+local: tools sources io_poll.a
+local_clean: toollink_clean sources_clean
 
-tools: make-compile make-link make-makelib make-makeso make-libname \
-	conf-cc conf-ld conf-shebang rebuild-flag
+tools: cc ld mk-slib \
+	conf-cc conf-ld rebuild-flag conf-cctype  \
+	conf-systype
 
 toollink_clean:
-	@rm -f make-compile make-link make-makelib make-makeso make-libname \
-	conf-cc conf-ld conf-shebang rebuild-flag compile link makelib makeso \
-	libname 
+	@rm -f cc ld mk-slib conf-cc conf-ld conf-cctype  \
+	conf-systype rebuild-flag
 
 conf-cc: ../../conf-cc
 	@echo symlink conf-cc
@@ -20,47 +17,30 @@ conf-ld: ../../conf-ld
 	@echo symlink conf-ld
 	@rm -f conf-ld
 	@ln -s ../../conf-ld conf-ld
-conf-shebang: ../../conf-shebang
-	@echo symlink conf-shebang
-	@rm -f conf-shebang
-	@ln -s ../../conf-shebang conf-shebang
+conf-cctype: ../../conf-cctype
+	@echo symlink conf-cctype
+	@rm -f conf-cctype
+	@ln -s ../../conf-cctype conf-cctype
+conf-systype: ../../conf-systype
+	@echo symlink conf-systype
+	@rm -f conf-systype
+	@ln -s ../../conf-systype conf-systype
 
-make-compile: ../../make-compile conf-cc conf-shebang conf-ccfflist \
+cc: ../../cc conf-cc  conf-ccfflist \
 	flags-sysspec
-	@echo symlink make-compile
-	@rm -f make-compile
-	@ln -s ../../make-compile make-compile
+	@echo symlink cc
+	@rm -f cc
+	@ln -s ../../cc cc
 
-make-link: ../../make-link conf-ld conf-shebang
-	@echo symlink make-link
-	@rm -f make-link
-	@ln -s ../../make-link make-link
+ld: ../../ld conf-ld 
+	@echo symlink ld
+	@rm -f ld
+	@ln -s ../../ld ld
 
-make-makelib: ../../make-makelib conf-shebang
-	@echo symlink make-makelib
-	@rm -f make-makelib
-	@ln -s ../../make-makelib make-makelib
-
-make-makeso: ../../make-makeso conf-shebang
-	@echo symlink make-makeso
-	@rm -f make-makeso
-	@ln -s ../../make-makeso make-makeso
-
-make-libname: ../../make-libname conf-shebang
-	@echo symlink make-libname
-	@rm -f make-libname
-	@ln -s ../../make-libname make-libname
-
-compile: conf-shebang conf-cc make-compile conf-ccfflist flags-sysspec
-	(cat conf-shebang; ./make-compile) > compile; chmod u+x compile;
-link: conf-shebang conf-ld make-link 
-	(cat conf-shebang; ./make-link) > link; chmod u+x link;
-makelib: conf-shebang make-makelib 
-	(cat conf-shebang; ./make-makelib) > makelib; chmod u+x makelib;
-makeso: conf-shebang libname make-makeso 
-	(cat conf-shebang; ./make-makeso) > makeso; chmod u+x makeso;
-libname: conf-shebang make-libname 
-	(cat conf-shebang; ./make-libname) > libname; chmod u+x libname;
+mk-slib: ../../mk-slib 
+	@echo symlink mk-slib
+	@rm -f mk-slib
+	@ln -s ../../mk-slib mk-slib
 
 rebuild-flag:
 	@touch rebuild-flag

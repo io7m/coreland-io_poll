@@ -1,5 +1,5 @@
-phase_test_clean:
+tests_clean:
 	(cd UNIT_TESTS; make clean)
 
-phase_test:
+tests:
 	(cd UNIT_TESTS; make && make tests)
