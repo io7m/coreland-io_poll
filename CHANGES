@@ -1,3 +1,6 @@
 20060727 version: io_poll 0.1
 20060912 code: moved to latest coreproject
 20060912 code: added installer
+20060921 code: fixed incorrect conversion to nanoseconds in kqueue
+               wait(). imported int64.h for times as most values
+               are too large for kqueue on 32 bit hardware.

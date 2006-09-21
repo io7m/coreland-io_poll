@@ -3,6 +3,7 @@
 
 #include "aio-mech.h"
 #include "io_poll_fdh.h"
+#include "int64.h"
 
 #define IO_POLL_OVERALLOC 32
 
@@ -32,7 +33,7 @@ int io_poll_register(struct io_poll *);
 int io_poll_add(struct io_poll *, int, unsigned int);
 int io_poll_rm(struct io_poll *, unsigned long);
 int io_poll_free(struct io_poll *);
-long io_poll_wait(struct io_poll *, long);
+long io_poll_wait(struct io_poll *, int64);
 
 #define io_poll_size(io) ((io)->len)
 #define io_poll_fds(io) ((io)->fds)

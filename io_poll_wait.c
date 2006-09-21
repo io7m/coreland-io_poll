@@ -2,6 +2,7 @@
 #include "bin.h"
 #include "close.h"
 #include "error.h"
+#include "int64.h"
 
 #include "io_poll.h"
 
@@ -10,7 +11,7 @@
 #include <sys/event.h>
 #include <sys/time.h>
 
-static long iop_wait_kqueue(struct io_poll *iop, long ms)
+static long iop_wait_kqueue(struct io_poll *iop, int64 ms)
 {
   int kfd;
   struct timespec ts;
@@ -29,11 +30,14 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
   len = iop->len;
   tsp = &ts;
 
-  if (ms > 0) ms /= 1000000UL; /* ms to nanoseconds */
   if (ms == -1) tsp = 0;
 
-  ts.tv_sec = 0;
-  ts.tv_nsec = ms;
+  /* break times into seconds + nanoseconds */
+  if (tsp) {
+    ts.tv_sec = ms / 1000;
+    ms -= (ts.tv_sec * 1000);
+    ts.tv_nsec = ms * 1000000UL;
+  }
 
   ret = kevent(kfd, 0, 0, kout, len, tsp);
   if (ret <= 0) return ret;
@@ -52,7 +56,7 @@ static long iop_wait_kqueue(struct io_poll *iop, long ms)
 #ifdef HAVE_EPOLL
 #include <sys/epoll.h>
 
-static long iop_wait_epoll(struct io_poll *iop, long ms)
+static long iop_wait_epoll(struct io_poll *iop, int64 ms)
 {
   int pfd;
   int fd;
@@ -87,7 +91,7 @@ static long iop_wait_epoll(struct io_poll *iop, long ms)
 #ifdef HAVE_POLL
 #include <poll.h>
 
-static long iop_wait_poll(struct io_poll *iop, long ms)
+static long iop_wait_poll(struct io_poll *iop, int64 ms)
 {
   struct pollfd *pfds;
   struct io_pollfd *fds;
@@ -125,7 +129,7 @@ static long iop_wait_poll(struct io_poll *iop, long ms)
 #ifdef HAVE_SELECT
 #include "select.h"
 
-static long iop_wait_select(struct io_poll *iop, long ms)
+static long iop_wait_select(struct io_poll *iop, int64 ms)
 {
   struct io_pollfd *fds;
   struct io_pollfd *rfds;
@@ -182,7 +186,7 @@ static long iop_wait_select(struct io_poll *iop, long ms)
 }
 #endif /* HAVE_SELECT */
 
-long io_poll_wait(struct io_poll *iop, long ms)
+long io_poll_wait(struct io_poll *iop, int64 ms)
 {
 #ifdef HAVE_KQUEUE
   return iop_wait_kqueue(iop, ms);
