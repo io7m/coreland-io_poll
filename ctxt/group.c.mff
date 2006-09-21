@@ -1,3 +1,0 @@
-ctxt/group.c: conf-group mk-ctxt
-	rm -f ctxt/group.c
-	./mk-ctxt ctxt_group ../ctxt < conf-group > ctxt/group.c

@@ -3,9 +3,11 @@
 default: all
 
 all: local  sysdeps.out \
-	deinstaller depchklist inst-check inst-copy inst-dir inst-link \
-	installer instchk io_poll-conf support 
+	alloc.a bin.a ctxt.a deinstaller depchklist error.a get_opt.a \
+	inst-check inst-copy inst-dir inst-link installer instchk \
+	io_poll-conf io_poll.a support 
 
+sysdeps: sysdeps.out
 sysdeps.out:
 	SYSDEPS/sysdep-header sysdeps.out
 	(cd SYSDEPS && make)
@@ -37,10 +39,10 @@ conf-systype:\
 	mk-systype 
 	./mk-systype > conf-systype
 ctxt.a:\
-	mk-slib ctxt.sld ctxt/incdir.o ctxt/slibdir.o ctxt/group.o \
-	ctxt/owner.o ctxt/bindir.o ctxt/version.o 
-	./mk-slib ctxt ctxt/incdir.o ctxt/slibdir.o ctxt/group.o \
-	ctxt/owner.o ctxt/bindir.o ctxt/version.o 
+	mk-slib ctxt.sld ctxt/incdir.o ctxt/slibdir.o ctxt/bindir.o \
+	ctxt/version.o 
+	./mk-slib ctxt ctxt/incdir.o ctxt/slibdir.o ctxt/bindir.o \
+	ctxt/version.o 
 ctxt/bindir.c: conf-bindir mk-ctxt
 	rm -f ctxt/bindir.c
 	./mk-ctxt ctxt_bindir ../ctxt < conf-bindir > ctxt/bindir.c
@@ -48,13 +50,6 @@ ctxt/bindir.c: conf-bindir mk-ctxt
 ctxt/bindir.o:\
 	cc ctxt/bindir.c 
 	./cc ctxt/bindir.c
-ctxt/group.c: conf-group mk-ctxt
-	rm -f ctxt/group.c
-	./mk-ctxt ctxt_group ../ctxt < conf-group > ctxt/group.c
-
-ctxt/group.o:\
-	cc ctxt/group.c 
-	./cc ctxt/group.c
 ctxt/incdir.c: conf-incdir mk-ctxt
 	rm -f ctxt/incdir.c
 	./mk-ctxt ctxt_incdir ../ctxt < conf-incdir > ctxt/incdir.c
@@ -62,13 +57,6 @@ ctxt/incdir.c: conf-incdir mk-ctxt
 ctxt/incdir.o:\
 	cc ctxt/incdir.c 
 	./cc ctxt/incdir.c
-ctxt/owner.c: conf-owner mk-ctxt
-	rm -f ctxt/owner.c
-	./mk-ctxt ctxt_owner ../ctxt < conf-owner > ctxt/owner.c
-
-ctxt/owner.o:\
-	cc ctxt/owner.c 
-	./cc ctxt/owner.c
 ctxt/slibdir.c: conf-slibdir mk-ctxt
 	rm -f ctxt/slibdir.c
 	./mk-ctxt ctxt_slibdir ../ctxt < conf-slibdir > ctxt/slibdir.c
@@ -199,7 +187,8 @@ io_poll_rm.o:\
 	cc io_poll_rm.c bin.h error.h io_poll.h select.h select.h 
 	./cc io_poll_rm.c
 io_poll_wait.o:\
-	cc io_poll_wait.c alloc.h bin.h close.h error.h io_poll.h select.h 
+	cc io_poll_wait.c alloc.h bin.h close.h error.h int64.h io_poll.h \
+	select.h 
 	./cc io_poll_wait.c
 ld:\
 	conf-ld sysdeps.out 
@@ -222,9 +211,8 @@ support.o:\
 	cc support.c aio-mech.h 
 	./cc support.c
 clean: sysdeps_clean tests_clean local_clean 
-	rm -f alloc.a alloc.o bin.a bin_copy.o bin_zero.o conf-cctype \
-	conf-systype ctxt.a ctxt/bindir.c ctxt/bindir.o ctxt/group.c \
-	ctxt/group.o ctxt/incdir.c ctxt/incdir.o ctxt/owner.c ctxt/owner.o \
+	rm -f alloc.a alloc.o bin.a bin_copy.o bin_zero.o ctxt.a \
+	ctxt/bindir.c ctxt/bindir.o ctxt/incdir.c ctxt/incdir.o \
 	ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o \
 	deinstaller deinstaller.o depchklist depchklist.o error.a error.o \
 	error_str.o get_opt.a get_opt.o inst-check inst-check.o inst-copy \
@@ -232,8 +220,7 @@ clean: sysdeps_clean tests_clean local_clean
 	install_error.o installer installer.o instchk instchk.o insthier.o \
 	io_poll-conf io_poll-conf.o io_poll.a io_poll_add.o io_poll_fdh.o \
 	io_poll_flgt.o io_poll_free.o io_poll_init.o io_poll_iom.o \
-	io_poll_reg.o io_poll_rm.o io_poll_wait.o mk-ctxt mk-ctxt.o support \
-	support.o 
+	io_poll_reg.o io_poll_rm.o io_poll_wait.o support support.o 
 
 deinstall: deinstaller
 	./deinstaller
