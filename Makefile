@@ -35,6 +35,9 @@ cc:\
 conf-cctype:\
 	conf-systype conf-cc mk-cctype 
 	./mk-cctype > conf-cctype
+conf-sosuffix:\
+	mk-sosuffix 
+	./mk-sosuffix > conf-sosuffix
 conf-systype:\
 	mk-systype 
 	./mk-systype > conf-systype
@@ -220,7 +223,8 @@ clean: sysdeps_clean tests_clean local_clean
 	install_error.o installer installer.o instchk instchk.o insthier.o \
 	io_poll-conf io_poll-conf.o io_poll.a io_poll_add.o io_poll_fdh.o \
 	io_poll_flgt.o io_poll_free.o io_poll_init.o io_poll_iom.o \
-	io_poll_reg.o io_poll_rm.o io_poll_wait.o support support.o 
+	io_poll_reg.o io_poll_rm.o io_poll_wait.o mk-ctxt.o support \
+	support.o 
 
 deinstall: deinstaller
 	./deinstaller
