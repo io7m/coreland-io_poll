@@ -4,3 +4,5 @@
 20060921 code: fixed incorrect conversion to nanoseconds in kqueue
                wait(). imported int64.h for times as most values
                are too large for kqueue on 32 bit hardware.
+20061010 code: if len == 0, io_poll_add now correctly inserts at
+               start of array as opposed to skipping.

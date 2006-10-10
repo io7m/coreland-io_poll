@@ -11,6 +11,9 @@ static int find_empty(struct io_pollfd *fds,
                       unsigned long len, unsigned long *pos)
 {
   unsigned long ind;
+
+  if (!len) { *pos = 0; return 1; }
+
   /* empty space before len? */
   for (ind = 0; ind < len; ++ind) {
     if ((fds[ind].fd == -1) && (!fds[ind].events)) {
