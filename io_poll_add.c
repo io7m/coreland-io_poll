@@ -12,8 +12,6 @@ static int find_empty(struct io_pollfd *fds,
 {
   unsigned long ind;
 
-  if (!len) { *pos = 0; return 1; }
-
   /* empty space before len? */
   for (ind = 0; ind < len; ++ind) {
     if ((fds[ind].fd == -1) && (!fds[ind].events)) {
@@ -69,8 +67,7 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
   if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
   /* append */
-  ++len;
-  if (len >= old_a) {
+  if (len + 1 >= old_a) {
     struct io_pollfd *tmpfds;
     struct io_pollfd *tmprfds;
     struct kevent *tmpkein;
@@ -129,11 +126,11 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
   }
   kptr = &kein[len];
   fptr = &fds[len];
-  iop->len = len;
 
   SET:
   fptr->fd = fd;
   fptr->events = flags;
+  iop->len = len + 1;
 
   EV_SET(kptr, fd, io_poll_flags_io2kq(flags), EV_ADD, 0, 1, 0);
   return kevent(kfd, kptr, 1, 0, 0, 0);
@@ -183,8 +180,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
 
   if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
-  ++len;
-  if (len >= old_a) {
+  if (len + 1 >= old_a) {
     struct io_pollfd *tmpfds;
     struct io_pollfd *tmprfds;
     struct epoll_event *tmpevs;
@@ -243,7 +239,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
   }
   eptr = &evs[len];
   fptr = &fds[len];
-  iop->len = len;
+  iop->len = len + 1;
 
   SET:
   fptr->fd = fd;
@@ -295,8 +291,7 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
   if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
   /* append */
-  ++len;
-  if (len >= old_a) {
+  if (len + 1 >= old_a) {
     struct io_pollfd *tmpfds;
     struct io_pollfd *tmprfds;
     struct pollfd *tmppfds;
@@ -343,7 +338,7 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
   }
   pptr = &pfds[len];
   fptr = &fds[len];
-  iop->len = len;
+  iop->len = len + 1;
 
   SET:
   pptr->fd = fd;
@@ -397,8 +392,7 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
   /* redundant */
   if (CHECK_OVERFLOW(len)) { errno = error_overflow; goto ERR; }
 
-  ++len;
-  if (len >= old_a) {
+  if (len + 1 >= old_a) {
     struct io_pollfd *tmpfds;
     struct io_pollfd *tmprfds;
     unsigned int esize;
@@ -428,7 +422,7 @@ static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
     rfds = iop->rfds;
   }
   fptr = &fds[len];
-  iop->len = len;
+  iop->len = len + 1;
 
   SET:
   fptr->fd = fd;

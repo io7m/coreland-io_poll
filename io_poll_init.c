@@ -10,7 +10,7 @@ static unsigned long alloc_io_pollfds(struct io_pollfd **pfds,
 {
   unsigned long allocnum;
   struct io_pollfd *fds;
-  allocnum = num + IO_POLL_OVERALLOC;
+  allocnum = num + 1 + IO_POLL_OVERALLOC;
   fds = alloc(allocnum * sizeof(struct io_pollfd));
   if (!fds) return 0;
   *pfds = fds;

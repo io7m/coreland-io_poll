@@ -13,7 +13,7 @@ int main()
     printf("iop.len %lu != %lu\n", iop.len, len);
     _exit(1);
   }
-  if (iop.a != len + IO_POLL_OVERALLOC) {
+  if (iop.a != len + 1 + IO_POLL_OVERALLOC) {
     printf("iop.a %lu != %lu\n", iop.a, len + IO_POLL_OVERALLOC);
     _exit(1);
   }
