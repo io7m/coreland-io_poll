@@ -23,72 +23,74 @@ ld: ../ld conf-ld
 	ln -s ../ld ld
 
 t_fdhash:\
-	ld t_fdhash.ld t_fdhash.o ../io_poll.a ../alloc.a 
-	./ld t_fdhash t_fdhash.o ../io_poll.a ../alloc.a 
+	ld t_fdhash.ld t_fdhash.o ../io_poll.a ../hashtable.a ../error.a \
+	../bin.a ../alloc.a 
+	./ld t_fdhash t_fdhash.o ../io_poll.a ../hashtable.a ../error.a \
+	../bin.a ../alloc.a 
 t_fdhash.o:\
 	cc t_fdhash.c ../io_poll_fdh.h 
 	./cc t_fdhash.c
 t_iop1_ep:\
-	ld t_iop1_ep.ld t_iop1_ep.o io_poll_ep/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop1_ep t_iop1_ep.o io_poll_ep/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop1_ep.ld t_iop1_ep.o io_poll_ep/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
+	./ld t_iop1_ep t_iop1_ep.o io_poll_ep/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
 t_iop1_ep.o:\
 	cc t_iop1_ep.c ../io_poll.h t_iop1.inc 
 	./cc t_iop1_ep.c
 t_iop1_kq:\
-	ld t_iop1_kq.ld t_iop1_kq.o io_poll_kq/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop1_kq t_iop1_kq.o io_poll_kq/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop1_kq.ld t_iop1_kq.o io_poll_kq/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
+	./ld t_iop1_kq t_iop1_kq.o io_poll_kq/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
 t_iop1_kq.o:\
 	cc t_iop1_kq.c ../io_poll.h t_iop1.inc 
 	./cc t_iop1_kq.c
 t_iop1_po:\
-	ld t_iop1_po.ld t_iop1_po.o io_poll_po/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop1_po t_iop1_po.o io_poll_po/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop1_po.ld t_iop1_po.o io_poll_po/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
+	./ld t_iop1_po t_iop1_po.o io_poll_po/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
 t_iop1_po.o:\
 	cc t_iop1_po.c ../io_poll.h t_iop1.inc 
 	./cc t_iop1_po.c
 t_iop1_se:\
-	ld t_iop1_se.ld t_iop1_se.o io_poll_se/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop1_se t_iop1_se.o io_poll_se/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop1_se.ld t_iop1_se.o io_poll_se/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
+	./ld t_iop1_se t_iop1_se.o io_poll_se/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
 t_iop1_se.o:\
 	cc t_iop1_se.c ../io_poll.h t_iop1.inc 
 	./cc t_iop1_se.c
 t_iop2_ep:\
-	ld t_iop2_ep.ld t_iop2_ep.o io_poll_ep/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop2_ep t_iop2_ep.o io_poll_ep/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop2_ep.ld t_iop2_ep.o io_poll_ep/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
+	./ld t_iop2_ep t_iop2_ep.o io_poll_ep/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
 t_iop2_ep.o:\
 	cc t_iop2_ep.c ../io_poll.h t_iop2.inc 
 	./cc t_iop2_ep.c
 t_iop2_kq:\
-	ld t_iop2_kq.ld t_iop2_kq.o io_poll_kq/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop2_kq t_iop2_kq.o io_poll_kq/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop2_kq.ld t_iop2_kq.o io_poll_kq/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
+	./ld t_iop2_kq t_iop2_kq.o io_poll_kq/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
 t_iop2_kq.o:\
 	cc t_iop2_kq.c ../io_poll.h t_iop2.inc 
 	./cc t_iop2_kq.c
 t_iop2_po:\
-	ld t_iop2_po.ld t_iop2_po.o io_poll_po/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop2_po t_iop2_po.o io_poll_po/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop2_po.ld t_iop2_po.o io_poll_po/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
+	./ld t_iop2_po t_iop2_po.o io_poll_po/io_poll.a ../hashtable.a \
+	../bin.a ../error.a ../alloc.a 
 t_iop2_po.o:\
 	cc t_iop2_po.c ../io_poll.h t_iop2.inc 
 	./cc t_iop2_po.c
 t_iop2_se:\
-	ld t_iop2_se.ld t_iop2_se.o io_poll_se/io_poll.a ../bin.a \
-	../error.a ../alloc.a 
-	./ld t_iop2_se t_iop2_se.o io_poll_se/io_poll.a ../bin.a ../error.a \
-	../alloc.a 
+	ld t_iop2_se.ld t_iop2_se.o io_poll_se/io_poll.a ../hashtable.a \
+	../error.a ../bin.a ../alloc.a 
+	./ld t_iop2_se t_iop2_se.o io_poll_se/io_poll.a ../hashtable.a \
+	../error.a ../bin.a ../alloc.a 
 t_iop2_se.o:\
 	cc t_iop2_se.c ../io_poll.h t_iop2.inc 
 	./cc t_iop2_se.c
