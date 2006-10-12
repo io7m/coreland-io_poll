@@ -9,3 +9,5 @@ TEST
   scatter test of reading, writing and closing of/to multiple fds to
   ensure all data is up to date at all times.
 
+  the current unit tests cover less than 20% of the code. this isn't
+  acceptable.

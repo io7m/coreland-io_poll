@@ -94,7 +94,7 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
       goto ERR;
     }
     tmpkout = alloc(new_a * esize);
-    if (tmpkout) {
+    if (!tmpkout) {
       dealloc(tmpfds);
       dealloc(tmprfds);
       dealloc(tmpkein);
@@ -102,11 +102,11 @@ static int iop_add_kqueue(struct io_poll *iop, int fd, unsigned int flags)
     }
 
     esize = sizeof(struct io_pollfd);
-    bin_copy(fds, tmpfds, old_a * esize);
+    bin_copy(fds,  tmpfds,  old_a * esize);
     bin_copy(rfds, tmprfds, old_a * esize);
     esize = sizeof(struct kevent);
-    bin_copy(tmpkein, tmpkein, old_a * esize);
-    bin_copy(tmpkout, tmpkout, old_a * esize);
+    bin_copy(kein, tmpkein, old_a * esize);
+    bin_copy(kout, tmpkout, old_a * esize);
 
     iop->a = new_a;
     iop->pd_in = tmpkein;
@@ -207,7 +207,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
       goto ERR;
     }
     tmprevs = alloc(new_a * esize);
-    if (tmprevs) {
+    if (!tmprevs) {
       dealloc(tmpfds);
       dealloc(tmprfds);
       dealloc(tmpevs);
@@ -215,11 +215,11 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
     }
 
     esize = sizeof(struct io_pollfd);
-    bin_copy(fds, tmpfds, old_a * esize);
+    bin_copy(fds,  tmpfds,  old_a * esize);
     bin_copy(rfds, tmprfds, old_a * esize);
     esize = sizeof(struct epoll_event);
-    bin_copy(tmpevs, tmpevs, old_a * esize);
-    bin_copy(tmprevs, tmprevs, old_a * esize);
+    bin_copy(evs,  tmpevs,  old_a * esize);
+    bin_copy(revs, tmprevs, old_a * esize);
 
     iop->a = new_a;
     iop->pd_in = tmpevs;
@@ -249,7 +249,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
 
   return epoll_ctl(pfd, EPOLL_CTL_ADD, eptr->data.fd, eptr);
   ERR:
-  fd_hash_rm(fd);
+  iop_fdhash_rm(fdhash, fd);
   return -1;
 }
 #endif /* HAVE_EPOLL */
@@ -318,10 +318,10 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
     }
 
     esize = sizeof(struct io_pollfd);
-    bin_copy(fds, tmpfds, esize);
+    bin_copy(fds,  tmpfds,  esize);
     bin_copy(rfds, tmprfds, esize);
     esize = sizeof(struct pollfd);
-    bin_copy(tmppfds, tmppfds, esize);
+    bin_copy(pfds, tmppfds, esize);
 
     iop->a = new_a;
     iop->pd_in = tmppfds;
