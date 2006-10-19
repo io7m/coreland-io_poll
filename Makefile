@@ -33,8 +33,7 @@ bin_diff.o:\
 bin_zero.o:\
 	cc bin_zero.c bin.h 
 	./cc bin_zero.c
-cc:\
-	conf-cc conf-cctype conf-cflags sysdeps.out 
+cc: conf-cc conf-cctype sysdeps.out 
 conf-cctype:\
 	conf-systype conf-cc mk-cctype 
 	./mk-cctype > conf-cctype
@@ -51,31 +50,31 @@ ctxt.a:\
 	ctxt/version.o 
 ctxt/bindir.c: conf-bindir mk-ctxt
 	rm -f ctxt/bindir.c
-	./mk-ctxt ctxt_bindir ../ctxt < conf-bindir > ctxt/bindir.c
+	./mk-ctxt ctxt_bindir < conf-bindir > ctxt/bindir.c
 
 ctxt/bindir.o:\
-	cc ctxt/bindir.c ctxt.h 
+	cc ctxt/bindir.c 
 	./cc ctxt/bindir.c
 ctxt/incdir.c: conf-incdir mk-ctxt
 	rm -f ctxt/incdir.c
-	./mk-ctxt ctxt_incdir ../ctxt < conf-incdir > ctxt/incdir.c
+	./mk-ctxt ctxt_incdir < conf-incdir > ctxt/incdir.c
 
 ctxt/incdir.o:\
-	cc ctxt/incdir.c ctxt.h 
+	cc ctxt/incdir.c 
 	./cc ctxt/incdir.c
 ctxt/slibdir.c: conf-slibdir mk-ctxt
 	rm -f ctxt/slibdir.c
-	./mk-ctxt ctxt_slibdir ../ctxt < conf-slibdir > ctxt/slibdir.c
+	./mk-ctxt ctxt_slibdir < conf-slibdir > ctxt/slibdir.c
 
 ctxt/slibdir.o:\
-	cc ctxt/slibdir.c ctxt.h 
+	cc ctxt/slibdir.c 
 	./cc ctxt/slibdir.c
 ctxt/version.c: VERSION mk-ctxt
 	rm -f ctxt/version.c
-	./mk-ctxt ctxt_version ../ctxt < VERSION > ctxt/version.c
+	./mk-ctxt ctxt_version < VERSION > ctxt/version.c
 
 ctxt/version.o:\
-	cc ctxt/version.c ctxt.h 
+	cc ctxt/version.c 
 	./cc ctxt/version.c
 deinstaller:\
 	ld deinstaller.ld deinstaller.o insthier.o install_core.o \
@@ -216,20 +215,16 @@ io_poll_wait.o:\
 	cc io_poll_wait.c alloc.h bin.h close.h error.h int64.h io_poll.h \
 	select.h 
 	./cc io_poll_wait.c
-ld:\
-	conf-ld sysdeps.out 
-mk-cctype:\
-	conf-cc conf-systype 
+ld: conf-ld sysdeps.out 
+mk-cctype: conf-cc conf-systype 
 mk-ctxt.o:\
 	cc mk-ctxt.c
 	./cc mk-ctxt.c
 mk-ctxt:\
 	ld mk-ctxt.o mk-ctxt.ld
 	./ld mk-ctxt mk-ctxt.o
-mk-slib:\
-	conf-systype 
-mk-sosuffix:\
-	conf-systype 
+mk-slib: conf-systype 
+mk-sosuffix: conf-systype 
 support:\
 	ld support.ld support.o io_poll.a alloc.a bin.a error.a 
 	./ld support support.o io_poll.a alloc.a bin.a error.a 

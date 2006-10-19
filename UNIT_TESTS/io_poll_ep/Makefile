@@ -150,14 +150,6 @@ _aio-mech.h: ../../_aio-mech.h rebuild-flag
 	@echo symlink _aio-mech.h
 	@rm -f _aio-mech.h
 	@ln -s ../../_aio-mech.h _aio-mech.h
-_int16.h: ../../_int16.h rebuild-flag
-	@echo symlink _int16.h
-	@rm -f _int16.h
-	@ln -s ../../_int16.h _int16.h
-_int32.h: ../../_int32.h rebuild-flag
-	@echo symlink _int32.h
-	@rm -f _int32.h
-	@ln -s ../../_int32.h _int32.h
 _int64.h: ../../_int64.h rebuild-flag
 	@echo symlink _int64.h
 	@rm -f _int64.h
@@ -166,18 +158,6 @@ _select.h: ../../_select.h rebuild-flag
 	@echo symlink _select.h
 	@rm -f _select.h
 	@ln -s ../../_select.h _select.h
-_uint16.h: ../../_uint16.h rebuild-flag
-	@echo symlink _uint16.h
-	@rm -f _uint16.h
-	@ln -s ../../_uint16.h _uint16.h
-_uint32.h: ../../_uint32.h rebuild-flag
-	@echo symlink _uint32.h
-	@rm -f _uint32.h
-	@ln -s ../../_uint32.h _uint32.h
-_uint64.h: ../../_uint64.h rebuild-flag
-	@echo symlink _uint64.h
-	@rm -f _uint64.h
-	@ln -s ../../_uint64.h _uint64.h
 aio-mech.h: ../../aio-mech.h rebuild-flag
 	@echo symlink aio-mech.h
 	@rm -f aio-mech.h
@@ -231,9 +211,9 @@ select.h: ../../select.h rebuild-flag
 	@rm -f select.h
 	@ln -s ../../select.h select.h
 sources_clean: 
-	rm -f  io_poll-conf.c io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _int16.h _int32.h _int64.h _select.h _uint16.h _uint32.h _uint64.h aio-mech.h alloc.h bin.h close.h ctxt.h error.h get_opt.h hashtable.h install.h int64.h io_poll.h io_poll_fdh.h select.h
+	rm -f  io_poll-conf.c io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _int64.h _select.h aio-mech.h alloc.h bin.h close.h ctxt.h error.h get_opt.h hashtable.h install.h int64.h io_poll.h io_poll_fdh.h select.h
 	touch  io_poll-conf.c io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c
-sources:  io_poll-conf.c io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _int16.h _int32.h _int64.h _select.h _uint16.h _uint32.h _uint64.h aio-mech.h alloc.h bin.h close.h ctxt.h error.h get_opt.h hashtable.h install.h int64.h io_poll.h io_poll_fdh.h select.h
+sources:  io_poll-conf.c io_poll_add.c io_poll_fdh.c io_poll_flgt.c io_poll_free.c io_poll_init.c io_poll_iom.c io_poll_reg.c io_poll_rm.c io_poll_wait.c  _aio-mech.h _int64.h _select.h aio-mech.h alloc.h bin.h close.h ctxt.h error.h get_opt.h hashtable.h install.h int64.h io_poll.h io_poll_fdh.h select.h
 regen:
 	cpj-genmk > Makefile.tmp
 	mv Makefile.tmp Makefile
