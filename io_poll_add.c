@@ -158,6 +158,7 @@ static int iop_add_epoll(struct io_poll *iop, int fd, unsigned int flags)
   unsigned long ind;
   int pfd;
 
+  fdhash = &iop->fdhash;
   old_a = iop->a;
   revs = (struct epoll_event *) iop->pd_out;
   rfds = iop->rfds;
