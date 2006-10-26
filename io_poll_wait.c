@@ -188,6 +188,7 @@ static long iop_wait_select(struct io_poll *iop, int64 ms)
 
 long io_poll_wait(struct io_poll *iop, int64 ms)
 {
+  if (!iop->len) return 0;
 #ifdef HAVE_KQUEUE
   return iop_wait_kqueue(iop, ms);
 #endif
