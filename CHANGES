@@ -6,3 +6,5 @@
                are too large for kqueue on 32 bit hardware.
 20061010 code: if len == 0, io_poll_add now correctly inserts at
                start of array as opposed to skipping.
+20061026 code: OVERALLOCATE() macro to stop epoll_create(0) ever
+               happening.

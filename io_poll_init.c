@@ -5,6 +5,8 @@
 
 #include "io_poll.h"
 
+#define OVERALLOCATE(n) ((n) + 1 + IO_POLL_OVERALLOC)
+
 static unsigned long alloc_io_pollfds(struct io_pollfd **pfds,
                                       unsigned long num)
 {
@@ -102,7 +104,7 @@ static int iop_init_epoll(struct io_poll *iop, unsigned long num)
   int pfd;
   int err;
 
-  pfd = epoll_create(num);
+  pfd = epoll_create(OVERALLOCATE(num));
   if (pfd == -1) return -1;
 
   allocd = alloc_io_pollfds(&fds, num);
