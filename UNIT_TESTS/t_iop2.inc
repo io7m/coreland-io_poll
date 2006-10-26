@@ -9,7 +9,7 @@ void open_pipes()
   for (ind = 0; ind < NUM_PIPES; ++ind)
     if (pipe(pipes[ind]) == -1) {
       perror("pipe");
-      _exit(2);
+      exit(2);
     }
 }
 void close_pipes()
@@ -22,11 +22,11 @@ void close_pipes()
 }
 void init()
 {
-  if (io_poll_init(&iop, NUM_PIPES) == -1) { perror("io_poll_init"); _exit(2); }
+  if (io_poll_init(&iop, NUM_PIPES) == -1) { perror("io_poll_init"); exit(2); }
 }
 void xfree()
 {
-  if (io_poll_free(&iop) == -1) { perror("io_poll_init"); _exit(2); }
+  if (io_poll_free(&iop) == -1) { perror("io_poll_init"); exit(2); }
 }
 
 int main()
@@ -40,7 +40,7 @@ int main()
     iop.fds[ind].fd = pipes[ind][0];
     iop.fds[ind].events = IO_POLL_READ;
   }
-  if (io_poll_register(&iop) == -1) { perror("io_poll_register"); _exit(1); }
+  if (io_poll_register(&iop) == -1) { perror("io_poll_register"); exit(1); }
   xfree();
 
   /* duplicate descriptor test */
@@ -53,7 +53,7 @@ int main()
   iop.fds[(NUM_PIPES / 2) + 1].fd = 0;
   if (io_poll_register(&iop) != -1) {
     printf("FAIL: io_poll_register did not reject duplicate descriptors\n");
-    _exit(1);
+    exit(1);
   }
   xfree();
 
@@ -68,7 +68,7 @@ int main()
     iop.fds[0].events = IO_POLL_READ;
     if (io_poll_register(&iop) != -1) {
       printf("FAIL: io_poll_register did not reject internal poll descriptor\n");
-      _exit(1);
+      exit(1);
     }
   }
   xfree();

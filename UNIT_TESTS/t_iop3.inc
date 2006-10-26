@@ -2,8 +2,9 @@ int main()
 {
   struct io_poll iop;
   unsigned long len;
-
-  len = 10;
+  long r;
+  
+  len = 0;
 
   if (io_poll_init(&iop, len) == -1) {
     perror("io_poll_init");
@@ -17,6 +18,13 @@ int main()
     printf("iop.a %lu != %lu\n", iop.a, len + IO_POLL_OVERALLOC);
     exit(1);
   }
+
+  r = io_poll_wait(&iop, 0);
+  if (r != 0) {
+    printf("io_poll_wait returned %l\n", r);
+    exit(1);
+  }
+
   if (io_poll_free(&iop) == -1) {
     perror("io_poll_init");
     exit(2);
