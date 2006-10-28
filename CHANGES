@@ -14,3 +14,4 @@
 20061026 code: unitialized fdhash in iop_add_epoll.
 20061028 code: insthier regen
 20061028 version: io_poll 0.102
+20061029 code: do not install library symlink.
