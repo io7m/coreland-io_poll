@@ -1,10 +1,10 @@
 #ifndef FD_HASH_H
 #define FD_HASH_H
 
-#include "hashtable.h"
+#include <corelib/hashtable.h>
 
 struct iop_fdhash {
-  hashtable h;
+  struct hashtable h;
 };
 
 int iop_fdhash_init(struct iop_fdhash *);

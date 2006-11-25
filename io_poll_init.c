@@ -1,7 +1,7 @@
-#include "alloc.h"
-#include "bin.h"
-#include "close.h"
-#include "error.h"
+#include <corelib/alloc.h>
+#include <corelib/bin.h>
+#include <corelib/close.h>
+#include <corelib/error.h>
 
 #include "io_poll.h"
 

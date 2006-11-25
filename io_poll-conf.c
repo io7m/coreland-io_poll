@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <corelib/get_opt.h>
+
 #include "ctxt.h"
-#include "get_opt.h"
 
 const char progname[] = "io_poll-config";
 

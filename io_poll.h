@@ -1,9 +1,10 @@
 #ifndef IO_POLL_H
 #define IO_POLL_H
 
+#include <corelib/int64.h>
+
 #include "aio-mech.h"
 #include "io_poll_fdh.h"
-#include "int64.h"
 
 #define IO_POLL_OVERALLOC 32
 
