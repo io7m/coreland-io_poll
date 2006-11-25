@@ -121,8 +121,8 @@ insthier.o:\
 	cc insthier.c ctxt.h install.h 
 	./cc insthier.c
 io_poll-conf:\
-	ld io_poll-conf.ld io_poll-conf.o io_poll.a ctxt.a get_opt.a 
-	./ld io_poll-conf io_poll-conf.o io_poll.a ctxt.a get_opt.a 
+	ld io_poll-conf.ld io_poll-conf.o io_poll.a ctxt.a 
+	./ld io_poll-conf io_poll-conf.o io_poll.a ctxt.a 
 io_poll-conf.o:\
 	cc io_poll-conf.c ctxt.h 
 	./cc io_poll-conf.c
@@ -171,8 +171,8 @@ mk-ctxt:\
 mk-slib: conf-systype 
 mk-sosuffix: conf-systype 
 support:\
-	ld support.ld support.o io_poll.a alloc.a bin.a error.a 
-	./ld support support.o io_poll.a alloc.a bin.a error.a 
+	ld support.ld support.o io_poll.a 
+	./ld support support.o io_poll.a 
 support.o:\
 	cc support.c aio-mech.h 
 	./cc support.c

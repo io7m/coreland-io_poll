@@ -1,3 +1,3 @@
-cc: ../cc conf-cc
+cc: ../cc conf-cc conf-ccfflist ../flags-corelib
 	rm -f cc
 	ln -s ../cc cc
