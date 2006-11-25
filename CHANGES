@@ -15,3 +15,5 @@
 20061028 code: insthier regen
 20061028 version: io_poll 0.102
 20061029 code: do not install library symlink.
+20061125 code: corelib is now used as an external library as opposed to
+               including source.
