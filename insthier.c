@@ -3,6 +3,7 @@
 
 struct install_item insthier[] = {
   {INST_MKDIR, 0, 0, ctxt_incdir, 0, 0, 0755},
+  {INST_MKDIR, 0, 0, ctxt_dlibdir, 0, 0, 0755},
   {INST_MKDIR, 0, 0, ctxt_slibdir, 0, 0, 0755},
   {INST_MKDIR, 0, 0, ctxt_bindir, 0, 0, 0755},
 
