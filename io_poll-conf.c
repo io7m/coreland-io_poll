@@ -1,77 +1,111 @@
 #include <stdio.h>
-#include <corelib/get_opt.h>
-
 #include "ctxt.h"
 
-const char progname[] = "io_poll-config";
+const char progname[] = "io_poll-conf";
+
+int str_diff(register const char *, register const char *);
+long str_rchr(register const char *, register int);
+
+#define FLAG_INCDIR  0x0001
+#define FLAG_DLIBDIR 0x0002
+#define FLAG_SLIBDIR 0x0004
+#define FLAG_NEWLINE 0x0008
+#define FLAG_VERSION 0x0010
+#define FLAG_COMPILE 0x0020
+#define FLAG_HELP    0x0040
+
+struct flag { const char *flag; unsigned int val; const char *desc; };
+static const struct flag flags[] = {
+  { "incdir",  FLAG_INCDIR, "print include directory" },
+  { "dlibdir", FLAG_DLIBDIR, "print dynamic library directory" },
+  { "slibdir", FLAG_SLIBDIR, "print static library directory" },
+  { "compile", FLAG_COMPILE, "modify output for use as compiler flags" },
+  { "version", FLAG_VERSION, "print library version" },
+  { "help",    FLAG_HELP, "this message" },
+  { "newline", FLAG_NEWLINE, "print trailing newline" },
+};
 
 void usage()
 {
-  fprintf(stderr, "%s: usage: [-ILhnsV]\n", progname); fflush(0);
+  printf("%s: [help] ops ...\n", progname);
 }
 void help()
 {
-  fprintf(stderr,
-"  -I: print C include location\n"
-"  -L: print library location\n"
-"  -V: print library version\n"
-"  -c: print output as compiler flags, if applicable\n"
-"  -s: print output for compiling against static libraries\n"
-"  -h: this message\n"
-"  -n: print trailing newline\n");
-  fflush(0);
+  unsigned int ind;
+  usage();
+  printf("possible operators:\n");
+  for (ind = 0; ind < sizeof(flags) / sizeof(struct flag); ++ind)
+    printf("%s - %s\n", flags[ind].flag, flags[ind].desc);
 }
 
 int main(int argc, char *argv[])
 {
-  int flag_incdir;
-  int flag_libdir;
-  int flag_nl;
-  int flag_ver;
-  int flag_comp;
-  int flag_static;
-  int ch;
-  int ind;
+  unsigned int flag;
+  unsigned int ind;
+  unsigned int jnd;
 
-  flag_comp = 0;
-  flag_ver = 0;
-  flag_nl = 0;
-  flag_incdir = 0;
-  flag_libdir = 0;
-  flag_static = 0;
+  --argc;
+  ++argv;
 
-  if (argc < 1) { usage(); return 111; }
+  if (!argc) { usage(); return 111; }
 
-  while ((ch = get_opt(argc, argv, "ILVcshn")) != opteof)
-    switch (ch) {
-      case 'I': flag_incdir = 1; break;
-      case 'L': flag_libdir = 1; break;
-      case 'c': flag_comp = 1; break;
-      case 'h': usage(); help(); return 0; break;
-      case 'n': flag_nl = 1; break;
-      case 's': flag_static = 1; break;
-      case 'V': flag_ver = 1; break;
-       default: usage(); return 111; break;
+  flag = 0;
+  for (ind = 0; ind < argc; ++ind) {
+    for (jnd = 0; jnd < sizeof(flags) / sizeof(struct flag); ++jnd) {
+      if (str_diff(argv[ind], flags[jnd].flag) == 0) {
+        flag |= flags[jnd].val;
+        break;
+      }
     }
-
-  if (flag_ver) {
-    printf("%s", ctxt_version);
-    printf("%s", " ");
   }
-  if (flag_incdir) {
-    if (flag_comp) printf("%s", "-I");
-    printf("%s", ctxt_incdir);
+  if (flag & FLAG_HELP) { help(); return 0; }
+  if (flag & FLAG_VERSION) printf("%s ", ctxt_version);
+  if (flag & FLAG_INCDIR) {
+    if (flag & FLAG_COMPILE) {
+      ctxt_incdir[str_rchr(ctxt_incdir, '/')] = 0;
+      printf("-I%s ", ctxt_incdir);
+    } else {
+      printf("%s ", ctxt_incdir);
+    }
   }
-  if (flag_libdir) {
-    if (flag_comp) printf("%s", "-L");
-    if (flag_static)
-      printf("%s", ctxt_slibdir);
-    else
-      printf("%s", ctxt_slibdir);
-    printf("%s", " ");
-    if (flag_comp) printf("%s", "-lio_poll ");
+  if (flag & FLAG_DLIBDIR) {
+    if (flag & FLAG_COMPILE) printf("-L");
+    printf("%s ", ctxt_dlibdir);
   }
-  if (flag_nl) { printf("\n"); }
-  fflush(0);
+  if (flag & FLAG_SLIBDIR) {
+    if (flag & FLAG_COMPILE) printf("-L");
+    printf("%s ", ctxt_slibdir);
+  }
+  if (flag & FLAG_NEWLINE) printf("\n");
   return 0;
+}
+
+/* portability functions */
+int str_diff(register const char *s, register const char *t)
+{
+  register char u;
+  for (;;) {
+    u = *s; if (u != *t) break; if (!u) break; ++s; ++t;
+    u = *s; if (u != *t) break; if (!u) break; ++s; ++t;
+    u = *s; if (u != *t) break; if (!u) break; ++s; ++t;
+    u = *s; if (u != *t) break; if (!u) break; ++s; ++t;
+  }
+  return ((int)(unsigned int)(unsigned char) u) - 
+         ((int)(unsigned int)(unsigned char) *t);
+}
+long str_rchr(register const char *s, register int c)
+{
+  register const char *t;
+  register const char *u;
+  register char cc;
+  int f = 0;
+  for (t = s, cc = c, u = 0;;) {
+    if (!*t) break; if (*t == cc) { u = t; f = 1; } ++t;
+    if (!*t) break; if (*t == cc) { u = t; f = 1; } ++t;
+    if (!*t) break; if (*t == cc) { u = t; f = 1; } ++t;
+    if (!*t) break; if (*t == cc) { u = t; f = 1; } ++t;
+  }
+  if (f == 0) return -1;
+  if (!u) u = t;
+  return u - s;
 }
