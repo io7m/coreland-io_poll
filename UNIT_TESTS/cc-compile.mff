@@ -1,0 +1,3 @@
+cc-compile: ../cc-compile conf-cc conf-ccfflist ../flags-corelib
+	rm -f cc-compile
+	ln -s ../cc-compile cc-compile

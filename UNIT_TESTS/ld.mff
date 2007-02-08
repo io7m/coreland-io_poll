@@ -1,3 +1,0 @@
-ld: ../ld conf-ld conf-ldfflist ../libs-corelib ../libs-corelib-C
-	rm -f ld
-	ln -s ../ld ld
