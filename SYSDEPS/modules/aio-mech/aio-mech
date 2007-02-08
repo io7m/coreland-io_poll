@@ -1,0 +1,72 @@
+#!/bin/sh
+
+fout="$1"
+sysdeps="$2"
+
+cat >> "${fout}" <<EOF
+#ifndef _IOMECH_H
+#define _IOMECH_H
+EOF
+
+${SYSDEP_CC} -o trykqueue1 trykqueue1.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+  ${SYSDEP_CC} -o trykqueue2 trykqueue2.c >/dev/null 2>&1
+  ./trykqueue2 >/dev/null 2>&1
+  ret=$?
+  if [ ${ret} -eq 0 ]
+  then
+    echo '#define HAVE_KQUEUE' >> "${fout}" 
+    mechs="${mechs} kqueue"
+  fi
+fi
+
+${SYSDEP_CC} -o tryepoll1 tryepoll1.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+  ${SYSDEP_CC} -o tryepoll2 tryepoll2.c >/dev/null 2>&1
+  ./tryepoll2 >/dev/null 2>&1
+  ret=$?
+  if [ ${ret} -eq 0 ]
+  then
+    echo '#define HAVE_EPOLL' >> "${fout}"
+    mechs="${mechs} epoll"
+  fi
+fi
+
+${SYSDEP_CC} -o trypoll trypoll.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+  echo '#define HAVE_POLL' >> "${fout}"
+  mechs="${mechs} poll"
+fi
+
+${SYSDEP_CC} -o tryselect1 tryselect1.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+  echo '#define HAVE_SELECT' >> "${fout}"
+  mechs="${mechs} select"
+else
+  ${SYSDEP_CC} -o tryselect2 tryselect2.c >/dev/null 2>&1
+  if [ $? -eq 0 ]
+  then
+    echo '#define HAVE_SELECT' >> "${fout}"
+    mechs="${mechs} select"
+  else
+    ${SYSDEP_CC} -o tryselect3 tryselect3.c >/dev/null 2>&1
+    if [ $? -eq 0 ]
+    then
+      echo '#define HAVE_SELECT' >> "${fout}"
+      mechs="${mechs} select"
+    fi
+  fi
+fi
+
+cat >> "${fout}" <<EOF
+#endif
+EOF
+
+echo "aio-mech:${mechs}" >> "${sysdeps}"
+
+rm -f trykqueue1 trykqueue2 tryepoll1 tryepoll2 trypoll tryselect1 \
+      tryselect2 tryselect3
