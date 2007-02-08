@@ -1,12 +1,12 @@
 local: tools sources io_poll.a
 local_clean: toollink_clean sources_clean
 
-tools: cc ld mk-slib \
+tools: cc-compile cc-link cc-slib \
 	conf-cc conf-ld rebuild-flag conf-cctype  \
 	conf-systype
 
 toollink_clean:
-	@rm -f cc ld mk-slib conf-cc conf-ld conf-cctype  \
+	@rm -f cc-compile cc-link cc-slib conf-cc conf-ld conf-cctype  \
 	conf-systype rebuild-flag
 
 conf-cc: ../../conf-cc
@@ -26,21 +26,21 @@ conf-systype: ../../conf-systype
 	@rm -f conf-systype
 	@ln -s ../../conf-systype conf-systype
 
-cc: ../../cc conf-cc conf-ccfflist \
+cc-compile: ../../cc-compile conf-cc conf-ccfflist \
 	flags-sysspec ../../flags-corelib
-	@echo symlink cc
-	@rm -f cc
-	@ln -s ../../cc cc
+	@echo symlink cc-compile
+	@rm -f cc-compile
+	@ln -s ../../cc-compile cc-compile
 
-ld: ../../ld conf-ld 
-	@echo symlink ld
-	@rm -f ld
-	@ln -s ../../ld ld
+cc-link: ../../cc-link conf-ld 
+	@echo symlink cc-link
+	@rm -f cc-link
+	@ln -s ../../cc-link cc-link
 
-mk-slib: ../../mk-slib 
-	@echo symlink mk-slib
-	@rm -f mk-slib
-	@ln -s ../../mk-slib mk-slib
+cc-slib: ../../cc-slib 
+	@echo symlink cc-slib
+	@rm -f cc-slib
+	@ln -s ../../cc-slib cc-slib
 
 rebuild-flag:
 	@touch rebuild-flag
