@@ -8,7 +8,7 @@ struct install_item insthier[] = {
   {INST_MKDIR, 0, 0, ctxt_bindir, 0, 0, 0755},
 
   {INST_COPY, "_aio-mech.h", 0, ctxt_incdir, 0, 0, 0444},
-  {INST_COPY, "_select.h", 0, ctxt_incdir, 0, 0, 0444},
+  {INST_COPY, "_sd_select.h", 0, ctxt_incdir, 0, 0, 0444},
   {INST_COPY, "aio-mech.h", 0, ctxt_incdir, 0, 0, 0444},
   {INST_COPY, "io_poll.h", 0, ctxt_incdir, 0, 0, 0444},
   {INST_COPY, "io_poll_fdh.h", 0, ctxt_incdir, 0, 0, 0444},
