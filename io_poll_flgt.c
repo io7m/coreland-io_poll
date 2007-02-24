@@ -1,5 +1,4 @@
 #include "io_poll.h"
-#include "select.h"
 
 #ifdef HAVE_KQUEUE
 #include <sys/types.h>

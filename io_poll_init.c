@@ -201,7 +201,7 @@ static int iop_init_poll(struct io_poll *iop, unsigned long num)
 #endif /* HAVE_POLL */
 
 #ifdef HAVE_SELECT
-#include "select.h"
+#include "sd_select.h"
 
 static int iop_init_select(struct io_poll *iop, unsigned long num)
 {

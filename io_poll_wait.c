@@ -127,7 +127,7 @@ static long iop_wait_poll(struct io_poll *iop, int64 ms)
 #endif /* HAVE_POLL */
 
 #ifdef HAVE_SELECT
-#include "select.h"
+#include "sd_select.h"
 
 static long iop_wait_select(struct io_poll *iop, int64 ms)
 {

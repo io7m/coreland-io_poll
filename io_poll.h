@@ -75,7 +75,7 @@ int io_poll_iomech(void);
 
 /* select() specific data */
 #ifdef HAVE_SELECT
-#include "select.h"
+#include "sd_select.h"
 
 struct fd_sets {
   fd_set readfds;

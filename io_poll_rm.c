@@ -4,7 +4,6 @@
 #include <corelib/error.h>
 
 #include "io_poll.h"
-#include "select.h"
 
 #ifdef HAVE_KQUEUE
 #include <sys/types.h>
@@ -89,7 +88,7 @@ static int iop_rm_poll(struct io_poll *iop, unsigned long n)
 #endif /* HAVE_POLL */
 
 #ifdef HAVE_SELECT
-#include "select.h"
+#include "sd_select.h"
 
 static int iop_rm_select(struct io_poll *iop, unsigned long n)
 {

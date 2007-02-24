@@ -5,7 +5,6 @@
 #include <corelib/error.h>
 
 #include "io_poll.h"
-#include "select.h"
 
 static int find_empty(struct io_pollfd *fds,
                       unsigned long len, unsigned long *pos)
@@ -355,7 +354,7 @@ static int iop_add_poll(struct io_poll *iop, int fd, unsigned int flags)
 #endif /* HAVE_POLL */
 
 #ifdef HAVE_SELECT
-#include "select.h"
+#include "sd_select.h"
 
 static int iop_add_select(struct io_poll *iop, int fd, unsigned int flags)
 {

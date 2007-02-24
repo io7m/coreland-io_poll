@@ -7,6 +7,12 @@ case "$sys" in
   SYSDEP_OS_LINUX)
     ncpu="`grep -i '^processor' /proc/cpuinfo | wc -l`"
     ;;
+  SYSDEP_OS_CRAY_UNICOS)
+    ncpu="`getconf CRAY_NCPU`"
+    ;;
+  SYSDEP_OS_IRIX)
+    ncpu="`getconf NUM_PROCESSORS`"
+    ;;
   *)
     ncpu="`sysctl hw.ncpu`"
     if [ $? -eq 0 ]

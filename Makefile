@@ -143,31 +143,31 @@ io_poll.a:\
 	io_poll_free.o io_poll_init.o io_poll_iom.o io_poll_reg.o \
 	io_poll_rm.o io_poll_wait.o 
 io_poll_add.o:\
-	cc-compile io_poll_add.c io_poll.h select.h select.h 
+	cc-compile io_poll_add.c io_poll.h sd_select.h 
 	./cc-compile io_poll_add.c
 io_poll_fdh.o:\
 	cc-compile io_poll_fdh.c io_poll_fdh.h 
 	./cc-compile io_poll_fdh.c
 io_poll_flgt.o:\
-	cc-compile io_poll_flgt.c io_poll.h select.h 
+	cc-compile io_poll_flgt.c io_poll.h 
 	./cc-compile io_poll_flgt.c
 io_poll_free.o:\
-	cc-compile io_poll_free.c io_poll.h select.h 
+	cc-compile io_poll_free.c io_poll.h sd_select.h 
 	./cc-compile io_poll_free.c
 io_poll_init.o:\
-	cc-compile io_poll_init.c io_poll.h select.h 
+	cc-compile io_poll_init.c io_poll.h sd_select.h 
 	./cc-compile io_poll_init.c
 io_poll_iom.o:\
 	cc-compile io_poll_iom.c io_poll.h 
 	./cc-compile io_poll_iom.c
 io_poll_reg.o:\
-	cc-compile io_poll_reg.c io_poll.h select.h select.h 
+	cc-compile io_poll_reg.c io_poll.h sd_select.h 
 	./cc-compile io_poll_reg.c
 io_poll_rm.o:\
-	cc-compile io_poll_rm.c io_poll.h select.h select.h 
+	cc-compile io_poll_rm.c io_poll.h sd_select.h 
 	./cc-compile io_poll_rm.c
 io_poll_wait.o:\
-	cc-compile io_poll_wait.c io_poll.h select.h 
+	cc-compile io_poll_wait.c io_poll.h sd_select.h 
 	./cc-compile io_poll_wait.c
 mk-cctype: conf-cc conf-systype 
 mk-ctxt.o:\
@@ -194,7 +194,7 @@ clean: sysdeps_clean tests_clean local_clean
 	instchk instchk.o insthier.o io_poll-conf io_poll-conf.o io_poll.a \
 	io_poll_add.o io_poll_fdh.o io_poll_flgt.o io_poll_free.o \
 	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
-	io_poll_wait.o support support.o 
+	io_poll_wait.o mk-ctxt mk-ctxt.o support support.o 
 
 deinstall: deinstaller
 	./deinstaller
