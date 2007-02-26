@@ -2,6 +2,8 @@ BUGS
 
 TEST
 
+  /dev/poll support for Solaris, HP-UX etc.
+
   split tests up
 
   what happens if io_poll_rm(iop, iop->len)? --iop->len?
