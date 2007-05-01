@@ -1,8 +1,8 @@
 default: sysdeps
 clean: sysdeps_clean
 
-sysdeps:  sd_corelib-flags sd_corelib-libs-S sd_sd-select sd_aio-mech
-sysdeps_clean:  sd_corelib-flags_clean sd_corelib-libs-S_clean sd_sd-select_clean sd_aio-mech_clean
+sysdeps:  sd_corelib-flags sd_corelib-libs-S sd_sd-select sd_aio-mech sd_integer-flags sd_integer-libs-S
+sysdeps_clean:  sd_corelib-flags_clean sd_corelib-libs-S_clean sd_sd-select_clean sd_aio-mech_clean sd_integer-flags_clean sd_integer-libs-S_clean
 
 sd_corelib-flags:
 	@(cd modules/corelib-flags && ./run)
@@ -24,6 +24,15 @@ sd_aio-mech:
 sd_aio-mech_clean:
 	@(cd modules/aio-mech && ./clean)
 
+sd_integer-flags:
+	@(cd modules/integer-flags && ./run)
+sd_integer-flags_clean:
+	@(cd modules/integer-flags && ./clean)
+
+sd_integer-libs-S:
+	@(cd modules/integer-libs-S && ./run)
+sd_integer-libs-S_clean:
+	@(cd modules/integer-libs-S && ./clean)
+
 regen:
-	./gen-makefile > Makefile.tmp
-	mv Makefile.tmp Makefile
+	./gen-makefile > Makefile.tmp && mv Makefile.tmp Makefile

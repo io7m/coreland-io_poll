@@ -1,9 +1,7 @@
 #ifndef IO_POLL_H
 #define IO_POLL_H
 
-#include <corelib/int64.h>
-
-#include "aio-mech.h"
+#include <integer/int64.h>
 #include "io_poll_fdh.h"
 
 #define IO_POLL_OVERALLOC 32
@@ -71,33 +69,6 @@ int io_poll_iomech(void);
 #undef HAVE_KQUEUE
 #undef HAVE_EPOLL
 #undef HAVE_SELECT
-#endif
-
-/* select() specific data */
-#ifdef HAVE_SELECT
-#include "sd_select.h"
-
-struct fd_sets {
-  fd_set readfds;
-  fd_set writefds;
-  fd_set exceptfds; /* unused, currently */
-};
-#endif
-
-/* flag translation */
-#ifdef HAVE_KQUEUE
-unsigned int io_poll_flags_io2kq(unsigned int);
-unsigned int io_poll_flags_kq2io(unsigned int);
-#endif
-
-#ifdef HAVE_EPOLL
-unsigned int io_poll_flags_io2ep(unsigned int);
-unsigned int io_poll_flags_ep2io(unsigned int);
-#endif
-
-#ifdef HAVE_POLL
-unsigned int io_poll_flags_io2po(unsigned int);
-unsigned int io_poll_flags_po2io(unsigned int);
 #endif
 
 #endif

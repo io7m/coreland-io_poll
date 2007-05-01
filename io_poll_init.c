@@ -4,6 +4,7 @@
 #include <corelib/error.h>
 
 #include "io_poll.h"
+#include "io_poll_impl.h"
 
 #define OVERALLOCATE(n) ((n) + 1 + IO_POLL_OVERALLOC)
 

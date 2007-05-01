@@ -4,6 +4,7 @@
 #include <corelib/error.h>
 
 #include "io_poll.h"
+#include "io_poll_impl.h"
 
 #ifdef HAVE_KQUEUE
 #include <sys/types.h>

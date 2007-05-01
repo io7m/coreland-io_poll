@@ -2,9 +2,10 @@
 #include <corelib/bin.h>
 #include <corelib/close.h>
 #include <corelib/error.h>
-#include <corelib/int64.h>
+#include <integer/int64.h>
 
 #include "io_poll.h"
+#include "io_poll_impl.h"
 
 #ifdef HAVE_KQUEUE
 #include <sys/types.h>

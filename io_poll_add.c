@@ -5,6 +5,7 @@
 #include <corelib/error.h>
 
 #include "io_poll.h"
+#include "io_poll_impl.h"
 
 static int find_empty(struct io_pollfd *fds,
                       unsigned long len, unsigned long *pos)

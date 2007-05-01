@@ -2,9 +2,9 @@
 
 default: all
 
-all: local  sysdeps.out \
-	ctxt.a deinstaller depchklist inst-check inst-copy inst-dir \
-	inst-link installer instchk io_poll-conf io_poll.a support 
+all: local sysdeps.out ctxt.a deinstaller depchklist inst-check \
+	inst-copy inst-dir inst-link installer instchk io_poll-conf \
+	io_poll.a support 
 
 sysdeps: sysdeps.out
 sysdeps.out:
@@ -14,8 +14,17 @@ sysdeps_clean:
 	(cd SYSDEPS && make clean)
 	rm -f sysdeps.out
 
-cc-compile: conf-cc conf-cctype sysdeps.out flags-corelib 
-cc-link: conf-ld sysdeps.out libs-corelib libs-corelib-C 
+_aio-mech.h: sysdeps.out
+flags-corelib: sysdeps.out
+libs-corelib: sysdeps.out
+flags-integer: sysdeps.out
+libs-integer: sysdeps.out
+_sd_select.h: sysdeps.out
+
+cc-compile: conf-cc conf-cctype sysdeps.out flags-corelib \
+	flags-integer 
+cc-link: conf-ld sysdeps.out libs-corelib libs-corelib-C \
+	libs-integer 
 cc-slib: conf-systype 
 conf-cctype:\
 	conf-systype conf-cc mk-cctype 
@@ -184,17 +193,19 @@ support:\
 support.o:\
 	cc-compile support.c aio-mech.h 
 	./cc-compile support.c
-clean: sysdeps_clean tests_clean local_clean 
-	rm -f conf-cctype conf-systype ctxt.a ctxt/bindir.c ctxt/bindir.o \
-	ctxt/dlibdir.c ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o \
-	ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o \
-	deinstaller deinstaller.o depchklist depchklist.o inst-check \
-	inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o inst-link \
-	inst-link.o install_core.o install_error.o installer installer.o \
-	instchk instchk.o insthier.o io_poll-conf io_poll-conf.o io_poll.a \
+clean-all: sysdeps_clean tests_clean local_clean obj_clean 
+clean: obj_clean
+obj_clean: 
+	rm -f ctxt.a ctxt/bindir.c ctxt/bindir.o ctxt/dlibdir.c \
+	ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o ctxt/slibdir.c \
+	ctxt/slibdir.o ctxt/version.c ctxt/version.o deinstaller \
+	deinstaller.o depchklist depchklist.o inst-check inst-check.o \
+	inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o \
+	install_core.o install_error.o installer installer.o instchk \
+	instchk.o insthier.o io_poll-conf io_poll-conf.o io_poll.a \
 	io_poll_add.o io_poll_fdh.o io_poll_flgt.o io_poll_free.o \
 	io_poll_init.o io_poll_iom.o io_poll_reg.o io_poll_rm.o \
-	io_poll_wait.o mk-ctxt mk-ctxt.o support support.o 
+	io_poll_wait.o support support.o 
 
 deinstall: deinstaller
 	./deinstaller
@@ -223,6 +234,5 @@ checkdeps.done: depchklist
 	./depchklist
 	touch checkdeps.done
 regen:
-	cpj-genmk > Makefile.tmp
-	mv Makefile.tmp Makefile
+	cpj-genmk > Makefile.tmp && mv Makefile.tmp Makefile
 
