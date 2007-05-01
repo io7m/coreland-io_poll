@@ -1,5 +1,9 @@
 BUGS
 
+  This library is a mess.
+
+  Complete rewrite.
+
 TEST
 
   /dev/poll support for Solaris, HP-UX etc.
