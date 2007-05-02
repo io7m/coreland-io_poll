@@ -9,4 +9,5 @@ iop_kqueue.o
 iop_poll.o
 iop_rm.o
 iop_select.o
+iop_size.o
 iop_wait.o

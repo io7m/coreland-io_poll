@@ -2,29 +2,29 @@
 #include "io_poll_impl.h"
 
 #if defined(HAVE_POLL)
-int iop_poll_init(struct io_poll *iop)
+static int iop_poll_init(struct io_poll *iop)
 {
-
+  return 0;
 }
 
-int iop_poll_free(struct io_poll *iop)
+static int iop_poll_free(struct io_poll *iop)
 {
-
+  return 0;
 }
 
-int iop_poll_add(struct io_poll *iop, struct io_pollfd *pfd, unsigned long len)
+static int iop_poll_add(struct io_poll *iop, const struct io_pollfd *pfd)
 {
-
+  return 0;
 }
 
-int iop_poll_del(struct io_poll *iop, int fd)
+static int iop_poll_del(struct io_poll *iop, int fd)
 {
-
+  return 0;
 }
 
-long iop_poll_wait(struct io_poll *iop, int64 t)
+static long iop_poll_wait(struct io_poll *iop, int64 t)
 {
-
+  return 0;
 }
 
 static const struct io_poll_core iop_core_poll = {

@@ -1,12 +1,12 @@
 #include <corelib/hashtable.h>
 #include "io_poll_fdh.h"
 
-int io_pfdhash_init(struct io_pfdhash *h)
+int io_poll_fdhash_init(struct io_poll_fdhash *h)
 {
   return ht_init(&h->h);
 }
 
-int io_pfdhash_add(struct io_pfdhash *h, int fd)
+int io_poll_fdhash_add(struct io_poll_fdhash *h, int fd)
 {
   /* sanity */
   if (fd == -1) return 0;
@@ -20,7 +20,7 @@ int io_pfdhash_add(struct io_pfdhash *h, int fd)
   }
 }
 
-int io_pfdhash_rm(struct io_pfdhash *h, int fd)
+int io_poll_fdhash_rm(struct io_poll_fdhash *h, int fd)
 {
   /* sanity */
   if (fd == -1) return 0;
@@ -32,7 +32,7 @@ int io_pfdhash_rm(struct io_pfdhash *h, int fd)
   }
 }
 
-int io_pfdhash_free(struct io_pfdhash *h)
+int io_poll_fdhash_free(struct io_poll_fdhash *h)
 {
   ht_free(&h->h);
   return 1;

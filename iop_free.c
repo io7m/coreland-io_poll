@@ -3,5 +3,7 @@
 
 int io_poll_free(struct io_poll *iop)
 {
-  return 1;
+  array_free(&iop->fds);
+  array_free(&iop->rfds);
+  return iop->core->free(iop);
 }

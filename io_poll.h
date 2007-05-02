@@ -17,7 +17,7 @@ struct io_poll_core;
 struct io_poll_core {
   int (*init)(struct io_poll *);
   int (*free)(struct io_poll *);
-  int (*add)(struct io_poll *, struct io_pollfd *, unsigned long);
+  int (*add)(struct io_poll *, const struct io_pollfd *);
   int (*del)(struct io_poll *, int);
   long (*wait)(struct io_poll *, int64);
 };
@@ -28,7 +28,7 @@ struct io_pollfd {
 };
 
 struct io_poll {
-  struct io_pfdhash fdhash;
+  struct io_poll_fdhash fdhash;
   struct array fds;
   struct array rfds;
   struct array pd_in;

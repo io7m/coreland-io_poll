@@ -14,20 +14,6 @@ struct fd_sets {
 };
 #endif
 
-/* flag translation */
-#ifdef HAVE_KQUEUE
-unsigned int io_poll_flags_io2kq(unsigned int);
-unsigned int io_poll_flags_kq2io(unsigned int);
-#endif
-
-#ifdef HAVE_EPOLL
-unsigned int io_poll_flags_io2ep(unsigned int);
-unsigned int io_poll_flags_ep2io(unsigned int);
-#endif
-
-#ifdef HAVE_POLL
-unsigned int io_poll_flags_io2po(unsigned int);
-unsigned int io_poll_flags_po2io(unsigned int);
-#endif
+int io_poll_find_unused(struct array *, unsigned long *);
 
 #endif
