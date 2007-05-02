@@ -3,7 +3,8 @@
 
 int io_poll_setcore(struct io_poll *iop, const struct io_poll_core *core)
 {
-  if (iop->pd_in || iop->pd_out) return 0;
+  if (!core) return 0;
+  if (array_data(&iop->pd_in) || array_data(&iop->pd_out)) return 0;
   iop->core = core;
   return 1;
 }

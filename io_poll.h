@@ -31,9 +31,9 @@ struct io_poll {
   struct io_pfdhash fdhash;
   struct array fds;
   struct array rfds;
-  struct io_poll_core *core;
-  void *pd_in;
-  void *pd_out;
+  struct array pd_in;
+  struct array pd_out;
+  const struct io_poll_core *core;
   int pfd;
 };
 
@@ -44,6 +44,8 @@ int io_poll_rm(struct io_poll *, const struct io_pollfd *, unsigned long);
 int io_poll_rmfd(struct io_poll *, int);
 int io_poll_free(struct io_poll *);
 long io_poll_wait(struct io_poll *, int64);
+
+unsigned long io_poll_size(const struct io_poll *);
 
 int io_poll_setcore(struct io_poll *, const struct io_poll_core *);
 const struct io_poll_core *io_poll_default_core(void);

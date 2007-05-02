@@ -2,6 +2,7 @@ iop_add.o
 iop_core.o
 iop_devpoll.o
 iop_epoll.o
+iop_fdhash.o
 iop_free.o
 iop_init.o
 iop_kqueue.o
