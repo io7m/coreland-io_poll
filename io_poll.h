@@ -1,6 +1,7 @@
 #ifndef IO_POLL_H
 #define IO_POLL_H
 
+#include <corelib/array.h>
 #include <integer/int64.h>
 #include "io_poll_fdh.h"
 
@@ -18,6 +19,7 @@ struct io_poll_core {
   int (*free)(struct io_poll *);
   int (*add)(struct io_poll *, struct io_pollfd *, unsigned long);
   int (*del)(struct io_poll *, int);
+  long (*wait)(struct io_poll *, int64);
 };
 
 struct io_pollfd {
@@ -37,12 +39,14 @@ struct io_poll {
 
 int io_poll_init(struct io_poll *);
 int io_poll_add(struct io_poll *, const struct io_pollfd *, unsigned long);
-int io_poll_addfd(struct io_poll *, int);
+int io_poll_addfd(struct io_poll *, int, unsigned int);
 int io_poll_rm(struct io_poll *, const struct io_pollfd *, unsigned long);
 int io_poll_rmfd(struct io_poll *, int);
 int io_poll_free(struct io_poll *);
 long io_poll_wait(struct io_poll *, int64);
+
 int io_poll_setcore(struct io_poll *, const struct io_poll_core *);
+const struct io_poll_core *io_poll_default_core(void);
 
 extern const struct io_poll_core *io_poll_core_devpoll;
 extern const struct io_poll_core *io_poll_core_epoll;
