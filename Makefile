@@ -23,6 +23,9 @@ flags-corelib: sysdeps.out
 libs-corelib: sysdeps.out
 flags-integer: sysdeps.out
 libs-integer: sysdeps.out
+_sd_fcntl.h: sysdeps.out
+flags-fcntl: sysdeps.out
+libs-fcntl: sysdeps.out
 _sd_select.h: sysdeps.out
 
 UNIT_TESTS/core_def.o:\
@@ -167,7 +170,7 @@ io_poll.a:\
 	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_poll.o iop_rm.o \
 	iop_select.o iop_size.o iop_wait.o 
 iop_add.o:\
-	cc-compile iop_add.c io_poll.h io_poll_impl.h 
+	cc-compile iop_add.c io_poll.h io_poll_impl.h _sd_fcntl.h 
 	./cc-compile iop_add.c
 iop_core.o:\
 	cc-compile iop_core.c io_poll.h io_poll_impl.h 
@@ -226,9 +229,10 @@ obj_clean:
 	UNIT_TESTS/t_assert.a UNIT_TESTS/t_assert.o UNIT_TESTS/t_init1.o \
 	UNIT_TESTS/t_init1_def UNIT_TESTS/t_init1_dp UNIT_TESTS/t_init1_ep \
 	UNIT_TESTS/t_init1_kq UNIT_TESTS/t_init1_po UNIT_TESTS/t_init1_se \
-	io_poll.a iop_add.o iop_core.o iop_devpoll.o iop_epoll.o \
-	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_poll.o iop_rm.o \
-	iop_select.o iop_size.o iop_wait.o 
+	conf-cctype conf-systype io_poll.a iop_add.o iop_core.o \
+	iop_devpoll.o iop_epoll.o iop_fdhash.o iop_free.o iop_init.o \
+	iop_kqueue.o iop_poll.o iop_rm.o iop_select.o iop_size.o iop_wait.o \
+	
 
 tests_clean:
 	(cd UNIT_TESTS && make clean)

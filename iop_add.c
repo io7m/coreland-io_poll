@@ -2,12 +2,14 @@
 
 #include "io_poll.h"
 #include "io_poll_impl.h"
+#include "_sd_fcntl.h"
 
 static int iop_fd_check(struct io_poll *iop, const struct io_pollfd *pfd)
 {
-  return ((pfd->fd != iop->pfd) &&
-          (pfd->fd != -1) &&
-          (pfd->events != 0));
+  return ((pfd->fd != iop->pfd)
+          && (pfd->fd != -1)
+          && (pfd->events != 0)
+          && (fcntl(pfd->fd, F_GETFL, 0) != -1));
 }
 
 /* this function is called from the various cores */
