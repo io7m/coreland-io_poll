@@ -71,8 +71,8 @@ static int iop_kqu_free(struct io_poll *iop)
 static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
 {
   struct kevent kev;
-  struct kevent *kep;
-  struct io_pollfd *ifd;
+  struct kevent *kep = 0;
+  struct io_pollfd *ifd = 0;
   unsigned long ind;
   int add_fds = 0;
   int add_rfd = 0;
@@ -107,6 +107,8 @@ static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
   return 1;
 
   FAIL:
+  ifd->fd = -1;
+  bin_zero(kep, sizeof(struct kevent));
   if (add_fds) array_chop(&iop->fds, array_size(&iop->fds) - 1);
   if (add_rfd) array_chop(&iop->rfds, array_size(&iop->rfds) - 1);
   if (add_pdi) array_chop(&iop->pd_in, array_size(&iop->pd_in) - 1);

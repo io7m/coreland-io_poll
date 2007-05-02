@@ -80,34 +80,34 @@ UNIT_TESTS/t_add2.o:\
 	cc-compile UNIT_TESTS/t_add2.c io_poll.h UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/t_add2.c
 UNIT_TESTS/t_add2_def:\
-	cc-link UNIT_TESTS/t_add2_def.ld UNIT_TESTS/t_add1.o \
+	cc-link UNIT_TESTS/t_add2_def.ld UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
-	./cc-link UNIT_TESTS/t_add2_def UNIT_TESTS/t_add1.o \
+	./cc-link UNIT_TESTS/t_add2_def UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
 UNIT_TESTS/t_add2_dp:\
-	cc-link UNIT_TESTS/t_add2_dp.ld UNIT_TESTS/t_add1.o \
+	cc-link UNIT_TESTS/t_add2_dp.ld UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
-	./cc-link UNIT_TESTS/t_add2_dp UNIT_TESTS/t_add1.o \
+	./cc-link UNIT_TESTS/t_add2_dp UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
 UNIT_TESTS/t_add2_ep:\
-	cc-link UNIT_TESTS/t_add2_ep.ld UNIT_TESTS/t_add1.o \
+	cc-link UNIT_TESTS/t_add2_ep.ld UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
-	./cc-link UNIT_TESTS/t_add2_ep UNIT_TESTS/t_add1.o \
+	./cc-link UNIT_TESTS/t_add2_ep UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
 UNIT_TESTS/t_add2_kq:\
-	cc-link UNIT_TESTS/t_add2_kq.ld UNIT_TESTS/t_add1.o \
+	cc-link UNIT_TESTS/t_add2_kq.ld UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
-	./cc-link UNIT_TESTS/t_add2_kq UNIT_TESTS/t_add1.o \
+	./cc-link UNIT_TESTS/t_add2_kq UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
 UNIT_TESTS/t_add2_po:\
-	cc-link UNIT_TESTS/t_add2_po.ld UNIT_TESTS/t_add1.o \
+	cc-link UNIT_TESTS/t_add2_po.ld UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
-	./cc-link UNIT_TESTS/t_add2_po UNIT_TESTS/t_add1.o \
+	./cc-link UNIT_TESTS/t_add2_po UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
 UNIT_TESTS/t_add2_se:\
-	cc-link UNIT_TESTS/t_add2_se.ld UNIT_TESTS/t_add1.o \
+	cc-link UNIT_TESTS/t_add2_se.ld UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
-	./cc-link UNIT_TESTS/t_add2_se UNIT_TESTS/t_add1.o \
+	./cc-link UNIT_TESTS/t_add2_se UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
 UNIT_TESTS/t_assert.a:\
 	cc-slib UNIT_TESTS/t_assert.sld UNIT_TESTS/t_assert.o 
@@ -226,10 +226,9 @@ obj_clean:
 	UNIT_TESTS/t_assert.a UNIT_TESTS/t_assert.o UNIT_TESTS/t_init1.o \
 	UNIT_TESTS/t_init1_def UNIT_TESTS/t_init1_dp UNIT_TESTS/t_init1_ep \
 	UNIT_TESTS/t_init1_kq UNIT_TESTS/t_init1_po UNIT_TESTS/t_init1_se \
-	conf-cctype conf-systype io_poll.a iop_add.o iop_core.o \
-	iop_devpoll.o iop_epoll.o iop_fdhash.o iop_free.o iop_init.o \
-	iop_kqueue.o iop_poll.o iop_rm.o iop_select.o iop_size.o iop_wait.o \
-	
+	io_poll.a iop_add.o iop_core.o iop_devpoll.o iop_epoll.o \
+	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_poll.o iop_rm.o \
+	iop_select.o iop_size.o iop_wait.o 
 
 tests_clean:
 	(cd UNIT_TESTS && make clean)

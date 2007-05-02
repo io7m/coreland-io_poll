@@ -14,11 +14,6 @@ int main(void)
   test_assert(io_poll_init(&iop) == 1);
   test_assert(io_poll_size(&iop) == 0);
 
-  ifd.fd = ifd->pfd;
-  ifd.events = IO_POLL_WRITE | IO_POLL_READ | IO_POLL_EOF | IO_POLL_ERROR;
-  test_assert(io_poll_add(&iop, &ifd, 1) == 0);
-  test_assert(io_poll_size(&iop) == 0);
-
   test_assert(io_poll_free(&iop) == 1);
   return 0;
 }

@@ -26,6 +26,8 @@ int io_poll_init(struct io_poll *iop)
   if (!array_init(&fds, 16, sizeof(struct io_pollfd))) { es = errno; goto FAIL; }
   if (!array_init(&rfds, 16, sizeof(struct io_pollfd))) { es = errno; goto FAIL; }
   if (!io_poll_fdhash_init(&hash)) { es = errno; goto FAIL; }
+
+  iop->pfd = -1;
   if (!core->init(iop)) { es = errno; goto FAIL; }
 
   len = array_size_ub(&fds);

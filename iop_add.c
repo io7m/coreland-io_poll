@@ -3,6 +3,13 @@
 #include "io_poll.h"
 #include "io_poll_impl.h"
 
+static int iop_fd_check(struct io_poll *iop, const struct io_pollfd *pfd)
+{
+  return ((pfd->fd != iop->pfd) &&
+          (pfd->fd != -1) &&
+          (pfd->events != 0));
+}
+
 /* this function is called from the various cores */
 int io_poll_find_unused(struct array *arr, unsigned long *ret)
 {
@@ -29,6 +36,7 @@ int io_poll_add(struct io_poll *iop,
 
   for (ind = 0; ind < len; ++ind) {
     fd = &pfd[ind];
+    if (!iop_fd_check(iop, pfd)) { errno = EINVAL; goto FAIL; }
     switch (io_poll_fdhash_add(&iop->fdhash, fd->fd)) {
       case 0: es = error_exist; goto FAIL;
       case -1: goto FAIL;
