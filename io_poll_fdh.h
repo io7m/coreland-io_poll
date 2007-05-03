@@ -9,6 +9,7 @@ struct io_poll_fdhash {
 
 int io_poll_fdhash_init(struct io_poll_fdhash *);
 int io_poll_fdhash_add(struct io_poll_fdhash *, int fd);
+int io_poll_fdhash_check(struct io_poll_fdhash *, int fd);
 int io_poll_fdhash_rm(struct io_poll_fdhash *, int fd);
 int io_poll_fdhash_free(struct io_poll_fdhash *);
 

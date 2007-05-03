@@ -19,7 +19,7 @@ struct io_poll_core {
   int (*free)(struct io_poll *);
   int (*add)(struct io_poll *, const struct io_pollfd *);
   int (*del)(struct io_poll *, int);
-  long (*wait)(struct io_poll *, int64);
+  int (*wait)(struct io_poll *, int64);
 };
 
 struct io_pollfd {
@@ -38,12 +38,15 @@ struct io_poll {
 };
 
 int io_poll_init(struct io_poll *);
-int io_poll_add(struct io_poll *, const struct io_pollfd *, unsigned long);
+int io_poll_add(struct io_poll *, const struct io_pollfd *);
 int io_poll_addfd(struct io_poll *, int, unsigned int);
-int io_poll_rm(struct io_poll *, const struct io_pollfd *, unsigned long);
+int io_poll_rm(struct io_poll *, const struct io_pollfd *);
 int io_poll_rmfd(struct io_poll *, int);
 int io_poll_free(struct io_poll *);
-long io_poll_wait(struct io_poll *, int64);
+int io_poll_wait(struct io_poll *, int64);
+void io_poll_rfds(struct io_poll *, struct io_pollfd **, unsigned long *);
+int io_poll_check(struct io_poll *, const struct io_pollfd *);
+int io_poll_checkfd(struct io_poll *, int fd);
 
 unsigned long io_poll_size(const struct io_poll *);
 

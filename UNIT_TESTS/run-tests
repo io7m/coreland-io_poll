@@ -13,15 +13,15 @@ do
   ret=$?
   case $ret in
     0)
-      echo $f passed
+      echo passed $f
       let lib_passed=lib_passed+1 >/dev/null 2>&1
       ;;
     1)
-      echo $f failed
+      echo failed $f
       let lib_failed=lib_failed+1 >/dev/null 2>&1
       ;;
     *)
-      echo $f failed
+      echo crash  $f
       let lib_failed_bad=lib_failed_bad+1 >/dev/null 2>&1
       ;;
   esac

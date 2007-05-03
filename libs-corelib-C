@@ -1,1 +1,1 @@
--larray -lhashtable -lalloc -lbin -lerror
+-lnonblock -lsig -larray -lhashtable -lalloc -lbin -lerror

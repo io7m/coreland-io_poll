@@ -22,7 +22,7 @@ static int iop_epol_del(struct io_poll *iop, int fd)
   return 0;
 }
 
-static long iop_epol_wait(struct io_poll *iop, int64 t)
+static int iop_epol_wait(struct io_poll *iop, int64 t)
 {
   return 0;
 }

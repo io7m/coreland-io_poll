@@ -72,8 +72,10 @@ static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
 {
   struct kevent kev;
   struct kevent *kep = 0;
+  struct io_pollfd dummy;
   struct io_pollfd *ifd = 0;
   unsigned long ind;
+  unsigned long len;
   int add_fds = 0;
   int add_rfd = 0;
   int add_pdi = 0;
@@ -81,16 +83,20 @@ static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
   int es;
   int r;
 
+  dummy.fd = -1;
+  dummy.events = 0;
+
+  len = array_size(&iop->fds);
   if (!io_poll_find_unused(&iop->fds, &ind)) {
-    add_fds = array_cat(&iop->fds, pfd);
+    add_fds = array_cat(&iop->fds, &dummy);
     if (!add_fds) { es = errno; goto FAIL; }
-    add_rfd = array_cat(&iop->rfds, pfd);
+    add_rfd = array_cat(&iop->rfds, &dummy);
     if (!add_rfd) { es = errno; goto FAIL; }
     add_pdi = array_cat(&iop->pd_in, &kev);
     if (!add_pdi) { es = errno; goto FAIL; }
     add_pdo = array_cat(&iop->pd_out, &kev);
     if (!add_pdo) { es = errno; goto FAIL; }
-    ind = array_size(&iop->fds) - 1;
+    ind = len;
   }
  
   kep = array_index(&iop->pd_in, ind);
@@ -109,22 +115,59 @@ static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
   FAIL:
   if (ifd) ifd->fd = -1;
   if (kep) bin_zero(kep, sizeof(struct kevent));
-  if (add_fds) array_chop(&iop->fds, array_size(&iop->fds) - 1);
-  if (add_rfd) array_chop(&iop->rfds, array_size(&iop->rfds) - 1);
-  if (add_pdi) array_chop(&iop->pd_in, array_size(&iop->pd_in) - 1);
-  if (add_pdo) array_chop(&iop->pd_out, array_size(&iop->pd_out) - 1);
   errno = es;
   return 0;
 }
 
 static int iop_kqu_del(struct io_poll *iop, int fd)
 {
-  return 0;
+  struct kevent *kep = 0;
+  struct io_pollfd *ifd = 0;
+  unsigned long ind;
+
+  if (!io_poll_find(&iop->fds, fd, &ind)) return 0;
+
+  kep = array_index(&iop->pd_in, ind);
+  ifd = array_index(&iop->fds, ind);
+
+  EV_SET(kep, ifd->fd, kep->filter, EV_DELETE, 0, 0, 0);
+  ifd->fd = -1;
+  ifd->events = 0;
+
+  return kevent(iop->pfd, kep, 1, 0, 0, 0) != -1;
 }
 
-static long iop_kqu_wait(struct io_poll *iop, int64 t)
+static int iop_kqu_wait(struct io_poll *iop, int64 ms)
 {
-  return 0;
+  struct timespec ts;
+  struct io_pollfd rfd;
+  struct timespec *tsp;
+  struct kevent *kout;
+  unsigned long len;
+  unsigned long ind;
+  int ret;
+
+  tsp = &ts;
+  if (ms == (int64) -1) tsp = 0;
+  if (tsp) {
+    ts.tv_sec = ms / 1000;
+    ms -= (ts.tv_sec) * 1000;
+    ts.tv_nsec = ms * (int64) 1000000;
+  }
+
+  kout = (struct kevent *) array_data(&iop->pd_out);
+  ret = kevent(iop->pfd, 0, 0, kout, len, tsp);
+  if (ret == -1) return -1;
+  if (ret == 0) return 0;
+  
+  array_trunc(&iop->rfds);
+  for (ind = 0; ind < (unsigned long) ret; ++ind) {
+    rfd.fd = kout[ind].ident;
+    rfd.events = io_poll_flags_kq2io(kout[ind].filter);
+    rfd.events |= io_poll_flags_kq2io(kout[ind].flags);
+    if (!array_cat(&iop->rfds, &rfd)) return -1; /* should be impossible */
+  }
+  return 1;
 }
 
 static const struct io_poll_core iop_core_kqueue = {

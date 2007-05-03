@@ -112,7 +112,7 @@ static int iop_poll_del(struct io_poll *iop, int fd)
   return 0;
 }
 
-static long iop_poll_wait(struct io_poll *iop, int64 t)
+static int iop_poll_wait(struct io_poll *iop, int64 t)
 {
   return 0;
 }

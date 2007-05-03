@@ -15,7 +15,7 @@ void test_assert_core(unsigned int cond, const char *fname,
                       unsigned long line, const char *text)
 {
   if (!cond) {
-    if (!errno) 
+    if (!errno)
       fprintf(stderr, "[%lu] fail: %s: %lu: (%s) is false\n",
                        test_num, fname, line, text);
     else
@@ -23,6 +23,13 @@ void test_assert_core(unsigned int cond, const char *fname,
                        test_num, fname, line, text, strerror(errno));
     test_assert_fail();
   }
-  fprintf(stderr, "[%lu] pass: %s: %lu: %s\n", test_num, fname, line, text);
+  if (!errno) {
+    fprintf(stderr, "[%lu] pass: %s: %lu: %s\n",
+                      test_num, fname, line, text);
+  } else {
+    fprintf(stderr, "[%lu] pass: %s: %lu: %s (%s)\n",
+                      test_num, fname, line, text, strerror(errno));
+    errno = 0;
+  }
   test_num++;
 }

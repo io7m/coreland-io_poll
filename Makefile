@@ -6,9 +6,20 @@ all: sysdeps.out UNIT_TESTS/t_add1_def UNIT_TESTS/t_add1_dp \
 	UNIT_TESTS/t_add1_ep UNIT_TESTS/t_add1_kq UNIT_TESTS/t_add1_po \
 	UNIT_TESTS/t_add1_se UNIT_TESTS/t_add2_def UNIT_TESTS/t_add2_dp \
 	UNIT_TESTS/t_add2_ep UNIT_TESTS/t_add2_kq UNIT_TESTS/t_add2_po \
-	UNIT_TESTS/t_add2_se UNIT_TESTS/t_assert.a UNIT_TESTS/t_init1_def \
+	UNIT_TESTS/t_add2_se UNIT_TESTS/t_add3_def UNIT_TESTS/t_add3_dp \
+	UNIT_TESTS/t_add3_ep UNIT_TESTS/t_add3_kq UNIT_TESTS/t_add3_po \
+	UNIT_TESTS/t_add3_se UNIT_TESTS/t_add4_def UNIT_TESTS/t_add4_dp \
+	UNIT_TESTS/t_add4_ep UNIT_TESTS/t_add4_kq UNIT_TESTS/t_add4_po \
+	UNIT_TESTS/t_add4_se UNIT_TESTS/t_assert.a UNIT_TESTS/t_core1_def \
+	UNIT_TESTS/t_core1_dp UNIT_TESTS/t_core1_ep UNIT_TESTS/t_core1_kq \
+	UNIT_TESTS/t_core1_po UNIT_TESTS/t_core1_se UNIT_TESTS/t_init1_def \
 	UNIT_TESTS/t_init1_dp UNIT_TESTS/t_init1_ep UNIT_TESTS/t_init1_kq \
-	UNIT_TESTS/t_init1_po UNIT_TESTS/t_init1_se io_poll.a 
+	UNIT_TESTS/t_init1_po UNIT_TESTS/t_init1_se UNIT_TESTS/t_rm1_def \
+	UNIT_TESTS/t_rm1_dp UNIT_TESTS/t_rm1_ep UNIT_TESTS/t_rm1_kq \
+	UNIT_TESTS/t_rm1_po UNIT_TESTS/t_rm1_se UNIT_TESTS/t_verify.a \
+	UNIT_TESTS/t_wait1_def UNIT_TESTS/t_wait1_dp UNIT_TESTS/t_wait1_ep \
+	UNIT_TESTS/t_wait1_kq UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se \
+	io_poll.a 
 
 sysdeps: sysdeps.out
 sysdeps.out:
@@ -47,110 +58,385 @@ UNIT_TESTS/core_se.o:\
 	cc-compile UNIT_TESTS/core_se.c io_poll.h UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/core_se.c
 UNIT_TESTS/t_add1.o:\
-	cc-compile UNIT_TESTS/t_add1.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/t_add1.c io_poll.h UNIT_TESTS/t_assert.h \
+	UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_add1.c
 UNIT_TESTS/t_add1_def:\
 	cc-link UNIT_TESTS/t_add1_def.ld UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add1_def UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add1_dp:\
 	cc-link UNIT_TESTS/t_add1_dp.ld UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add1_dp UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add1_ep:\
 	cc-link UNIT_TESTS/t_add1_ep.ld UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add1_ep UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add1_kq:\
 	cc-link UNIT_TESTS/t_add1_kq.ld UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add1_kq UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add1_po:\
 	cc-link UNIT_TESTS/t_add1_po.ld UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add1_po UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add1_se:\
 	cc-link UNIT_TESTS/t_add1_se.ld UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add1_se UNIT_TESTS/t_add1.o \
-	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add2.o:\
-	cc-compile UNIT_TESTS/t_add2.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/t_add2.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_add2.c
 UNIT_TESTS/t_add2_def:\
 	cc-link UNIT_TESTS/t_add2_def.ld UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add2_def UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add2_dp:\
 	cc-link UNIT_TESTS/t_add2_dp.ld UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add2_dp UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add2_ep:\
 	cc-link UNIT_TESTS/t_add2_ep.ld UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add2_ep UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add2_kq:\
 	cc-link UNIT_TESTS/t_add2_kq.ld UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add2_kq UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add2_po:\
 	cc-link UNIT_TESTS/t_add2_po.ld UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add2_po UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_add2_se:\
 	cc-link UNIT_TESTS/t_add2_se.ld UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_add2_se UNIT_TESTS/t_add2.o \
-	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add3.o:\
+	cc-compile UNIT_TESTS/t_add3.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_add3.c
+UNIT_TESTS/t_add3_def:\
+	cc-link UNIT_TESTS/t_add3_def.ld UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add3_def UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add3_dp:\
+	cc-link UNIT_TESTS/t_add3_dp.ld UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add3_dp UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add3_ep:\
+	cc-link UNIT_TESTS/t_add3_ep.ld UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add3_ep UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add3_kq:\
+	cc-link UNIT_TESTS/t_add3_kq.ld UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add3_kq UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add3_po:\
+	cc-link UNIT_TESTS/t_add3_po.ld UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add3_po UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add3_se:\
+	cc-link UNIT_TESTS/t_add3_se.ld UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add3_se UNIT_TESTS/t_add3.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add4.o:\
+	cc-compile UNIT_TESTS/t_add4.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_add4.c
+UNIT_TESTS/t_add4_def:\
+	cc-link UNIT_TESTS/t_add4_def.ld UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add4_def UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add4_dp:\
+	cc-link UNIT_TESTS/t_add4_dp.ld UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add4_dp UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add4_ep:\
+	cc-link UNIT_TESTS/t_add4_ep.ld UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add4_ep UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add4_kq:\
+	cc-link UNIT_TESTS/t_add4_kq.ld UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add4_kq UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add4_po:\
+	cc-link UNIT_TESTS/t_add4_po.ld UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add4_po UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_add4_se:\
+	cc-link UNIT_TESTS/t_add4_se.ld UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_add4_se UNIT_TESTS/t_add4.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_assert.a:\
 	cc-slib UNIT_TESTS/t_assert.sld UNIT_TESTS/t_assert.o 
 	./cc-slib UNIT_TESTS/t_assert UNIT_TESTS/t_assert.o 
 UNIT_TESTS/t_assert.o:\
 	cc-compile UNIT_TESTS/t_assert.c UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/t_assert.c
+UNIT_TESTS/t_core1.o:\
+	cc-compile UNIT_TESTS/t_core1.c io_poll.h UNIT_TESTS/t_assert.h 
+	./cc-compile UNIT_TESTS/t_core1.c
+UNIT_TESTS/t_core1_def:\
+	cc-link UNIT_TESTS/t_core1_def.ld UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_core1_def UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_core1_dp:\
+	cc-link UNIT_TESTS/t_core1_dp.ld UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_core1_dp UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_core1_ep:\
+	cc-link UNIT_TESTS/t_core1_ep.ld UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_core1_ep UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_core1_kq:\
+	cc-link UNIT_TESTS/t_core1_kq.ld UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_core1_kq UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_core1_po:\
+	cc-link UNIT_TESTS/t_core1_po.ld UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_core1_po UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_core1_se:\
+	cc-link UNIT_TESTS/t_core1_se.ld UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_core1_se UNIT_TESTS/t_core1.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_init1.o:\
-	cc-compile UNIT_TESTS/t_init1.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/t_init1.c io_poll.h UNIT_TESTS/t_assert.h \
+	UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_init1.c
 UNIT_TESTS/t_init1_def:\
 	cc-link UNIT_TESTS/t_init1_def.ld UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_init1_def UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_def.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_init1_dp:\
 	cc-link UNIT_TESTS/t_init1_dp.ld UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_init1_dp UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_dp.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_init1_ep:\
 	cc-link UNIT_TESTS/t_init1_ep.ld UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_init1_ep UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_ep.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_init1_kq:\
 	cc-link UNIT_TESTS/t_init1_kq.ld UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_init1_kq UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_kq.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_init1_po:\
 	cc-link UNIT_TESTS/t_init1_po.ld UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_init1_po UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_po.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 UNIT_TESTS/t_init1_se:\
 	cc-link UNIT_TESTS/t_init1_se.ld UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 	./cc-link UNIT_TESTS/t_init1_se UNIT_TESTS/t_init1.o \
-	UNIT_TESTS/core_se.o UNIT_TESTS/t_assert.a io_poll.a 
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_rm1.o:\
+	cc-compile UNIT_TESTS/t_rm1.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_rm1.c
+UNIT_TESTS/t_rm1_def:\
+	cc-link UNIT_TESTS/t_rm1_def.ld UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_rm1_def UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_rm1_dp:\
+	cc-link UNIT_TESTS/t_rm1_dp.ld UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_rm1_dp UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_rm1_ep:\
+	cc-link UNIT_TESTS/t_rm1_ep.ld UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_rm1_ep UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_rm1_kq:\
+	cc-link UNIT_TESTS/t_rm1_kq.ld UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_rm1_kq UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_rm1_po:\
+	cc-link UNIT_TESTS/t_rm1_po.ld UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_rm1_po UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_rm1_se:\
+	cc-link UNIT_TESTS/t_rm1_se.ld UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_rm1_se UNIT_TESTS/t_rm1.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_verify.a:\
+	cc-slib UNIT_TESTS/t_verify.sld UNIT_TESTS/t_verify.o 
+	./cc-slib UNIT_TESTS/t_verify UNIT_TESTS/t_verify.o 
+UNIT_TESTS/t_verify.o:\
+	cc-compile UNIT_TESTS/t_verify.c UNIT_TESTS/t_assert.h \
+	UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_verify.c
+UNIT_TESTS/t_wait1.o:\
+	cc-compile UNIT_TESTS/t_wait1.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_wait1.c
+UNIT_TESTS/t_wait1_def:\
+	cc-link UNIT_TESTS/t_wait1_def.ld UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait1_def UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait1_dp:\
+	cc-link UNIT_TESTS/t_wait1_dp.ld UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait1_dp UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait1_ep:\
+	cc-link UNIT_TESTS/t_wait1_ep.ld UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait1_ep UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait1_kq:\
+	cc-link UNIT_TESTS/t_wait1_kq.ld UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait1_kq UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait1_po:\
+	cc-link UNIT_TESTS/t_wait1_po.ld UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait1_se:\
+	cc-link UNIT_TESTS/t_wait1_se.ld UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait1_se UNIT_TESTS/t_wait1.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 cc-compile: conf-cc conf-cctype conf-cflags sysdeps.out \
 	flags-corelib flags-integer 
 cc-link: conf-ld conf-ldflags sysdeps.out libs-corelib \
@@ -163,15 +449,20 @@ conf-systype:\
 	mk-systype 
 	./mk-systype > conf-systype
 io_poll.a:\
-	cc-slib io_poll.sld iop_add.o iop_core.o iop_devpoll.o iop_epoll.o \
-	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_poll.o iop_rm.o \
-	iop_select.o iop_size.o iop_wait.o 
-	./cc-slib io_poll iop_add.o iop_core.o iop_devpoll.o iop_epoll.o \
-	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_poll.o iop_rm.o \
-	iop_select.o iop_size.o iop_wait.o 
+	cc-slib io_poll.sld iop_add.o iop_check.o iop_core.o iop_devpoll.o \
+	iop_epoll.o iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o \
+	iop_misc.o iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o \
+	iop_wait.o 
+	./cc-slib io_poll iop_add.o iop_check.o iop_core.o iop_devpoll.o \
+	iop_epoll.o iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o \
+	iop_misc.o iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o \
+	iop_wait.o 
 iop_add.o:\
-	cc-compile iop_add.c io_poll.h io_poll_impl.h _sd_fcntl.h 
+	cc-compile iop_add.c io_poll.h io_poll_impl.h 
 	./cc-compile iop_add.c
+iop_check.o:\
+	cc-compile iop_check.c io_poll.h io_poll_impl.h 
+	./cc-compile iop_check.c
 iop_core.o:\
 	cc-compile iop_core.c io_poll.h io_poll_impl.h 
 	./cc-compile iop_core.c
@@ -193,9 +484,15 @@ iop_init.o:\
 iop_kqueue.o:\
 	cc-compile iop_kqueue.c io_poll.h io_poll_impl.h 
 	./cc-compile iop_kqueue.c
+iop_misc.o:\
+	cc-compile iop_misc.c io_poll.h io_poll_impl.h _sd_fcntl.h 
+	./cc-compile iop_misc.c
 iop_poll.o:\
 	cc-compile iop_poll.c io_poll.h io_poll_impl.h 
 	./cc-compile iop_poll.c
+iop_rfds.o:\
+	cc-compile iop_rfds.c io_poll.h io_poll_impl.h 
+	./cc-compile iop_rfds.c
 iop_rm.o:\
 	cc-compile iop_rm.c io_poll.h io_poll_impl.h 
 	./cc-compile iop_rm.c
@@ -226,13 +523,25 @@ obj_clean:
 	UNIT_TESTS/t_add1_po UNIT_TESTS/t_add1_se UNIT_TESTS/t_add2.o \
 	UNIT_TESTS/t_add2_def UNIT_TESTS/t_add2_dp UNIT_TESTS/t_add2_ep \
 	UNIT_TESTS/t_add2_kq UNIT_TESTS/t_add2_po UNIT_TESTS/t_add2_se \
-	UNIT_TESTS/t_assert.a UNIT_TESTS/t_assert.o UNIT_TESTS/t_init1.o \
+	UNIT_TESTS/t_add3.o UNIT_TESTS/t_add3_def UNIT_TESTS/t_add3_dp \
+	UNIT_TESTS/t_add3_ep UNIT_TESTS/t_add3_kq UNIT_TESTS/t_add3_po \
+	UNIT_TESTS/t_add3_se UNIT_TESTS/t_add4.o UNIT_TESTS/t_add4_def \
+	UNIT_TESTS/t_add4_dp UNIT_TESTS/t_add4_ep UNIT_TESTS/t_add4_kq \
+	UNIT_TESTS/t_add4_po UNIT_TESTS/t_add4_se UNIT_TESTS/t_assert.a \
+	UNIT_TESTS/t_assert.o UNIT_TESTS/t_core1.o UNIT_TESTS/t_core1_def \
+	UNIT_TESTS/t_core1_dp UNIT_TESTS/t_core1_ep UNIT_TESTS/t_core1_kq \
+	UNIT_TESTS/t_core1_po UNIT_TESTS/t_core1_se UNIT_TESTS/t_init1.o \
 	UNIT_TESTS/t_init1_def UNIT_TESTS/t_init1_dp UNIT_TESTS/t_init1_ep \
 	UNIT_TESTS/t_init1_kq UNIT_TESTS/t_init1_po UNIT_TESTS/t_init1_se \
-	conf-cctype conf-systype io_poll.a iop_add.o iop_core.o \
-	iop_devpoll.o iop_epoll.o iop_fdhash.o iop_free.o iop_init.o \
-	iop_kqueue.o iop_poll.o iop_rm.o iop_select.o iop_size.o iop_wait.o \
-	
+	UNIT_TESTS/t_rm1.o UNIT_TESTS/t_rm1_def UNIT_TESTS/t_rm1_dp \
+	UNIT_TESTS/t_rm1_ep UNIT_TESTS/t_rm1_kq UNIT_TESTS/t_rm1_po \
+	UNIT_TESTS/t_rm1_se UNIT_TESTS/t_verify.a UNIT_TESTS/t_verify.o \
+	UNIT_TESTS/t_wait1.o UNIT_TESTS/t_wait1_def UNIT_TESTS/t_wait1_dp \
+	UNIT_TESTS/t_wait1_ep UNIT_TESTS/t_wait1_kq 
+	rm -f UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se io_poll.a \
+	iop_add.o iop_check.o iop_core.o iop_devpoll.o iop_epoll.o \
+	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_misc.o \
+	iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o iop_wait.o 
 
 tests_clean:
 	(cd UNIT_TESTS && make clean)

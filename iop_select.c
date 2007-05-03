@@ -45,7 +45,7 @@ static int iop_sel_del(struct io_poll *iop, int fd)
   return 0;
 }
 
-static long iop_sel_wait(struct io_poll *iop, int64 t)
+static int iop_sel_wait(struct io_poll *iop, int64 t)
 {
   return 0;
 }
