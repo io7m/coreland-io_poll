@@ -109,12 +109,41 @@ static int iop_poll_add(struct io_poll *iop, const struct io_pollfd *pfd)
 
 static int iop_poll_del(struct io_poll *iop, int fd)
 {
-  return 0;
+  struct io_pollfd *ifd = 0;
+  unsigned long ind;
+
+  if (!io_poll_find(&iop->fds, fd, &ind)) return 0;
+
+  ifd = array_index(&iop->fds, ind);
+  ifd->fd = -1;
+  ifd->events = 0;
+  return 1;
 }
 
-static int iop_poll_wait(struct io_poll *iop, int64 t)
+static int iop_poll_wait(struct io_poll *iop, int64 ms)
 {
-  return 0;
+  struct io_pollfd rfd;
+  struct pollfd *pfd;
+  unsigned long ind;
+  unsigned long len;
+  long ret;
+
+  pfd = array_data(&iop->pd_in);
+  len = array_size(&iop->pd_in);
+
+  ret = poll(pfd, len, ms);
+  if (ret == -1) return -1;
+  if (ret == 0) return 0;
+
+  for (ind = 0; ind < (unsigned long) ret; ++ind) {
+    if (pfd[ind].revents) {
+      rfd.fd = pfd[ind].fd;
+      rfd.events = io_poll_flags_po2io(pfd[ind].revents);
+      if (!array_cat(&iop->pd_out, &rfd)) return -1;
+    }
+  }
+
+  return 1;
 }
 
 static const struct io_poll_core iop_core_poll = {

@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include <corelib/alloc.h>
 #include <corelib/bin.h>
 #include <corelib/close.h>
+#include <corelib/error.h>
 #include <corelib/nonblock.h>
 
 #include "../io_poll.h"
@@ -50,8 +52,23 @@ int main(void)
   }
   test_assert(io_poll_size(&iop) == MAX_FDS);
 
-  for (ind = 0; ind < MAX_FDS; ++ind)
-    test_assert(write(pipes[ind].fd[1], "ABCD", 4) != -1);
+  for (ind = 0; ind < MAX_FDS; ++ind) {
+    if (ind % 2) {
+      ifd.fd = pipes[ind].fd[0];
+      ifd.events = IO_POLL_READ | IO_POLL_EOF | IO_POLL_ERROR;
+      test_assert(io_poll_rm(&iop, &ifd) == 1);
+      test_assert(io_poll_check(&iop, &ifd) == 0);
+      test_assert(close(pipes[ind].fd[0]) != -1);
+      test_assert(close(pipes[ind].fd[1]) != -1);
+    }
+  }
+  test_assert(io_poll_size(&iop) == MAX_FDS / 2);
+
+  for (ind = 0; ind < MAX_FDS; ++ind) {
+    if (fcntl(pipes[ind].fd[1], F_GETFL, 0) != -1)
+      test_assert(write(pipes[ind].fd[1], "ABCD", 4) != -1);
+    errno = 0;
+  }
 
   r = io_poll_wait(&iop, 0);
   test_assert(r != -1);
@@ -59,7 +76,7 @@ int main(void)
   test_assert(r == 1);
 
   io_poll_rfds(&iop, &rfds, &len);
-  test_assert(len == MAX_FDS);
+  test_assert(len == MAX_FDS / 2);
 
   for (ind = 0; ind < len; ++ind) {
     test_assert(read(rfds[ind].fd, buf, 4) == 4);

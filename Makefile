@@ -19,6 +19,8 @@ all: sysdeps.out UNIT_TESTS/t_add1_def UNIT_TESTS/t_add1_dp \
 	UNIT_TESTS/t_rm1_po UNIT_TESTS/t_rm1_se UNIT_TESTS/t_verify.a \
 	UNIT_TESTS/t_wait1_def UNIT_TESTS/t_wait1_dp UNIT_TESTS/t_wait1_ep \
 	UNIT_TESTS/t_wait1_kq UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se \
+	UNIT_TESTS/t_wait2_def UNIT_TESTS/t_wait2_dp UNIT_TESTS/t_wait2_ep \
+	UNIT_TESTS/t_wait2_kq UNIT_TESTS/t_wait2_po UNIT_TESTS/t_wait2_se \
 	io_poll.a 
 
 sysdeps: sysdeps.out
@@ -437,6 +439,52 @@ UNIT_TESTS/t_wait1_se:\
 	./cc-link UNIT_TESTS/t_wait1_se UNIT_TESTS/t_wait1.o \
 	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
 	io_poll.a 
+UNIT_TESTS/t_wait2.o:\
+	cc-compile UNIT_TESTS/t_wait2.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_wait2.c
+UNIT_TESTS/t_wait2_def:\
+	cc-link UNIT_TESTS/t_wait2_def.ld UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait2_def UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait2_dp:\
+	cc-link UNIT_TESTS/t_wait2_dp.ld UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait2_dp UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait2_ep:\
+	cc-link UNIT_TESTS/t_wait2_ep.ld UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait2_ep UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait2_kq:\
+	cc-link UNIT_TESTS/t_wait2_kq.ld UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait2_kq UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait2_po:\
+	cc-link UNIT_TESTS/t_wait2_po.ld UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait2_po UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait2_se:\
+	cc-link UNIT_TESTS/t_wait2_se.ld UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait2_se UNIT_TESTS/t_wait2.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 cc-compile: conf-cc conf-cctype conf-cflags sysdeps.out \
 	flags-corelib flags-integer 
 cc-link: conf-ld conf-ldflags sysdeps.out libs-corelib \
@@ -538,10 +586,13 @@ obj_clean:
 	UNIT_TESTS/t_rm1_se UNIT_TESTS/t_verify.a UNIT_TESTS/t_verify.o \
 	UNIT_TESTS/t_wait1.o UNIT_TESTS/t_wait1_def UNIT_TESTS/t_wait1_dp \
 	UNIT_TESTS/t_wait1_ep UNIT_TESTS/t_wait1_kq 
-	rm -f UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se io_poll.a \
-	iop_add.o iop_check.o iop_core.o iop_devpoll.o iop_epoll.o \
-	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_misc.o \
-	iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o iop_wait.o 
+	rm -f UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se \
+	UNIT_TESTS/t_wait2.o UNIT_TESTS/t_wait2_def UNIT_TESTS/t_wait2_dp \
+	UNIT_TESTS/t_wait2_ep UNIT_TESTS/t_wait2_kq UNIT_TESTS/t_wait2_po \
+	UNIT_TESTS/t_wait2_se conf-cctype conf-systype io_poll.a iop_add.o \
+	iop_check.o iop_core.o iop_devpoll.o iop_epoll.o iop_fdhash.o \
+	iop_free.o iop_init.o iop_kqueue.o iop_misc.o iop_poll.o iop_rfds.o \
+	iop_rm.o iop_select.o iop_size.o iop_wait.o 
 
 tests_clean:
 	(cd UNIT_TESTS && make clean)

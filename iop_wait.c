@@ -3,5 +3,5 @@
 
 int io_poll_wait(struct io_poll *iop, int64 ms)
 {
-  return 1;
+  return iop->core->wait(iop, ms);
 }
