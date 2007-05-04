@@ -1,5 +1,4 @@
 tests_clean:
-	(cd UNIT_TESTS; make clean)
-
+	(cd UNIT_TESTS && make clean)
 tests:
-	(cd UNIT_TESTS; make && make tests)
+	(cd UNIT_TESTS && make tests)

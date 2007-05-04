@@ -1,15 +1,16 @@
-#ifndef FD_HASH_H
-#define FD_HASH_H
+#ifndef IO_POLL_FDH_H
+#define IO_POLL_FDH_H
 
 #include <corelib/hashtable.h>
 
-struct iop_fdhash {
+struct io_poll_fdhash {
   struct hashtable h;
 };
 
-int iop_fdhash_init(struct iop_fdhash *);
-int iop_fdhash_add(struct iop_fdhash *, int fd);
-int iop_fdhash_rm(struct iop_fdhash *, int fd);
-int iop_fdhash_free(struct iop_fdhash *);
+int io_poll_fdhash_init(struct io_poll_fdhash *);
+int io_poll_fdhash_add(struct io_poll_fdhash *, int fd);
+int io_poll_fdhash_check(struct io_poll_fdhash *, int fd);
+int io_poll_fdhash_rm(struct io_poll_fdhash *, int fd);
+int io_poll_fdhash_free(struct io_poll_fdhash *);
 
 #endif

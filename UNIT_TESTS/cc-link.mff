@@ -1,3 +1,0 @@
-cc-link: ../cc-link conf-ld conf-ldfflist ../libs-corelib ../libs-corelib-C
-	rm -f cc-link
-	ln -s ../cc-link cc-link

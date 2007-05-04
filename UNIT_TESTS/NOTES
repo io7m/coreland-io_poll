@@ -1,0 +1,8 @@
+On at least Darwin and OpenBSD, it is necessary to raise the default
+file descriptor limit for all tests to pass.
+
+  Darwin:
+    ulimit -n 4096
+
+  OpenBSD:
+    sysctl -w kern.maxfiles 4096

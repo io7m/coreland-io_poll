@@ -1,1 +1,1 @@
--lhashtable -lalloc -lget_opt -lbuffer -lbin -lstr -lerror
+-lnonblock -lsig -larray -lhashtable -lalloc -lbin -lerror
