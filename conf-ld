@@ -1,4 +1,4 @@
 cc
+cc89_strict
 
-This will be used to link object files into executables. Only the first
-line of this file will be used.
+This will be used to link object files into executables.
