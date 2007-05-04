@@ -91,6 +91,7 @@ static int iop_sel_wait(struct io_poll *iop, int64 ms)
   ms -= tv.tv_sec * 1000;
   tv.tv_usec = ms / 1000;
 
+  nfds = 0;
   len = array_size(&iop->fds);
   for (ind = 0; ind < len; ++ind) {
     ifd = array_index(&iop->fds, ind);
