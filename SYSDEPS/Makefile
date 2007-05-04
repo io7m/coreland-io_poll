@@ -1,8 +1,8 @@
 default: sysdeps
 clean: sysdeps_clean
 
-sysdeps:  sd_corelib-flags sd_corelib-libs-S sd_integer-flags sd_integer-libs-S sd_aio-mech sd_sd-select sd_sd-fcntl sd_sysinfo sd_io-notice
-sysdeps_clean:  sd_corelib-flags_clean sd_corelib-libs-S_clean sd_integer-flags_clean sd_integer-libs-S_clean sd_aio-mech_clean sd_sd-select_clean sd_sd-fcntl_clean sd_sysinfo_clean sd_io-notice_clean
+sysdeps:  sd_corelib-flags sd_corelib-libs-S sd_integer-flags sd_integer-libs-S sd_sd-select sd_sd-fcntl sd_sysinfo sd_io-notice
+sysdeps_clean:  sd_corelib-flags_clean sd_corelib-libs-S_clean sd_integer-flags_clean sd_integer-libs-S_clean sd_sd-select_clean sd_sd-fcntl_clean sd_sysinfo_clean sd_io-notice_clean
 
 sd_corelib-flags:
 	@(cd modules/corelib-flags && ./run)
@@ -23,11 +23,6 @@ sd_integer-libs-S:
 	@(cd modules/integer-libs-S && ./run)
 sd_integer-libs-S_clean:
 	@(cd modules/integer-libs-S && ./clean)
-
-sd_aio-mech:
-	@(cd modules/aio-mech && ./run)
-sd_aio-mech_clean:
-	@(cd modules/aio-mech && ./clean)
 
 sd_sd-select:
 	@(cd modules/sd-select && ./run)
