@@ -1,8 +1,8 @@
 default: sysdeps
 clean: sysdeps_clean
 
-sysdeps:  sd_corelib-flags sd_corelib-libs-S sd_integer-flags sd_integer-libs-S sd_aio-mech sd_sd-select sd_sd-fcntl sd_sysinfo
-sysdeps_clean:  sd_corelib-flags_clean sd_corelib-libs-S_clean sd_integer-flags_clean sd_integer-libs-S_clean sd_aio-mech_clean sd_sd-select_clean sd_sd-fcntl_clean sd_sysinfo_clean
+sysdeps:  sd_corelib-flags sd_corelib-libs-S sd_integer-flags sd_integer-libs-S sd_aio-mech sd_sd-select sd_sd-fcntl sd_sysinfo sd_io-notice
+sysdeps_clean:  sd_corelib-flags_clean sd_corelib-libs-S_clean sd_integer-flags_clean sd_integer-libs-S_clean sd_aio-mech_clean sd_sd-select_clean sd_sd-fcntl_clean sd_sysinfo_clean sd_io-notice_clean
 
 sd_corelib-flags:
 	@(cd modules/corelib-flags && ./run)
@@ -43,6 +43,11 @@ sd_sysinfo:
 	@(cd modules/sysinfo && ./run)
 sd_sysinfo_clean:
 	@(cd modules/sysinfo && ./clean)
+
+sd_io-notice:
+	@(cd modules/io-notice && ./run)
+sd_io-notice_clean:
+	@(cd modules/io-notice && ./clean)
 
 regen:
 	./gen-makefile > Makefile.tmp && mv Makefile.tmp Makefile

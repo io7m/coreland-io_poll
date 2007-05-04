@@ -31,15 +31,16 @@ sysdeps_clean:
 	(cd SYSDEPS && make clean)
 	rm -f sysdeps.out
 
-_aio-mech.h: sysdeps.out
 flags-corelib: sysdeps.out
 libs-corelib: sysdeps.out
 flags-integer: sysdeps.out
 libs-integer: sysdeps.out
+_io-notice.h: sysdeps.out
 _sd_fcntl.h: sysdeps.out
 flags-fcntl: sysdeps.out
 libs-fcntl: sysdeps.out
 _sd_select.h: sysdeps.out
+_sysinfo.h: sysdeps.out
 
 UNIT_TESTS/core_def.o:\
 	cc-compile UNIT_TESTS/core_def.c io_poll.h UNIT_TESTS/t_assert.h 
@@ -589,10 +590,10 @@ obj_clean:
 	rm -f UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se \
 	UNIT_TESTS/t_wait2.o UNIT_TESTS/t_wait2_def UNIT_TESTS/t_wait2_dp \
 	UNIT_TESTS/t_wait2_ep UNIT_TESTS/t_wait2_kq UNIT_TESTS/t_wait2_po \
-	UNIT_TESTS/t_wait2_se conf-cctype conf-systype io_poll.a iop_add.o \
-	iop_check.o iop_core.o iop_devpoll.o iop_epoll.o iop_fdhash.o \
-	iop_free.o iop_init.o iop_kqueue.o iop_misc.o iop_poll.o iop_rfds.o \
-	iop_rm.o iop_select.o iop_size.o iop_wait.o 
+	UNIT_TESTS/t_wait2_se io_poll.a iop_add.o iop_check.o iop_core.o \
+	iop_devpoll.o iop_epoll.o iop_fdhash.o iop_free.o iop_init.o \
+	iop_kqueue.o iop_misc.o iop_poll.o iop_rfds.o iop_rm.o iop_select.o \
+	iop_size.o iop_wait.o 
 
 tests_clean:
 	(cd UNIT_TESTS && make clean)
