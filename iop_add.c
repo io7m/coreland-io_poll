@@ -24,6 +24,8 @@ int io_poll_add(struct io_poll *iop, const struct io_pollfd *pfd)
     errno = es;
     return 0;
   }
+
+  ++iop->size;
   return 1;
 }
 

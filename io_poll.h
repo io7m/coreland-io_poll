@@ -34,6 +34,7 @@ struct io_poll {
   struct array pd_in;
   struct array pd_out;
   const struct io_poll_core *core;
+  unsigned long size;                 /* number of active descriptors */
   int pfd;
 };
 
@@ -52,6 +53,7 @@ unsigned long io_poll_size(const struct io_poll *);
 
 int io_poll_setcore(struct io_poll *, const struct io_poll_core *);
 const struct io_poll_core *io_poll_default_core(void);
+const struct io_poll_core *io_poll_core(const struct io_poll *);
 
 extern const struct io_poll_core *io_poll_core_devpoll;
 extern const struct io_poll_core *io_poll_core_epoll;

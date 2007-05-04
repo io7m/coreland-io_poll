@@ -545,10 +545,10 @@ iop_rm.o:\
 	cc-compile iop_rm.c io_poll.h io_poll_impl.h 
 	./cc-compile iop_rm.c
 iop_select.o:\
-	cc-compile iop_select.c io_poll.h io_poll_impl.h 
+	cc-compile iop_select.c io_poll.h io_poll_impl.h _sd_select.h 
 	./cc-compile iop_select.c
 iop_size.o:\
-	cc-compile iop_size.c io_poll.h io_poll_impl.h 
+	cc-compile iop_size.c io_poll.h 
 	./cc-compile iop_size.c
 iop_wait.o:\
 	cc-compile iop_wait.c io_poll.h io_poll_impl.h 

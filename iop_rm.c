@@ -13,6 +13,8 @@ int io_poll_rm(struct io_poll *iop, const struct io_pollfd *pfd)
   }
 
   if (!iop->core->del(iop, pfd->fd)) return 0;
+
+  --iop->size;
   return 1;
 }
 

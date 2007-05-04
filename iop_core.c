@@ -28,3 +28,8 @@ const struct io_poll_core *io_poll_default_core(void)
 #endif
   return 0;
 }
+
+const struct io_poll_core *io_poll_core(const struct io_poll *iop)
+{
+  return iop->core;
+}

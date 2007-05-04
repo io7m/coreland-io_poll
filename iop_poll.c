@@ -7,7 +7,8 @@
 #include <poll.h>
 
 /* various kernel bugs mean that it's better to always check
-   for POLLHUP and POLLERR */
+ * for POLLHUP and POLLERR
+ */
 
 static unsigned int io_poll_flags_io2po(unsigned int iof)
 {
@@ -30,25 +31,24 @@ static unsigned int io_poll_flags_po2io(unsigned int pf)
   return iof;
 }
 
+/* iop->pd_in   used to hold pollfd structures.
+ * iop->pd_out  unused.
+ */
+
 static int iop_poll_init(struct io_poll *iop)
 {
   struct array po_ifds;
-  struct array po_ofds;
   int es = 0;
 
   array_zero(&po_ifds);
-  array_zero(&po_ofds);
-
   if (!array_init(&po_ifds, 16, sizeof(struct pollfd))) { es = errno; goto FAIL; }
-  if (!array_init(&po_ofds, 16, sizeof(struct pollfd))) { es = errno; goto FAIL; }
 
   iop->pd_in = po_ifds;
-  iop->pd_out = po_ofds;
+  array_zero(&iop->pd_out);
   return 1;
 
   FAIL:
   if (array_data(&po_ifds)) array_free(&po_ifds);
-  if (array_data(&po_ofds)) array_free(&po_ofds);
   errno = es;
   return 0;
 }
@@ -56,53 +56,35 @@ static int iop_poll_init(struct io_poll *iop)
 static int iop_poll_free(struct io_poll *iop)
 {
   array_free(&iop->pd_in);
-  array_free(&iop->pd_out);
   return 1;
 }
 
 static int iop_poll_add(struct io_poll *iop, const struct io_pollfd *pfd)
 {
-  struct pollfd pofd;
-  struct pollfd *poptr = 0;
+  struct pollfd dummy_pofd;
+  struct io_pollfd dummy_pfd;
   struct io_pollfd *ifd = 0;
   unsigned long ind;
-  int add_fds = 0;
-  int add_rfd = 0;
-  int add_pdi = 0;
-  int add_pdo = 0;
   int es;
 
+  dummy_pfd.fd = -1;
+  dummy_pfd.events = 0;
+
+  /* allocate extra space on arrays if necessary */
   if (!io_poll_find_unused(&iop->fds, &ind)) {
-    add_fds = array_cat(&iop->fds, pfd);
-    if (!add_fds) { es = errno; goto FAIL; }
-    add_rfd = array_cat(&iop->rfds, pfd);
-    if (!add_rfd) { es = errno; goto FAIL; }
-    add_pdi = array_cat(&iop->pd_in, &pofd);
-    if (!add_pdi) { es = errno; goto FAIL; }
-    add_pdo = array_cat(&iop->pd_out, &pofd);
-    if (!add_pdo) { es = errno; goto FAIL; }
+    if (!array_cat(&iop->fds, &dummy_pfd)) { es = errno; goto FAIL; }
+    if (!array_cat(&iop->rfds, &dummy_pfd)) { es = errno; goto FAIL; }
+    if (!array_cat(&iop->pd_in, &dummy_pofd)) { es = errno; goto FAIL; }
     ind = array_size(&iop->fds) - 1;
   }
  
-  poptr = array_index(&iop->pd_in, ind);
   ifd = array_index(&iop->fds, ind);
-
-  bin_zero(poptr, sizeof(struct pollfd));
   ifd->fd = pfd->fd;
   ifd->events = pfd->events;
-
-  poptr->fd = pfd->fd;
-  poptr->events = io_poll_flags_io2po(pfd->events);
-  poptr->revents = 0;
   return 1;
 
   FAIL:
   if (ifd) ifd->fd = -1;
-  if (poptr) bin_zero(poptr, sizeof(struct pollfd));
-  if (add_fds) array_chop(&iop->fds, array_size(&iop->fds) - 1);
-  if (add_rfd) array_chop(&iop->rfds, array_size(&iop->rfds) - 1);
-  if (add_pdi) array_chop(&iop->pd_in, array_size(&iop->pd_in) - 1);
-  if (add_pdo) array_chop(&iop->pd_out, array_size(&iop->pd_out) - 1);
   errno = es;
   return 0;
 }
@@ -123,23 +105,38 @@ static int iop_poll_del(struct io_poll *iop, int fd)
 static int iop_poll_wait(struct io_poll *iop, int64 ms)
 {
   struct io_pollfd rfd;
-  struct pollfd *pfd;
+  struct io_pollfd *ifd;
+  struct pollfd *pfdp;
+  struct pollfd pfd;
   unsigned long ind;
   unsigned long len;
   long ret;
 
-  pfd = array_data(&iop->pd_in);
+  array_trunc(&iop->pd_in);
+  len = array_size(&iop->fds);
+  for (ind = 0; ind < len; ++ind) {
+    ifd = array_index(&iop->fds, ind);
+    if (ifd->fd != -1) {
+      pfd.fd = ifd->fd;
+      pfd.events = io_poll_flags_io2po(ifd->events);
+      pfd.revents = 0; 
+      if (!array_cat(&iop->pd_in, &pfd)) return -1;
+    }
+  }
+
+  pfdp = array_data(&iop->pd_in);
   len = array_size(&iop->pd_in);
 
-  ret = poll(pfd, len, ms);
+  ret = poll(pfdp, len, ms);
   if (ret == -1) return -1;
   if (ret == 0) return 0;
 
+  array_trunc(&iop->rfds);
   for (ind = 0; ind < (unsigned long) ret; ++ind) {
-    if (pfd[ind].revents) {
-      rfd.fd = pfd[ind].fd;
-      rfd.events = io_poll_flags_po2io(pfd[ind].revents);
-      if (!array_cat(&iop->pd_out, &rfd)) return -1;
+    if (pfdp[ind].revents) {
+      rfd.fd = pfdp[ind].fd;
+      rfd.events = io_poll_flags_po2io(pfdp[ind].revents);
+      if (!array_cat(&iop->rfds, &rfd)) return -1;
     }
   }
 

@@ -32,6 +32,10 @@ static unsigned int io_poll_flags_kq2io(unsigned int kf)
   return iof;
 }
 
+/* iop->pd_in   unused
+ * iop->pd_out  used to hold kevent structures returned from kevent()
+ */
+
 static int iop_kqu_init(struct io_poll *iop)
 {
   struct array ke_ifds;
@@ -39,7 +43,6 @@ static int iop_kqu_init(struct io_poll *iop)
   int kfd = -1;
   int es = 0;
 
-  array_zero(&ke_ifds);
   array_zero(&ke_ofds);
 
   kfd = kqueue();
@@ -48,7 +51,7 @@ static int iop_kqu_init(struct io_poll *iop)
   if (!array_init(&ke_ifds, 16, sizeof(struct kevent))) { es = errno; goto FAIL; }
   if (!array_init(&ke_ofds, 16, sizeof(struct kevent))) { es = errno; goto FAIL; }
 
-  iop->pd_in = ke_ifds;
+  array_zero(&iop->pd_in);
   iop->pd_out = ke_ofds;
   iop->pfd = kfd;
   return 1;
@@ -63,7 +66,6 @@ static int iop_kqu_init(struct io_poll *iop)
 
 static int iop_kqu_free(struct io_poll *iop)
 {
-  array_free(&iop->pd_in);
   array_free(&iop->pd_out);
   return (close(iop->pfd) != -1);
 }
@@ -71,70 +73,57 @@ static int iop_kqu_free(struct io_poll *iop)
 static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
 {
   struct kevent kev;
-  struct kevent *kep = 0;
-  struct io_pollfd dummy;
+  struct io_pollfd dummy_pfd;
   struct io_pollfd *ifd = 0;
   unsigned long ind;
   unsigned long len;
-  int add_fds = 0;
-  int add_rfd = 0;
-  int add_pdi = 0;
-  int add_pdo = 0;
   int es;
   int r;
 
-  dummy.fd = -1;
-  dummy.events = 0;
+  dummy_pfd.fd = -1;
+  dummy_pfd.events = 0;
+  bin_zero(&kev, sizeof(struct kevent));
 
+  /* if necessary, allocate extra space on arrays to hold structures */
   len = array_size(&iop->fds);
   if (!io_poll_find_unused(&iop->fds, &ind)) {
-    add_fds = array_cat(&iop->fds, &dummy);
-    if (!add_fds) { es = errno; goto FAIL; }
-    add_rfd = array_cat(&iop->rfds, &dummy);
-    if (!add_rfd) { es = errno; goto FAIL; }
-    add_pdi = array_cat(&iop->pd_in, &kev);
-    if (!add_pdi) { es = errno; goto FAIL; }
-    add_pdo = array_cat(&iop->pd_out, &kev);
-    if (!add_pdo) { es = errno; goto FAIL; }
+    if (!array_cat(&iop->fds, &dummy_pfd)) { es = errno; goto FAIL; }
+    if (!array_cat(&iop->rfds, &dummy_pfd)) { es = errno; goto FAIL; }
+    if (!array_cat(&iop->pd_out, &kev)) { es = errno; goto FAIL; }
     ind = len;
   }
  
-  kep = array_index(&iop->pd_in, ind);
   ifd = array_index(&iop->fds, ind);
-
-  bin_zero(kep, sizeof(struct kevent));
   ifd->fd = pfd->fd;
   ifd->events = pfd->events;
 
-  EV_SET(kep, pfd->fd, io_poll_flags_io2kq(pfd->events), EV_ADD, 0, 1, 0);
+  EV_SET(&kev, pfd->fd, io_poll_flags_io2kq(pfd->events), EV_ADD, 0, 1, 0);
 
-  r = kevent(iop->pfd, kep, 1, 0, 0, 0);
+  r = kevent(iop->pfd, &kev, 1, 0, 0, 0);
   if (r == -1) { es = errno; goto FAIL; }
   return 1;
 
   FAIL:
   if (ifd) ifd->fd = -1;
-  if (kep) bin_zero(kep, sizeof(struct kevent));
   errno = es;
   return 0;
 }
 
 static int iop_kqu_del(struct io_poll *iop, int fd)
 {
-  struct kevent *kep = 0;
+  struct kevent kev;
   struct io_pollfd *ifd = 0;
   unsigned long ind;
 
   if (!io_poll_find(&iop->fds, fd, &ind)) return 0;
 
-  kep = array_index(&iop->pd_in, ind);
   ifd = array_index(&iop->fds, ind);
 
-  EV_SET(kep, ifd->fd, kep->filter, EV_DELETE, 0, 0, 0);
+  EV_SET(&kev, ifd->fd, io_poll_flags_io2kq(ifd->events), EV_DELETE, 0, 0, 0);
+
   ifd->fd = -1;
   ifd->events = 0;
-
-  return kevent(iop->pfd, kep, 1, 0, 0, 0) != -1;
+  return kevent(iop->pfd, &kev, 1, 0, 0, 0) != -1;
 }
 
 static int iop_kqu_wait(struct io_poll *iop, int64 ms)
@@ -143,7 +132,6 @@ static int iop_kqu_wait(struct io_poll *iop, int64 ms)
   struct io_pollfd rfd;
   struct timespec *tsp;
   struct kevent *kout;
-  unsigned long len;
   unsigned long ind;
   int ret;
 
@@ -156,7 +144,7 @@ static int iop_kqu_wait(struct io_poll *iop, int64 ms)
   }
 
   kout = (struct kevent *) array_data(&iop->pd_out);
-  ret = kevent(iop->pfd, 0, 0, kout, len, tsp);
+  ret = kevent(iop->pfd, 0, 0, kout, iop->size, tsp);
   if (ret == -1) return -1;
   if (ret == 0) return 0;
   
