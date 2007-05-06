@@ -40,6 +40,7 @@ int io_poll_init(struct io_poll *iop)
   iop->rfds = rfds;
   iop->fdhash = hash;
   iop->size = 0;
+  iop->core = core;
   return 1;
 
   FAIL:
