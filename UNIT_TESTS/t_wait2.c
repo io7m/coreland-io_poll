@@ -45,7 +45,7 @@ int main(void)
 
   for (ind = 0; ind < MAX_FDS; ++ind) {
     ifd.fd = pipes[ind].fd[0];
-    ifd.events = IO_POLL_READ | IO_POLL_EOF | IO_POLL_ERROR;
+    ifd.events = IO_POLL_READ;
     test_assert(io_poll_add(&iop, &ifd) == 1);
     test_assert(io_poll_check(&iop, &ifd) == 1);
     test_assert(io_poll_size(&iop) == ind + 1);

@@ -6,31 +6,6 @@
 #include <corelib/error.h>
 #include <poll.h>
 
-/* various kernel bugs mean that it's better to always check
- * for POLLHUP and POLLERR
- */
-
-static unsigned int io_poll_flags_io2po(unsigned int iof)
-{
-  unsigned int pf;
-  pf = 0;
-  if (iof & IO_POLL_READ) pf |= POLLIN | POLLERR | POLLHUP;
-  if (iof & IO_POLL_WRITE) pf |= POLLOUT | POLLERR | POLLHUP;
-  if (iof & IO_POLL_ERROR) pf |= POLLERR;
-  if (iof & IO_POLL_EOF) pf |= POLLHUP;
-  return pf;
-}
-static unsigned int io_poll_flags_po2io(unsigned int pf)
-{
-  unsigned int iof;
-  iof = 0;
-  if (pf & POLLIN) iof |= IO_POLL_READ;
-  if (pf & POLLOUT) iof |= IO_POLL_WRITE;
-  if (pf & POLLERR) iof |= IO_POLL_ERROR;
-  if (pf & POLLHUP) iof |= IO_POLL_EOF;
-  return iof;
-}
-
 /* iop->pd_in   used to hold pollfd structures.
  * iop->pd_out  unused.
  */
@@ -95,7 +70,6 @@ static int iop_poll_del(struct io_poll *iop, int fd)
   unsigned long ind;
 
   if (!io_poll_find(&iop->fds, fd, &ind)) return 0;
-
   ifd = array_index(&iop->fds, ind);
   ifd->fd = -1;
   ifd->events = 0;
@@ -118,7 +92,9 @@ static int iop_poll_wait(struct io_poll *iop, int64 ms)
     ifd = array_index(&iop->fds, ind);
     if (ifd->fd != -1) {
       pfd.fd = ifd->fd;
-      pfd.events = io_poll_flags_io2po(ifd->events);
+      pfd.events = 0;
+      if (ifd->events & IO_POLL_READ) pfd.events |= POLLIN | POLLHUP | POLLERR;
+      if (ifd->events & IO_POLL_WRITE) pfd.events |= POLLOUT | POLLHUP | POLLERR;
       pfd.revents = 0; 
       if (!array_cat(&iop->pd_in, &pfd)) return -1;
     }
@@ -135,7 +111,11 @@ static int iop_poll_wait(struct io_poll *iop, int64 ms)
   for (ind = 0; ind < (unsigned long) ret; ++ind) {
     if (pfdp[ind].revents) {
       rfd.fd = pfdp[ind].fd;
-      rfd.events = io_poll_flags_po2io(pfdp[ind].revents);
+      rfd.events = 0;
+      if (pfdp[ind].revents & POLLIN) rfd.events |= IO_POLL_READ;
+      if (pfdp[ind].revents & POLLOUT) rfd.events |= IO_POLL_WRITE;
+      if (pfdp[ind].revents & POLLHUP) rfd.events |= IO_POLL_EOF;
+      if (pfdp[ind].revents & POLLERR) rfd.events |= IO_POLL_ERROR;
       if (!array_cat(&iop->rfds, &rfd)) return -1;
     }
   }

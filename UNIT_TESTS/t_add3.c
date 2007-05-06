@@ -30,7 +30,7 @@ int main(void)
 
   /* add all file descriptors */
   for (ind = 0; ind < MAX_FDS; ++ind) {
-    ifd.events = IO_POLL_READ | IO_POLL_EOF | IO_POLL_ERROR;
+    ifd.events = IO_POLL_READ;
     ifd.fd = fds[ind];
     test_assert(io_poll_add(&iop, &ifd) == 1);
     test_assert(io_poll_add(&iop, &ifd) == 0);
@@ -44,7 +44,7 @@ int main(void)
   /* remove all odd file descriptors */
   for (ind = 0; ind < MAX_FDS; ++ind) {
     if (ind % 2) {
-      ifd.events = IO_POLL_READ | IO_POLL_EOF | IO_POLL_ERROR;
+      ifd.events = IO_POLL_READ;
       ifd.fd = fds[ind];
       test_assert(io_poll_rm(&iop, &ifd) == 1);
       test_assert(io_poll_rm(&iop, &ifd) == 0);
@@ -56,7 +56,7 @@ int main(void)
 
   /* check that re-adding odd file descriptors does not enlarge arrays */
   for (ind = 0; ind < MAX_FDS; ++ind) {
-    ifd.events = IO_POLL_READ | IO_POLL_EOF | IO_POLL_ERROR;
+    ifd.events = IO_POLL_READ;
     ifd.fd = fds[ind];
     if (ind % 2 ) {
       test_assert(io_poll_add(&iop, &ifd) == 1);
@@ -70,7 +70,7 @@ int main(void)
 
   /* refuse to add closed file descriptors */
   for (ind = 0; ind < MAX_FDS; ++ind) {
-    ifd.events = IO_POLL_READ | IO_POLL_EOF | IO_POLL_ERROR;
+    ifd.events = IO_POLL_READ;
     ifd.fd = fds[ind];
     test_assert(close(fds[ind]) != -1);
     test_assert(io_poll_add(&iop, &ifd) == 0);

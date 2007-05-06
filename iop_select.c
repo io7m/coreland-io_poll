@@ -78,7 +78,7 @@ static int iop_sel_wait(struct io_poll *iop, int64 ms)
   struct io_pollfd rfd;
   unsigned long len;
   unsigned long ind;
-  unsigned long nfds;
+  int high_fd = -1;
   int r;
 
   FD_ZERO(&readfds);
@@ -91,19 +91,18 @@ static int iop_sel_wait(struct io_poll *iop, int64 ms)
   ms -= tv.tv_sec * 1000;
   tv.tv_usec = ms / 1000;
 
-  nfds = 0;
+  high_fd = 0;
   len = array_size(&iop->fds);
   for (ind = 0; ind < len; ++ind) {
     ifd = array_index(&iop->fds, ind);
     if (ifd->fd != -1) {
       if (ifd->events & IO_POLL_READ) FD_SET(ifd->fd, &readfds);
       if (ifd->events & IO_POLL_WRITE) FD_SET(ifd->fd, &writefds);
-      if (ifd->events & IO_POLL_ERROR) FD_SET(ifd->fd, &errorfds);
-      ++nfds;
+      if (ifd->fd > high_fd) high_fd = ifd->fd;
     }
   }
 
-  r = select(nfds, &readfds, &writefds, &errorfds, tvp);
+  r = select(high_fd + 1, &readfds, &writefds, &errorfds, tvp);
   if (r == -1) return -1;
   if (r == 0) return 0;
 
@@ -113,12 +112,9 @@ static int iop_sel_wait(struct io_poll *iop, int64 ms)
     if (ifd->fd != -1) {
       rfd.fd = ifd->fd;
       rfd.events = 0;
-      if ((ifd->events & IO_POLL_READ) && FD_SET(ifd->fd, &readfds))
-        rfd.events |= IO_POLL_READ;
-      if ((ifd->events & IO_POLL_WRITE) && FD_SET(ifd->fd, &writefds))
-        rfd.events |= IO_POLL_WRITE;
-      if ((ifd->events & IO_POLL_ERROR) && FD_SET(ifd->fd, &errorfds))
-        rfd.events |= IO_POLL_ERROR;
+      if (FD_SET(ifd->fd, &readfds)) rfd.events |= IO_POLL_READ;
+      if (FD_SET(ifd->fd, &writefds)) rfd.events |= IO_POLL_WRITE;
+      if (FD_SET(ifd->fd, &errorfds)) rfd.events |= IO_POLL_EOF;
       if (rfd.events)
         if (!array_cat(&iop->rfds, &rfd)) return -1;
     }

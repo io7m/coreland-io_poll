@@ -10,28 +10,6 @@
 #include <sys/event.h>
 #include <sys/time.h>
 
-/* event flag conversion */
-static unsigned int io_poll_flags_io2kq(unsigned int iof)
-{
-  unsigned int kf;
-  kf = 0;
-  if (iof & IO_POLL_READ) kf |= EVFILT_READ;
-  if (iof & IO_POLL_WRITE) kf |= EVFILT_WRITE;
-  if (iof & IO_POLL_ERROR) kf |= EV_ERROR;
-  if (iof & IO_POLL_EOF) kf |= EV_EOF;
-  return kf;
-}
-static unsigned int io_poll_flags_kq2io(unsigned int kf)
-{
-  unsigned int iof;
-  iof = 0;
-  if (kf & EVFILT_READ) iof |= IO_POLL_READ;
-  if (kf & EVFILT_WRITE) iof |= IO_POLL_WRITE;
-  if (kf & EV_ERROR) iof |= IO_POLL_ERROR;
-  if (kf & EV_EOF) iof |= IO_POLL_EOF;
-  return iof;
-}
-
 /* iop->pd_in   unused
  * iop->pd_out  used to hold kevent structures returned from kevent()
  */
@@ -77,6 +55,7 @@ static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
   struct io_pollfd *ifd = 0;
   unsigned long ind;
   unsigned long len;
+  short filter = 0;
   int es;
   int r;
 
@@ -97,7 +76,10 @@ static int iop_kqu_add(struct io_poll *iop, const struct io_pollfd *pfd)
   ifd->fd = pfd->fd;
   ifd->events = pfd->events;
 
-  EV_SET(&kev, pfd->fd, io_poll_flags_io2kq(pfd->events), EV_ADD, 0, 1, 0);
+  if (ifd->events & IO_POLL_READ) filter |= EVFILT_READ;
+  if (ifd->events & IO_POLL_WRITE) filter |= EVFILT_WRITE;
+
+  EV_SET(&kev, pfd->fd, filter, EV_ADD, 0, 1, 0);
 
   r = kevent(iop->pfd, &kev, 1, 0, 0, 0);
   if (r == -1) { es = errno; goto FAIL; }
@@ -114,12 +96,14 @@ static int iop_kqu_del(struct io_poll *iop, int fd)
   struct kevent kev;
   struct io_pollfd *ifd = 0;
   unsigned long ind;
+  short filter = 0;
 
   if (!io_poll_find(&iop->fds, fd, &ind)) return 0;
-
   ifd = array_index(&iop->fds, ind);
 
-  EV_SET(&kev, ifd->fd, io_poll_flags_io2kq(ifd->events), EV_DELETE, 0, 0, 0);
+  if (ifd->events & IO_POLL_READ) filter |= EVFILT_READ;
+  if (ifd->events & IO_POLL_WRITE) filter |= EVFILT_WRITE;
+  EV_SET(&kev, ifd->fd, filter, EV_DELETE, 0, 0, 0);
 
   ifd->fd = -1;
   ifd->events = 0;
@@ -151,8 +135,15 @@ static int iop_kqu_wait(struct io_poll *iop, int64 ms)
   array_trunc(&iop->rfds);
   for (ind = 0; ind < (unsigned long) ret; ++ind) {
     rfd.fd = kout[ind].ident;
-    rfd.events = io_poll_flags_kq2io(kout[ind].filter);
-    rfd.events |= io_poll_flags_kq2io(kout[ind].flags);
+    rfd.events = 0;
+    if (kout[ind].filter == EVFILT_READ && kout[ind].data)
+      rfd.events |= IO_POLL_READ;
+    if (kout[ind].filter == EVFILT_WRITE)
+      rfd.events |= IO_POLL_WRITE;
+    if (kout[ind].flags & EV_EOF)
+      rfd.events |= IO_POLL_EOF;
+    if (kout[ind].flags & EV_ERROR)
+      rfd.events |= IO_POLL_ERROR;
     if (!array_cat(&iop->rfds, &rfd)) return -1; /* should be impossible */
   }
   return 1;

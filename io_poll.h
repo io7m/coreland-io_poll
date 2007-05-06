@@ -10,6 +10,11 @@
 #define IO_POLL_ERROR 0x4
 #define IO_POLL_EOF   0x8
 
+#define io_poll_got_read(fd)  (((fd)->events & IO_POLL_READ) == IO_POLL_READ)
+#define io_poll_got_write(fd) (((fd)->events & IO_POLL_WRITE) == IO_POLL_WRITE)
+#define io_poll_got_error(fd) (((fd)->events & IO_POLL_ERROR) == IO_POLL_ERROR)
+#define io_poll_got_eof(fd)   (((fd)->events & IO_POLL_EOF) == IO_POLL_EOF)
+
 struct io_pollfd;
 struct io_poll;
 struct io_poll_core;

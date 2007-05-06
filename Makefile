@@ -21,6 +21,12 @@ all: sysdeps.out UNIT_TESTS/t_add1_def UNIT_TESTS/t_add1_dp \
 	UNIT_TESTS/t_wait1_kq UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se \
 	UNIT_TESTS/t_wait2_def UNIT_TESTS/t_wait2_dp UNIT_TESTS/t_wait2_ep \
 	UNIT_TESTS/t_wait2_kq UNIT_TESTS/t_wait2_po UNIT_TESTS/t_wait2_se \
+	UNIT_TESTS/t_wait3_def UNIT_TESTS/t_wait3_dp UNIT_TESTS/t_wait3_ep \
+	UNIT_TESTS/t_wait3_kq UNIT_TESTS/t_wait3_po UNIT_TESTS/t_wait3_se \
+	UNIT_TESTS/t_wait4_def UNIT_TESTS/t_wait4_dp UNIT_TESTS/t_wait4_ep \
+	UNIT_TESTS/t_wait4_kq UNIT_TESTS/t_wait4_po UNIT_TESTS/t_wait4_se \
+	UNIT_TESTS/t_wait5_def UNIT_TESTS/t_wait5_dp UNIT_TESTS/t_wait5_ep \
+	UNIT_TESTS/t_wait5_kq UNIT_TESTS/t_wait5_po UNIT_TESTS/t_wait5_se \
 	ctxt/ctxt.a inst-check inst-copy inst-dir inst-link installer \
 	instchk io_poll.a 
 
@@ -487,6 +493,144 @@ UNIT_TESTS/t_wait2_se:\
 	./cc-link UNIT_TESTS/t_wait2_se UNIT_TESTS/t_wait2.o \
 	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
 	io_poll.a 
+UNIT_TESTS/t_wait3.o:\
+	cc-compile UNIT_TESTS/t_wait3.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_wait3.c
+UNIT_TESTS/t_wait3_def:\
+	cc-link UNIT_TESTS/t_wait3_def.ld UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait3_def UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait3_dp:\
+	cc-link UNIT_TESTS/t_wait3_dp.ld UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait3_dp UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait3_ep:\
+	cc-link UNIT_TESTS/t_wait3_ep.ld UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait3_ep UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait3_kq:\
+	cc-link UNIT_TESTS/t_wait3_kq.ld UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait3_kq UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait3_po:\
+	cc-link UNIT_TESTS/t_wait3_po.ld UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait3_po UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait3_se:\
+	cc-link UNIT_TESTS/t_wait3_se.ld UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait3_se UNIT_TESTS/t_wait3.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait4.o:\
+	cc-compile UNIT_TESTS/t_wait4.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_wait4.c
+UNIT_TESTS/t_wait4_def:\
+	cc-link UNIT_TESTS/t_wait4_def.ld UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait4_def UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait4_dp:\
+	cc-link UNIT_TESTS/t_wait4_dp.ld UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait4_dp UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait4_ep:\
+	cc-link UNIT_TESTS/t_wait4_ep.ld UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait4_ep UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait4_kq:\
+	cc-link UNIT_TESTS/t_wait4_kq.ld UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait4_kq UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait4_po:\
+	cc-link UNIT_TESTS/t_wait4_po.ld UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait4_po UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait4_se:\
+	cc-link UNIT_TESTS/t_wait4_se.ld UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait4_se UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait5.o:\
+	cc-compile UNIT_TESTS/t_wait5.c io_poll.h _sd_fcntl.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	./cc-compile UNIT_TESTS/t_wait5.c
+UNIT_TESTS/t_wait5_def:\
+	cc-link UNIT_TESTS/t_wait5_def.ld UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait5_def UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_def.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait5_dp:\
+	cc-link UNIT_TESTS/t_wait5_dp.ld UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait5_dp UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_dp.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait5_ep:\
+	cc-link UNIT_TESTS/t_wait5_ep.ld UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait5_ep UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_ep.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait5_kq:\
+	cc-link UNIT_TESTS/t_wait5_kq.ld UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait5_kq UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_kq.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait5_po:\
+	cc-link UNIT_TESTS/t_wait5_po.ld UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait5_po UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_po.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+UNIT_TESTS/t_wait5_se:\
+	cc-link UNIT_TESTS/t_wait5_se.ld UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
+	./cc-link UNIT_TESTS/t_wait5_se UNIT_TESTS/t_wait5.o \
+	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
+	io_poll.a 
 cc-compile: conf-cc conf-cctype conf-cflags sysdeps.out \
 	flags-corelib flags-integer 
 cc-link: conf-ld conf-ldflags sysdeps.out libs-corelib \
@@ -495,6 +639,9 @@ cc-slib: conf-systype
 conf-cctype:\
 	conf-systype conf-cc mk-cctype 
 	./mk-cctype > conf-cctype
+conf-sosuffix:\
+	mk-sosuffix 
+	./mk-sosuffix > conf-sosuffix
 conf-systype:\
 	mk-systype 
 	./mk-systype > conf-systype
@@ -658,6 +805,7 @@ mk-ctxt.o:\
 mk-ctxt:\
 	cc-link mk-ctxt.o mk-ctxt.ld
 	./cc-link mk-ctxt mk-ctxt.o
+mk-sosuffix: conf-systype 
 mk-systype: conf-cc 
 clean-all: sysdeps_clean tests_clean obj_clean 
 clean: obj_clean
@@ -687,16 +835,22 @@ obj_clean:
 	rm -f UNIT_TESTS/t_wait1_po UNIT_TESTS/t_wait1_se \
 	UNIT_TESTS/t_wait2.o UNIT_TESTS/t_wait2_def UNIT_TESTS/t_wait2_dp \
 	UNIT_TESTS/t_wait2_ep UNIT_TESTS/t_wait2_kq UNIT_TESTS/t_wait2_po \
-	UNIT_TESTS/t_wait2_se conf-cctype conf-systype ctxt/bindir.c \
-	ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c ctxt/dlibdir.o \
-	ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o ctxt/slibdir.c \
-	ctxt/slibdir.o ctxt/version.c ctxt/version.o inst-check inst-check.o \
-	inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o \
-	install_core.o install_error.o installer installer.o instchk \
-	instchk.o insthier.o io_poll.a iop_add.o iop_check.o iop_core.o \
-	iop_devpoll.o iop_epoll.o iop_fdhash.o iop_free.o iop_init.o \
-	iop_kqueue.o iop_misc.o iop_poll.o iop_rfds.o iop_rm.o iop_select.o \
-	iop_size.o iop_wait.o mk-ctxt mk-ctxt.o 
+	UNIT_TESTS/t_wait2_se UNIT_TESTS/t_wait3.o UNIT_TESTS/t_wait3_def \
+	UNIT_TESTS/t_wait3_dp UNIT_TESTS/t_wait3_ep UNIT_TESTS/t_wait3_kq \
+	UNIT_TESTS/t_wait3_po UNIT_TESTS/t_wait3_se UNIT_TESTS/t_wait4.o \
+	UNIT_TESTS/t_wait4_def UNIT_TESTS/t_wait4_dp UNIT_TESTS/t_wait4_ep \
+	UNIT_TESTS/t_wait4_kq UNIT_TESTS/t_wait4_po UNIT_TESTS/t_wait4_se \
+	UNIT_TESTS/t_wait5.o UNIT_TESTS/t_wait5_def UNIT_TESTS/t_wait5_dp \
+	UNIT_TESTS/t_wait5_ep UNIT_TESTS/t_wait5_kq UNIT_TESTS/t_wait5_po \
+	UNIT_TESTS/t_wait5_se ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a \
+	ctxt/dlibdir.c ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o \
+	ctxt/repos.c ctxt/repos.o ctxt/slibdir.c ctxt/slibdir.o \
+	ctxt/version.c ctxt/version.o inst-check inst-check.o inst-copy \
+	inst-copy.o inst-dir inst-dir.o inst-link inst-link.o install_core.o \
+	install_error.o installer installer.o instchk instchk.o insthier.o \
+	io_poll.a iop_add.o iop_check.o iop_core.o iop_devpoll.o iop_epoll.o 
+	rm -f iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_misc.o \
+	iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o iop_wait.o 
 
 deinstall: deinstaller inst-check inst-copy inst-dir inst-link
 	./deinstaller
