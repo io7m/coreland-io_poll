@@ -28,7 +28,7 @@ all: sysdeps.out UNIT_TESTS/t_add1_def UNIT_TESTS/t_add1_dp \
 	UNIT_TESTS/t_wait5_def UNIT_TESTS/t_wait5_dp UNIT_TESTS/t_wait5_ep \
 	UNIT_TESTS/t_wait5_kq UNIT_TESTS/t_wait5_po UNIT_TESTS/t_wait5_se \
 	ctxt/ctxt.a inst-check inst-copy inst-dir inst-link installer \
-	instchk io_poll.a 
+	instchk io_poll-conf io_poll.a 
 
 sysdeps: sysdeps.out
 sysdeps.out:
@@ -741,6 +741,12 @@ instchk.o:\
 insthier.o:\
 	cc-compile insthier.c install.h ctxt.h 
 	./cc-compile insthier.c
+io_poll-conf:\
+	cc-link io_poll-conf.ld io_poll-conf.o ctxt/ctxt.a 
+	./cc-link io_poll-conf io_poll-conf.o ctxt/ctxt.a 
+io_poll-conf.o:\
+	cc-compile io_poll-conf.c ctxt.h 
+	./cc-compile io_poll-conf.c
 io_poll.a:\
 	cc-slib io_poll.sld iop_add.o iop_check.o iop_core.o iop_devpoll.o \
 	iop_epoll.o iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o \
@@ -751,7 +757,7 @@ io_poll.a:\
 	iop_misc.o iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o \
 	iop_wait.o 
 iop_add.o:\
-	cc-compile iop_add.c io_poll.h io_poll_impl.h 
+	cc-compile iop_add.c io_poll.h io_poll_impl.h _sd_fcntl.h 
 	./cc-compile iop_add.c
 iop_check.o:\
 	cc-compile iop_check.c io_poll.h io_poll_impl.h 
@@ -787,7 +793,7 @@ iop_rfds.o:\
 	cc-compile iop_rfds.c io_poll.h io_poll_impl.h 
 	./cc-compile iop_rfds.c
 iop_rm.o:\
-	cc-compile iop_rm.c io_poll.h io_poll_impl.h 
+	cc-compile iop_rm.c io_poll.h io_poll_impl.h _sd_fcntl.h 
 	./cc-compile iop_rm.c
 iop_select.o:\
 	cc-compile iop_select.c io_poll.h io_poll_impl.h _sd_select.h 
@@ -842,15 +848,16 @@ obj_clean:
 	UNIT_TESTS/t_wait4_kq UNIT_TESTS/t_wait4_po UNIT_TESTS/t_wait4_se \
 	UNIT_TESTS/t_wait5.o UNIT_TESTS/t_wait5_def UNIT_TESTS/t_wait5_dp \
 	UNIT_TESTS/t_wait5_ep UNIT_TESTS/t_wait5_kq UNIT_TESTS/t_wait5_po \
-	UNIT_TESTS/t_wait5_se ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a \
-	ctxt/dlibdir.c ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o \
-	ctxt/repos.c ctxt/repos.o ctxt/slibdir.c ctxt/slibdir.o \
-	ctxt/version.c ctxt/version.o inst-check inst-check.o inst-copy \
-	inst-copy.o inst-dir inst-dir.o inst-link inst-link.o install_core.o \
-	install_error.o installer installer.o instchk instchk.o insthier.o \
-	io_poll.a iop_add.o iop_check.o iop_core.o iop_devpoll.o iop_epoll.o 
-	rm -f iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_misc.o \
-	iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o iop_wait.o 
+	UNIT_TESTS/t_wait5_se conf-cctype conf-systype ctxt/bindir.c \
+	ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c ctxt/dlibdir.o \
+	ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o ctxt/slibdir.c \
+	ctxt/slibdir.o ctxt/version.c ctxt/version.o inst-check inst-check.o \
+	inst-copy inst-copy.o inst-dir inst-dir.o inst-link inst-link.o \
+	install_core.o install_error.o installer installer.o instchk \
+	instchk.o insthier.o io_poll-conf io_poll-conf.o io_poll.a iop_add.o 
+	rm -f iop_check.o iop_core.o iop_devpoll.o iop_epoll.o iop_fdhash.o \
+	iop_free.o iop_init.o iop_kqueue.o iop_misc.o iop_poll.o iop_rfds.o \
+	iop_rm.o iop_select.o iop_size.o iop_wait.o mk-ctxt mk-ctxt.o 
 
 deinstall: deinstaller inst-check inst-copy inst-dir inst-link
 	./deinstaller
