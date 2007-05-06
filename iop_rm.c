@@ -2,10 +2,19 @@
 
 #include "io_poll.h"
 #include "io_poll_impl.h"
+#include "_sd_fcntl.h"
+
+static int io_poll_fd_rm_check(const struct io_poll *iop,
+                               const struct io_pollfd *pfd)
+{
+  return ((pfd->fd != iop->pfd)
+          && (pfd->fd != -1)
+          && (fcntl(pfd->fd, F_GETFL, 0) != -1));
+}
 
 int io_poll_rm(struct io_poll *iop, const struct io_pollfd *pfd)
 {
-  if (!io_poll_fd_check(iop, pfd)) { errno = EINVAL; return 0; }
+  if (!io_poll_fd_rm_check(iop, pfd)) { errno = EINVAL; return 0; }
 
   switch (io_poll_fdhash_rm(&iop->fdhash, pfd->fd)) {
     case 0: errno = error_noent; return 0;

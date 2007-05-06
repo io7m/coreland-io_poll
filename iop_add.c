@@ -2,12 +2,22 @@
 
 #include "io_poll.h"
 #include "io_poll_impl.h"
+#include "_sd_fcntl.h"
+
+static int io_poll_fd_add_check(const struct io_poll *iop,
+                                const struct io_pollfd *pfd)
+{
+  return ((pfd->fd != iop->pfd)
+          && (pfd->fd != -1)
+          && (pfd->events != 0)
+          && (fcntl(pfd->fd, F_GETFL, 0) != -1));
+}
 
 int io_poll_add(struct io_poll *iop, const struct io_pollfd *pfd)
 {
   int es = 0;
 
-  if (!io_poll_fd_check(iop, pfd)) { errno = EINVAL; return 0; }
+  if (!io_poll_fd_add_check(iop, pfd)) { errno = EINVAL; return 0; }
 
   switch (io_poll_fdhash_add(&iop->fdhash, pfd->fd)) {
     case 0:

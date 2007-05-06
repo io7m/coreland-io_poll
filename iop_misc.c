@@ -4,14 +4,6 @@
 #include "io_poll_impl.h"
 #include "_sd_fcntl.h"
 
-int io_poll_fd_check(const struct io_poll *iop, const struct io_pollfd *pfd)
-{
-  return ((pfd->fd != iop->pfd)
-          && (pfd->fd != -1)
-          && (pfd->events != 0)
-          && (fcntl(pfd->fd, F_GETFL, 0) != -1));
-}
-
 int io_poll_find_unused(const struct array *arr, unsigned long *ret)
 {
   const struct io_pollfd *pfd;
