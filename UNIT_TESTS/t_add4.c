@@ -3,6 +3,7 @@
 #include <corelib/close.h>
 #include "../io_poll.h"
 #include "../_sd_fcntl.h"
+#include "t_core.h"
 #include "t_assert.h"
 #include "t_verify.h"
 
@@ -22,8 +23,6 @@ int fds[MAX_FDS];
 
 struct io_poll iop;
 
-void setcore(struct io_poll *);
-
 int using_select(void)
 {
   return io_poll_core(&iop) == io_poll_core_select;
@@ -35,9 +34,9 @@ int main(void)
   unsigned long ind;
   unsigned long asize;
 
-  setcore(&iop);
+  check_core();
 
-  test_assert(io_poll_init(&iop) == 1);
+  init_core(&iop);
   test_assert(io_poll_size(&iop) == 0);
   verify(&iop);
 

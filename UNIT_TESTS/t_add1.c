@@ -1,10 +1,9 @@
 #include "../io_poll.h"
 #include "t_assert.h"
+#include "t_core.h"
 #include "t_verify.h"
 
 struct io_poll iop;
-
-void setcore(struct io_poll *);
 
 /* basic descriptor tests */
 
@@ -12,9 +11,9 @@ int main(void)
 {
   struct io_pollfd ifd;
 
-  setcore(&iop);
+  check_core();
 
-  test_assert(io_poll_init(&iop) == 1);
+  init_core(&iop);
   test_assert(io_poll_size(&iop) == 0);
   verify(&iop);
 

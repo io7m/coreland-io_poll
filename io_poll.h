@@ -44,6 +44,7 @@ struct io_poll {
 };
 
 int io_poll_init(struct io_poll *);
+int io_poll_initcore(struct io_poll *, const struct io_poll_core *);
 int io_poll_add(struct io_poll *, const struct io_pollfd *);
 int io_poll_addfd(struct io_poll *, int, unsigned int);
 int io_poll_rm(struct io_poll *, const struct io_pollfd *);
@@ -56,7 +57,6 @@ int io_poll_checkfd(struct io_poll *, int fd);
 
 unsigned long io_poll_size(const struct io_poll *);
 
-int io_poll_setcore(struct io_poll *, const struct io_poll_core *);
 const struct io_poll_core *io_poll_default_core(void);
 const struct io_poll_core *io_poll_core(const struct io_poll *);
 

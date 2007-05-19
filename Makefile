@@ -50,26 +50,32 @@ _sd_select.h: sysdeps.out
 _sysinfo.h: sysdeps.out
 
 UNIT_TESTS/core_def.o:\
-	cc-compile UNIT_TESTS/core_def.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/core_def.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/core_def.c
 UNIT_TESTS/core_dp.o:\
-	cc-compile UNIT_TESTS/core_dp.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/core_dp.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/core_dp.c
 UNIT_TESTS/core_ep.o:\
-	cc-compile UNIT_TESTS/core_ep.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/core_ep.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/core_ep.c
 UNIT_TESTS/core_kq.o:\
-	cc-compile UNIT_TESTS/core_kq.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/core_kq.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/core_kq.c
 UNIT_TESTS/core_po.o:\
-	cc-compile UNIT_TESTS/core_po.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/core_po.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/core_po.c
 UNIT_TESTS/core_se.o:\
-	cc-compile UNIT_TESTS/core_se.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/core_se.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/core_se.c
 UNIT_TESTS/t_add1.o:\
 	cc-compile UNIT_TESTS/t_add1.c io_poll.h UNIT_TESTS/t_assert.h \
-	UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_add1.c
 UNIT_TESTS/t_add1_def:\
 	cc-link UNIT_TESTS/t_add1_def.ld UNIT_TESTS/t_add1.o \
@@ -115,7 +121,7 @@ UNIT_TESTS/t_add1_se:\
 	io_poll.a 
 UNIT_TESTS/t_add2.o:\
 	cc-compile UNIT_TESTS/t_add2.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_add2.c
 UNIT_TESTS/t_add2_def:\
 	cc-link UNIT_TESTS/t_add2_def.ld UNIT_TESTS/t_add2.o \
@@ -161,7 +167,7 @@ UNIT_TESTS/t_add2_se:\
 	io_poll.a 
 UNIT_TESTS/t_add3.o:\
 	cc-compile UNIT_TESTS/t_add3.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_add3.c
 UNIT_TESTS/t_add3_def:\
 	cc-link UNIT_TESTS/t_add3_def.ld UNIT_TESTS/t_add3.o \
@@ -207,7 +213,7 @@ UNIT_TESTS/t_add3_se:\
 	io_poll.a 
 UNIT_TESTS/t_add4.o:\
 	cc-compile UNIT_TESTS/t_add4.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_add4.c
 UNIT_TESTS/t_add4_def:\
 	cc-link UNIT_TESTS/t_add4_def.ld UNIT_TESTS/t_add4.o \
@@ -258,7 +264,8 @@ UNIT_TESTS/t_assert.o:\
 	cc-compile UNIT_TESTS/t_assert.c UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/t_assert.c
 UNIT_TESTS/t_core1.o:\
-	cc-compile UNIT_TESTS/t_core1.c io_poll.h UNIT_TESTS/t_assert.h 
+	cc-compile UNIT_TESTS/t_core1.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/t_core1.c
 UNIT_TESTS/t_core1_def:\
 	cc-link UNIT_TESTS/t_core1_def.ld UNIT_TESTS/t_core1.o \
@@ -303,8 +310,8 @@ UNIT_TESTS/t_core1_se:\
 	UNIT_TESTS/core_se.o UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a \
 	io_poll.a 
 UNIT_TESTS/t_init1.o:\
-	cc-compile UNIT_TESTS/t_init1.c io_poll.h UNIT_TESTS/t_assert.h \
-	UNIT_TESTS/t_verify.h 
+	cc-compile UNIT_TESTS/t_init1.c io_poll.h UNIT_TESTS/t_core.h \
+	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_init1.c
 UNIT_TESTS/t_init1_def:\
 	cc-link UNIT_TESTS/t_init1_def.ld UNIT_TESTS/t_init1.o \
@@ -350,7 +357,7 @@ UNIT_TESTS/t_init1_se:\
 	io_poll.a 
 UNIT_TESTS/t_rm1.o:\
 	cc-compile UNIT_TESTS/t_rm1.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_rm1.c
 UNIT_TESTS/t_rm1_def:\
 	cc-link UNIT_TESTS/t_rm1_def.ld UNIT_TESTS/t_rm1.o \
@@ -403,7 +410,7 @@ UNIT_TESTS/t_verify.o:\
 	./cc-compile UNIT_TESTS/t_verify.c
 UNIT_TESTS/t_wait1.o:\
 	cc-compile UNIT_TESTS/t_wait1.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_wait1.c
 UNIT_TESTS/t_wait1_def:\
 	cc-link UNIT_TESTS/t_wait1_def.ld UNIT_TESTS/t_wait1.o \
@@ -449,7 +456,7 @@ UNIT_TESTS/t_wait1_se:\
 	io_poll.a 
 UNIT_TESTS/t_wait2.o:\
 	cc-compile UNIT_TESTS/t_wait2.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_wait2.c
 UNIT_TESTS/t_wait2_def:\
 	cc-link UNIT_TESTS/t_wait2_def.ld UNIT_TESTS/t_wait2.o \
@@ -495,7 +502,7 @@ UNIT_TESTS/t_wait2_se:\
 	io_poll.a 
 UNIT_TESTS/t_wait3.o:\
 	cc-compile UNIT_TESTS/t_wait3.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_wait3.c
 UNIT_TESTS/t_wait3_def:\
 	cc-link UNIT_TESTS/t_wait3_def.ld UNIT_TESTS/t_wait3.o \
@@ -541,7 +548,7 @@ UNIT_TESTS/t_wait3_se:\
 	io_poll.a 
 UNIT_TESTS/t_wait4.o:\
 	cc-compile UNIT_TESTS/t_wait4.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_wait4.c
 UNIT_TESTS/t_wait4_def:\
 	cc-link UNIT_TESTS/t_wait4_def.ld UNIT_TESTS/t_wait4.o \
@@ -587,7 +594,7 @@ UNIT_TESTS/t_wait4_se:\
 	io_poll.a 
 UNIT_TESTS/t_wait5.o:\
 	cc-compile UNIT_TESTS/t_wait5.c io_poll.h _sd_fcntl.h \
-	UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
+	UNIT_TESTS/t_core.h UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
 	./cc-compile UNIT_TESTS/t_wait5.c
 UNIT_TESTS/t_wait5_def:\
 	cc-link UNIT_TESTS/t_wait5_def.ld UNIT_TESTS/t_wait5.o \
@@ -857,7 +864,7 @@ obj_clean:
 	instchk.o insthier.o io_poll-conf io_poll-conf.o io_poll.a iop_add.o 
 	rm -f iop_check.o iop_core.o iop_devpoll.o iop_epoll.o iop_fdhash.o \
 	iop_free.o iop_init.o iop_kqueue.o iop_misc.o iop_poll.o iop_rfds.o \
-	iop_rm.o iop_select.o iop_size.o iop_wait.o mk-ctxt mk-ctxt.o 
+	iop_rm.o iop_select.o iop_size.o iop_wait.o 
 
 deinstall: deinstaller inst-check inst-copy inst-dir inst-link
 	./deinstaller

@@ -3,22 +3,17 @@
 
 #include <corelib/error.h>
 
-int io_poll_init(struct io_poll *iop)
+static int iop_init(struct io_poll *iop, const struct io_poll_core *core)
 {
   struct io_poll_fdhash hash;
   struct array fds;
   struct array rfds;
-  const struct io_poll_core *core;
   struct io_pollfd *ifd;
   unsigned long ind;
   unsigned long len;
   int es = 0;
 
-  core = iop->core;
-  if (!core) {
-    core = io_poll_default_core();
-    if (!core) return 0;
-  }
+  iop->core = core;
 
   array_zero(&fds);
   array_zero(&rfds);
@@ -40,7 +35,6 @@ int io_poll_init(struct io_poll *iop)
   iop->rfds = rfds;
   iop->fdhash = hash;
   iop->size = 0;
-  iop->core = core;
   return 1;
 
   FAIL:
@@ -48,4 +42,14 @@ int io_poll_init(struct io_poll *iop)
   if (array_data(&rfds)) array_free(&rfds);
   io_poll_fdhash_free(&hash);
   return 0;
+}
+
+int io_poll_init(struct io_poll *iop)
+{
+  return iop_init(iop, io_poll_default_core());
+}
+
+int io_poll_initcore(struct io_poll *iop, const struct io_poll_core *core)
+{
+  return iop_init(iop, core);
 }

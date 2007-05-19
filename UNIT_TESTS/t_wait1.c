@@ -8,6 +8,7 @@
 
 #include "../io_poll.h"
 #include "../_sd_fcntl.h"
+#include "t_core.h"
 #include "t_assert.h"
 #include "t_verify.h"
 
@@ -15,8 +16,6 @@
 
 struct pipe { int fd[2]; } pipes[MAX_FDS];
 struct io_poll iop;
-
-void setcore(struct io_poll *);
 
 int main(void)
 {
@@ -29,9 +28,9 @@ int main(void)
   int pid;
   int r;
 
-  setcore(&iop);
+  check_core();
 
-  test_assert(io_poll_init(&iop) == 1);
+  init_core(&iop);
   test_assert(io_poll_size(&iop) == 0);
   verify(&iop);
 

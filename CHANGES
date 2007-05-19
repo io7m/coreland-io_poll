@@ -1,1 +1,3 @@
 20070502 version: io_poll 0.2
+20070519 code: io_poll_setcore removed due to unreliability. replaced with
+               io_poll_initcore.
