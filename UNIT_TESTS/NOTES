@@ -1,4 +1,4 @@
-On at least Darwin and OpenBSD, it is necessary to raise the default
+On many operating systems, it is necessary to raise the default
 file descriptor limit for all tests to pass.
 
   Darwin:
@@ -6,3 +6,6 @@ file descriptor limit for all tests to pass.
 
   OpenBSD:
     sysctl -w kern.maxfiles 4096
+
+  Linux:
+    Edit /etc/security/limits.conf
