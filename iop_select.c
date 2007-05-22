@@ -112,9 +112,9 @@ static int iop_sel_wait(struct io_poll *iop, int64 ms)
     if (ifd->fd != -1) {
       rfd.fd = ifd->fd;
       rfd.events = 0;
-      if (FD_SET(ifd->fd, &readfds)) rfd.events |= IO_POLL_READ;
-      if (FD_SET(ifd->fd, &writefds)) rfd.events |= IO_POLL_WRITE;
-      if (FD_SET(ifd->fd, &errorfds)) rfd.events |= IO_POLL_EOF;
+      if (FD_ISSET(ifd->fd, &readfds)) rfd.events |= IO_POLL_READ;
+      if (FD_ISSET(ifd->fd, &writefds)) rfd.events |= IO_POLL_WRITE;
+      if (FD_ISSET(ifd->fd, &errorfds)) rfd.events |= IO_POLL_EOF;
       if (rfd.events)
         if (!array_cat(&iop->rfds, &rfd)) return -1;
     }

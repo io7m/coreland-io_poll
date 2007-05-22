@@ -8,21 +8,21 @@ lib_tests=0
 echo '-- tests start --'
 for f in `cat testlist`;
 do
-  let lib_tests=lib_tests+1 >/dev/null 2>&1
+  lib_tests=`expr $lib_tests + 1` >/dev/null 2>&1
   ./$f >/dev/null 2>&1
   ret=$?
   case $ret in
     0)
       echo passed $f
-      let lib_passed=lib_passed+1 >/dev/null 2>&1
+      lib_passed=`expr $lib_passed + 1` >/dev/null 2>&1
       ;;
     1)
       echo failed $f
-      let lib_failed=lib_failed+1 >/dev/null 2>&1
+      lib_failed=`expr $lib_failed + 1` >/dev/null 2>&1
       ;;
     *)
       echo crash  $f
-      let lib_failed_bad=lib_failed_bad+1 >/dev/null 2>&1
+      lib_failed_bad=`expr $lib_failed_bad + 1` >/dev/null 2>&1
       ;;
   esac
 done
