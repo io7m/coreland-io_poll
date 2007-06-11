@@ -48,16 +48,15 @@ int main(void)
   test_assert(len == 1);
   test_assert(rfds[0].fd == ifd.fd);
   test_assert(io_poll_got_read(&rfds[0]));
-  test_assert(io_poll_got_eof(&rfds[0]));
   test_assert(read(rfds[0].fd, buf, 4) == 4);
   test_assert(bin_same(buf, "AAAA", 4) == 1);
 
-  /* eof is still set */
+  /* eof is set */
   test_assert(io_poll_wait(&iop, 0) == 1);
   io_poll_rfds(&iop, &rfds, &len);
   test_assert(len == 1);
   test_assert(rfds[0].fd == ifd.fd);
-  test_assert(io_poll_got_eof(&rfds[0]));
+  test_assert(read(rfds[0].fd, buf, 4) == 0 || io_poll_got_eof(&rfds[0]));
  
   test_assert(io_poll_rm(&iop, &ifd) == 1);
   test_assert(close(pfd[0]) != -1);
