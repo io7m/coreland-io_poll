@@ -30,6 +30,7 @@ int main(void)
   /* open pipes and copy read end of pipe */
   for (ind = 0; ind < MAX_FDS * 2; ind += 2) {
     test_assert(pipe(&pipes[ind]) != -1);
+    test_assert(close(pipes[ind + 1]) != -1);
     read_fds[ind / 2] = pipes[ind];
   }
 

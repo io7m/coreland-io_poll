@@ -8,7 +8,7 @@
 #include "t_assert.h"
 #include "t_verify.h"
 
-/* this test speficallly attempts to cause problems with the select() core.
+/* this test specificallly attempts to cause problems with the select() core.
  * real code should never work around io_poll_core_select - it should
  * simply react as if the operating system ran out of file descriptors.
  * this code specifically handles io_poll_core_select to test that
@@ -45,6 +45,7 @@ int main(void)
   /* open pipes and copy read end of pipe */
   for (ind = 0; ind < MAX_FDS * 2; ind += 2) {
     test_assert(pipe(&pipes[ind]) != -1);
+    test_assert(close(pipes[ind + 1]) != -1);
     read_fds[ind / 2] = pipes[ind];
   }
 

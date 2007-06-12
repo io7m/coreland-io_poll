@@ -23,9 +23,7 @@ int main(void)
   struct io_pollfd *rfds;
   unsigned long ind;
   unsigned long len;
-  unsigned long asize;
   char buf[4];
-  int pid;
   int r;
 
   check_core();

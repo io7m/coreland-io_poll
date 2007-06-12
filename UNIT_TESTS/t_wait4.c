@@ -19,10 +19,8 @@ int main(void)
 {
   struct io_pollfd ifd;
   struct io_pollfd *rfds;
-  unsigned long ind;
   unsigned long len;
   char buf[4];
-  int r;
 
   check_core();
 
