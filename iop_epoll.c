@@ -106,7 +106,7 @@ static int iop_epoll_del(struct io_poll *iop, int fd)
 static int iop_epoll_wait(struct io_poll *iop, int64 t)
 {
   struct epoll_event *ep_out;
-  struct io_pollfd *ifd;
+  struct io_pollfd rfd;
   int max;
   int ind;
   int r;
@@ -117,14 +117,15 @@ static int iop_epoll_wait(struct io_poll *iop, int64 t)
   r = epoll_wait(iop->pfd, ep_out, max, t);
   if (r == -1) return 0;
 
+  array_trunc(&iop->rfds);
   for (ind = 0; ind < r; ++ind) {
-    ifd = array_index(&iop->rfds, ind);
-    ifd->fd = ep_out[ind].data.fd;
-    ifd->events = 0;
-    if (ep_out[ind].events & EPOLLIN) ifd->events |= IO_POLL_READ;
-    if (ep_out[ind].events & EPOLLOUT) ifd->events |= IO_POLL_WRITE;
-    if (ep_out[ind].events & EPOLLERR) ifd->events |= IO_POLL_ERROR;
-    if (ep_out[ind].events & EPOLLHUP) ifd->events |= IO_POLL_EOF;
+    rfd.fd = ep_out[ind].data.fd;
+    rfd.events = 0;
+    if (ep_out[ind].events & EPOLLIN) rfd.events |= IO_POLL_READ;
+    if (ep_out[ind].events & EPOLLOUT) rfd.events |= IO_POLL_WRITE;
+    if (ep_out[ind].events & EPOLLERR) rfd.events |= IO_POLL_ERROR;
+    if (ep_out[ind].events & EPOLLHUP) rfd.events |= IO_POLL_EOF;
+    if (!array_cat(&iop->rfds, &rfd)) return -1; /* impossible */
   }
   return 1;
 }

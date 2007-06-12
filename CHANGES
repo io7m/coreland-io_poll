@@ -2,3 +2,4 @@
 20070519 code: io_poll_setcore removed due to unreliability. replaced with
                io_poll_initcore.
 20070608 code: io_poll-conf.c from common source.
+20070612 version: io_poll 0.3
