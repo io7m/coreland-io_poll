@@ -1,3 +1,6 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <corelib/alloc.h>
 #include <corelib/close.h>
@@ -8,7 +11,8 @@
 #include "t_verify.h"
 
 #define MAX_FDS 64
-int fds[MAX_FDS];
+int pipes[MAX_FDS * 2];
+int read_fds[MAX_FDS];
 
 struct io_poll iop;
 
@@ -19,18 +23,20 @@ int main(void)
   unsigned long asize;
 
   check_core();
-
   init_core(&iop);
   test_assert(io_poll_size(&iop) == 0);
   verify(&iop);
 
-  for (ind = 0; ind < MAX_FDS; ++ind)
-    test_assert((fds[ind] = open("./t_add2.c", O_RDONLY)) != -1);
+  /* open pipes and copy read end of pipe */
+  for (ind = 0; ind < MAX_FDS * 2; ind += 2) {
+    test_assert(pipe(&pipes[ind]) != -1);
+    read_fds[ind / 2] = pipes[ind];
+  }
 
   /* add all file descriptors */
   for (ind = 0; ind < MAX_FDS; ++ind) {
     ifd.events = IO_POLL_READ;
-    ifd.fd = fds[ind];
+    ifd.fd = read_fds[ind];
     test_assert(io_poll_add(&iop, &ifd) == 1);
     test_assert(io_poll_add(&iop, &ifd) == 0);
     test_assert(io_poll_check(&iop, &ifd) == 1);
@@ -43,7 +49,7 @@ int main(void)
   /* remove all file descriptors */
   for (ind = 0; ind < MAX_FDS; ++ind) {
     ifd.events = IO_POLL_READ;
-    ifd.fd = fds[ind];
+    ifd.fd = read_fds[ind];
     test_assert(io_poll_rm(&iop, &ifd) == 1);
     test_assert(io_poll_rm(&iop, &ifd) == 0);
     test_assert(io_poll_check(&iop, &ifd) == 0);
@@ -54,7 +60,7 @@ int main(void)
   /* check that re-adding file descriptors does not enlarge arrays */
   for (ind = 0; ind < MAX_FDS; ++ind) {
     ifd.events = IO_POLL_READ;
-    ifd.fd = fds[ind];
+    ifd.fd = read_fds[ind];
     test_assert(io_poll_add(&iop, &ifd) == 1);
     test_assert(io_poll_add(&iop, &ifd) == 0);
     test_assert(io_poll_check(&iop, &ifd) == 1);
@@ -67,8 +73,8 @@ int main(void)
   /* refuse to add closed file descriptors */
   for (ind = 0; ind < MAX_FDS; ++ind) {
     ifd.events = IO_POLL_READ;
-    ifd.fd = fds[ind];
-    test_assert(close(fds[ind]) != -1);
+    ifd.fd = read_fds[ind];
+    test_assert(close(read_fds[ind]) != -1);
     test_assert(io_poll_add(&iop, &ifd) == 0);
     test_assert(io_poll_size(&iop) == MAX_FDS);
     verify(&iop);

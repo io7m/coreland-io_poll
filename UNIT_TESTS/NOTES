@@ -1,11 +1,13 @@
 On many operating systems, it is necessary to raise the default
-file descriptor limit for all tests to pass.
+file descriptor limit for all tests to pass. Some of the tests
+require very large numbers of file descriptors (specifically,
+FD_SETSIZE * 2).
 
   Darwin:
-    ulimit -n 4096
+    ulimit -n 8192
 
   OpenBSD:
-    sysctl -w kern.maxfiles 4096
+    sysctl -w kern.maxfiles 8192
 
   Linux:
     Edit /etc/security/limits.conf
