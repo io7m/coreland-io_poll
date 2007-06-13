@@ -940,17 +940,17 @@ obj_clean:
 	UNIT_TESTS/t_wait4_kq UNIT_TESTS/t_wait4_po UNIT_TESTS/t_wait4_se \
 	UNIT_TESTS/t_wait5.o UNIT_TESTS/t_wait5_def UNIT_TESTS/t_wait5_dp \
 	UNIT_TESTS/t_wait5_ep UNIT_TESTS/t_wait5_kq UNIT_TESTS/t_wait5_po \
-	UNIT_TESTS/t_wait5_se ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a \
-	ctxt/dlibdir.c ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o \
-	ctxt/repos.c ctxt/repos.o ctxt/slibdir.c ctxt/slibdir.o \
-	ctxt/version.c ctxt/version.o inst-check inst-check.o inst-copy \
-	inst-copy.o inst-dir inst-dir.o inst-link inst-link.o install_core.o \
-	install_error.o installer installer.o instchk instchk.o insthier.o \
-	io_poll-conf io_poll-conf.o io_poll.a iop_add.o iop_check.o \
-	iop_core.o 
-	rm -f iop_devpoll.o iop_epoll.o iop_fdhash.o iop_free.o iop_init.o \
-	iop_kqueue.o iop_misc.o iop_poll.o iop_rfds.o iop_rm.o iop_select.o \
-	iop_size.o iop_wait.o mk-ctxt mk-ctxt.o 
+	UNIT_TESTS/t_wait5_se conf-cctype conf-ldtype conf-systype \
+	ctxt/bindir.c ctxt/bindir.o ctxt/ctxt.a ctxt/dlibdir.c \
+	ctxt/dlibdir.o ctxt/incdir.c ctxt/incdir.o ctxt/repos.c ctxt/repos.o \
+	ctxt/slibdir.c ctxt/slibdir.o ctxt/version.c ctxt/version.o \
+	inst-check inst-check.o inst-copy inst-copy.o inst-dir inst-dir.o \
+	inst-link inst-link.o install_core.o install_error.o installer \
+	installer.o instchk instchk.o insthier.o io_poll-conf io_poll-conf.o \
+	io_poll.a 
+	rm -f iop_add.o iop_check.o iop_core.o iop_devpoll.o iop_epoll.o \
+	iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o iop_misc.o \
+	iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o iop_wait.o 
 
 deinstall: deinstaller inst-check inst-copy inst-dir inst-link
 	./deinstaller
