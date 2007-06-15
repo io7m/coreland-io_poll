@@ -3,3 +3,5 @@
                io_poll_initcore.
 20070608 code: io_poll-conf.c from common source.
 20070612 version: io_poll 0.3
+20070615 code: updated cpj tools and sydeps.
+20070615 version: io_poll 0.31
