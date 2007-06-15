@@ -3,7 +3,7 @@
 default: all
 
 all:\
-sysdeps.out UNIT_TESTS/t_add1_def UNIT_TESTS/t_add1_dp UNIT_TESTS/t_add1_ep \
+UNIT_TESTS/t_add1_def UNIT_TESTS/t_add1_dp UNIT_TESTS/t_add1_ep \
 UNIT_TESTS/t_add1_kq UNIT_TESTS/t_add1_po UNIT_TESTS/t_add1_se \
 UNIT_TESTS/t_add2_def UNIT_TESTS/t_add2_dp UNIT_TESTS/t_add2_ep \
 UNIT_TESTS/t_add2_kq UNIT_TESTS/t_add2_po UNIT_TESTS/t_add2_se \
@@ -30,24 +30,73 @@ UNIT_TESTS/t_wait5_dp UNIT_TESTS/t_wait5_ep UNIT_TESTS/t_wait5_kq \
 UNIT_TESTS/t_wait5_po UNIT_TESTS/t_wait5_se ctxt/ctxt.a inst-check inst-copy \
 inst-dir inst-link installer instchk io_poll-conf io_poll.a 
 
-sysdeps: sysdeps.out
-sysdeps.out:
-	SYSDEPS/sysdep-header sysdeps.out
-	(cd SYSDEPS && make)
-sysdeps_clean:
-	(cd SYSDEPS && make clean)
-	rm -f sysdeps.out
+# -- SYSDEPS start
+flags-corelib:
+	@echo SYSDEPS corelib-flags run create flags-corelib 
+	@(cd SYSDEPS/modules/corelib-flags && ./run)
+libs-corelib-S:
+	@echo SYSDEPS corelib-libs-S run create libs-corelib-S 
+	@(cd SYSDEPS/modules/corelib-libs-S && ./run)
+flags-integer:
+	@echo SYSDEPS integer-flags run create flags-integer 
+	@(cd SYSDEPS/modules/integer-flags && ./run)
+libs-integer-S:
+	@echo SYSDEPS integer-libs-S run create libs-integer-S 
+	@(cd SYSDEPS/modules/integer-libs-S && ./run)
+_io-notice.h:
+	@echo SYSDEPS io-notice run create _io-notice.h 
+	@(cd SYSDEPS/modules/io-notice && ./run)
+_sd_fcntl.h:
+	@echo SYSDEPS sd-fcntl run create libs-fcntl flags-fcntl _sd_fcntl.h 
+	@(cd SYSDEPS/modules/sd-fcntl && ./run)
+flags-fcntl: _sd_fcntl.h
+libs-fcntl: _sd_fcntl.h
+_sd_select.h:
+	@echo SYSDEPS sd-select run create _sd_select.h 
+	@(cd SYSDEPS/modules/sd-select && ./run)
+_sysinfo.h:
+	@echo SYSDEPS sysinfo run create _sysinfo.h 
+	@(cd SYSDEPS/modules/sysinfo && ./run)
 
-flags-corelib: sysdeps.out
-libs-corelib: sysdeps.out
-flags-integer: sysdeps.out
-libs-integer: sysdeps.out
-_io-notice.h: sysdeps.out
-_sd_fcntl.h: sysdeps.out
-flags-fcntl: sysdeps.out
-libs-fcntl: sysdeps.out
-_sd_select.h: sysdeps.out
-_sysinfo.h: sysdeps.out
+
+corelib-flags_clean:
+	@echo SYSDEPS corelib-flags clean flags-corelib 
+	@(cd SYSDEPS/modules/corelib-flags && ./clean)
+corelib-libs-S_clean:
+	@echo SYSDEPS corelib-libs-S clean libs-corelib-S 
+	@(cd SYSDEPS/modules/corelib-libs-S && ./clean)
+integer-flags_clean:
+	@echo SYSDEPS integer-flags clean flags-integer 
+	@(cd SYSDEPS/modules/integer-flags && ./clean)
+integer-libs-S_clean:
+	@echo SYSDEPS integer-libs-S clean libs-integer-S 
+	@(cd SYSDEPS/modules/integer-libs-S && ./clean)
+io-notice_clean:
+	@echo SYSDEPS io-notice clean _io-notice.h 
+	@(cd SYSDEPS/modules/io-notice && ./clean)
+sd-fcntl_clean:
+	@echo SYSDEPS sd-fcntl clean libs-fcntl flags-fcntl _sd_fcntl.h 
+	@(cd SYSDEPS/modules/sd-fcntl && ./clean)
+sd-select_clean:
+	@echo SYSDEPS sd-select clean _sd_select.h 
+	@(cd SYSDEPS/modules/sd-select && ./clean)
+sysinfo_clean:
+	@echo SYSDEPS sysinfo clean _sysinfo.h 
+	@(cd SYSDEPS/modules/sysinfo && ./clean)
+
+
+sysdeps_clean:\
+corelib-flags_clean \
+corelib-libs-S_clean \
+integer-flags_clean \
+integer-libs-S_clean \
+io-notice_clean \
+sd-fcntl_clean \
+sd-select_clean \
+sysinfo_clean \
+
+
+# -- SYSDEPS end
 
 UNIT_TESTS/core_def.o:\
 cc-compile UNIT_TESTS/core_def.c io_poll.h UNIT_TESTS/t_core.h \
@@ -275,6 +324,9 @@ UNIT_TESTS/t_assert.o:\
 cc-compile UNIT_TESTS/t_assert.c UNIT_TESTS/t_assert.h 
 	./cc-compile UNIT_TESTS/t_assert.c
 
+UNIT_TESTS/t_core.h:\
+io_poll.h 
+
 UNIT_TESTS/t_core1.o:\
 cc-compile UNIT_TESTS/t_core1.c io_poll.h UNIT_TESTS/t_core.h \
 UNIT_TESTS/t_assert.h 
@@ -419,6 +471,9 @@ UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a io_poll.a
 UNIT_TESTS/t_verify.a:\
 cc-slib UNIT_TESTS/t_verify.sld UNIT_TESTS/t_verify.o 
 	./cc-slib UNIT_TESTS/t_verify UNIT_TESTS/t_verify.o 
+
+UNIT_TESTS/t_verify.h:\
+io_poll.h 
 
 UNIT_TESTS/t_verify.o:\
 cc-compile UNIT_TESTS/t_verify.c UNIT_TESTS/t_assert.h UNIT_TESTS/t_verify.h 
@@ -660,12 +715,11 @@ UNIT_TESTS/t_verify.a UNIT_TESTS/t_assert.a io_poll.a
 	io_poll.a 
 
 cc-compile:\
-conf-cc conf-cctype conf-systype conf-cflags sysdeps.out flags-corelib \
-flags-integer 
+conf-cc conf-cctype conf-systype conf-cflags flags-corelib flags-integer 
 
 cc-link:\
-conf-ld conf-ldtype conf-systype conf-ldflags sysdeps.out libs-corelib \
-libs-corelib-C libs-integer 
+conf-ld conf-ldtype conf-systype conf-ldflags libs-corelib-S libs-corelib-C \
+libs-integer-S 
 
 cc-slib:\
 conf-systype 
@@ -821,6 +875,12 @@ iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o iop_wait.o
 	iop_epoll.o iop_fdhash.o iop_free.o iop_init.o iop_kqueue.o \
 	iop_misc.o iop_poll.o iop_rfds.o iop_rm.o iop_select.o iop_size.o \
 	iop_wait.o 
+
+io_poll.h:\
+io_poll_fdh.h 
+
+io_poll_impl.h:\
+_io-notice.h 
 
 iop_add.o:\
 cc-compile iop_add.c io_poll.h io_poll_impl.h _sd_fcntl.h 
