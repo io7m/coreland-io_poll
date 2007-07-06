@@ -1,2 +1,4 @@
+-g -O2 -W -Wall -pedantic -Wno-long-long
 
-These are passed to the C compiler.
+These are optional compiler flags. Only the first line of this
+file will be used.
