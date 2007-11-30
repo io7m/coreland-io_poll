@@ -100,7 +100,7 @@ static int iop_poll_wait(struct io_poll *iop, int64 ms)
     }
   }
 
-  pfdp = array_data(&iop->pd_in);
+  pfdp = (struct pollfd *) array_data(&iop->pd_in);
   len = array_size(&iop->pd_in);
 
   ret = poll(pfdp, len, ms);

@@ -53,11 +53,11 @@ int main(void)
   for (ind = 0; ind < MAX_FDS; ++ind) {
     ifd.events = IO_POLL_READ;
     ifd.fd = read_fds[ind];
-    test_assert(io_poll_add(&iop, &ifd) == 1
-            || (ifd.fd >= FD_SETSIZE - 1 && using_select()));
+    test_assert(io_poll_add(&iop, &ifd) == 1 ||
+               ((ifd.fd >= (long) FD_SETSIZE - 1) && using_select()));
     test_assert(io_poll_add(&iop, &ifd) == 0);
-    test_assert(io_poll_check(&iop, &ifd) == 1
-            || (ifd.fd >= FD_SETSIZE - 1 && using_select()));
+    test_assert(io_poll_check(&iop, &ifd) == 1 ||
+               (ifd.fd >= (long) FD_SETSIZE - 1 && using_select()));
     test_assert(io_poll_size(&iop) == ind + 1 || using_select());
     verify(&iop);
   }
@@ -70,8 +70,8 @@ int main(void)
     if (ind % 2) {
       ifd.events = IO_POLL_READ;
       ifd.fd = read_fds[ind];
-      test_assert(io_poll_rm(&iop, &ifd) == 1
-              || (ifd.fd >= FD_SETSIZE - 1 && using_select()));
+      test_assert(io_poll_rm(&iop, &ifd) == 1 ||
+                 (ifd.fd >= (long) FD_SETSIZE - 1 && using_select()));
       test_assert(io_poll_rm(&iop, &ifd) == 0);
       test_assert(io_poll_check(&iop, &ifd) == 0);
       verify(&iop);
@@ -86,12 +86,12 @@ int main(void)
     ifd.fd = read_fds[ind];
     if (ind % 2 ) {
       test_assert(io_poll_add(&iop, &ifd) == 1
-              || (ifd.fd >= FD_SETSIZE - 1 && using_select()));
+              || (ifd.fd >= (long) FD_SETSIZE - 1 && using_select()));
       test_assert(io_poll_add(&iop, &ifd) == 0);
     }
     verify(&iop);
-    test_assert(io_poll_check(&iop, &ifd) == 1
-            || (ifd.fd >= FD_SETSIZE - 1 && using_select()));
+    test_assert(io_poll_check(&iop, &ifd) == 1L
+            || (ifd.fd >= (long) FD_SETSIZE - 1 && using_select()));
   }
   test_assert(io_poll_size(&iop) == MAX_FDS ||
              (io_poll_size(&iop) == FD_SETSIZE - 1 && using_select()));
