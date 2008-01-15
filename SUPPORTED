@@ -1,0 +1,10 @@
+darwin 7.9.0 gcc 3.3.0 ppc
+darwin 8.9.0 gcc 4.0.1 ppc
+freebsd 6.2-release gcc 3.4.6 x86
+hpux b.11.11 hp_c 0.0.0 parisc
+hpux b.11.23 hp_c 0.0.0 parisc
+hpux b.11.23 hp_c 3.0.6 ia64
+hpux b.11.31 hp_c 3.0.6 ia64
+irix 6.5.22f mipspro 7.3.0 mips
+linux 2.6.18-5-686 gcc 4.1.2 x86
+linux 2.6.9-34.0.1.el gcc 4.1.0 ia64

@@ -112,7 +112,7 @@ static int iop_epoll_wait(struct io_poll *iop, int64 t)
   int r;
 
   max = array_size(&iop->pd_out);
-  ep_out = array_data(&iop->pd_out);
+  ep_out = (struct epoll_event *) array_data(&iop->pd_out);
 
   r = epoll_wait(iop->pfd, ep_out, max, t);
   if (r == -1) return 0;
