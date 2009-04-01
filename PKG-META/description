@@ -1,0 +1,7 @@
+This library provides a portable abstraction around various
+system-specific IO notification mechanisms. It also includes a number of
+workarounds for system-specific bugs and nuances of said mechanisms.
+<br/>
+<br/>
+io_poll is written in ISO C and has been tested with a wide range of
+compilers (HP C, Intel C, Sun C, GCC, MipsPro, etc).
