@@ -7,3 +7,5 @@
 20070615 version: io_poll 0.31
 20080115 code: updated inst-check.c
 20081204 code: updated installer.
+20090403 code: http://coreland.ath.cx/unix/portability/select, @20090403
+20090403 code: rearranged iop_core.c for strict semantic checks (unreachable).

@@ -8,3 +8,4 @@ hpux b.11.31 hp_c 3.0.6 ia64
 irix 6.5.22f mipspro 7.3.0 mips
 linux 2.6.18-5-686 gcc 4.1.2 x86
 linux 2.6.9-34.0.1.el gcc 4.1.0 ia64
+sunos 5.11-snv_110 sun_c 5.9.0 x86

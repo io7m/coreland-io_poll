@@ -5,6 +5,7 @@
 #include <corelib/bin.h>
 #include <corelib/error.h>
 #include "_sd_select.h"
+#include <string.h>
 
 /* iop->pd_in   allocated to prevent io_poll_setcore() changing active cores
  * iop->pd_out  unused
